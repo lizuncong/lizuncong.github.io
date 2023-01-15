@@ -108,6 +108,7 @@ const getMenus = async (dir) => {
       const files = await readDir(dir + temp);
       files.forEach((file) => {
         const fileName = file.replace(".md", "");
+        if (fileName.includes(".DS_Store")) return;
         generateJSX(temp, fileName);
         children.push({
           // label: `<NavLink to="/${temp}/${fileName}">${fileName}</NavLink>`,

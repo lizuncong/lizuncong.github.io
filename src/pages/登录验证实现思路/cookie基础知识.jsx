@@ -1,6 +1,6 @@
 import React from "react";
 import MarkDown from "@/components/markdown";
-import shape from "@docs/web优化总结/.DS_Store.md";
+import shape from "@docs/登录验证实现思路/cookie基础知识.md";
 
 function Index() {
   return <MarkDown src={shape} />;
