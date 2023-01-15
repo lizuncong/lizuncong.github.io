@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Menu } from "antd";
 import "./App.css";
 import MENU from './menu'
