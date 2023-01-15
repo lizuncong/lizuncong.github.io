@@ -1,4 +1,4 @@
-"use strict";
+
 
 const fs = require("fs");
 const path = require("path");
@@ -323,6 +323,7 @@ module.exports = function (webpackEnv) {
         }),
         ...(modules.webpackAliases || {}),
         "@": path.resolve(__dirname, "../src"),
+        "@docs": path.resolve(__dirname, "../docs"),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
