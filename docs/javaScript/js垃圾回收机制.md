@@ -113,7 +113,7 @@ node --max-new-space-size=1024 app.js 单位是kb
   - 64 位系统下老生代内存是 1400M
   - 32 位系统下老生代内存是 700M
 
-![image](../../Front-End-Development-Notes/memory-01.jpg)
+![image](../../imgs/memory-01.jpg)
 
 ### 2.2 新生代垃圾回收
 
@@ -125,7 +125,7 @@ node --max-new-space-size=1024 app.js 单位是kb
 - 当一个对象经历过多次的垃圾回收依然存活的时候，生存周期比较长的对象会被移动到老生代，这个移动过程被称为晋升或者升级
   - 经过 5 次以上的回收还存在
   - TO 的空间使用占比超过 25%，或者超大对象
-    ![image](../../Front-End-Development-Notes/memory-02.jpg)
+    ![image](../../imgs/memory-02.jpg)
 
 ### 2.3 老生代
 
@@ -139,9 +139,9 @@ node --max-new-space-size=1024 app.js 单位是kb
 - 老生代空间大，大部分都是活着的对象，GC 耗时比较长
 - 在 GC 期间无法响应，STOP-THE-WORLD
 - V8 有一个优化方案，增量处理，把一个大暂停换成多个小暂停 INCREMENT_GC
-  ![image](../../Front-End-Development-Notes/memory-03.jpg)
+  ![image](../../imgs/memory-03.jpg)
 
-![image](../../Front-End-Development-Notes/memory-04.jpg)
+![image](../../imgs/memory-04.jpg)
 
 ## 内存泄漏的场景
 

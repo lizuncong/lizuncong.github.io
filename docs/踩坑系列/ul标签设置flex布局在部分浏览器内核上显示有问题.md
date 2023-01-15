@@ -86,9 +86,9 @@ index.html
 ```
 
 以上代码在谷歌浏览器模拟器上的显示效果，可以看出正常显示：
-![image](../../Front-End-Development-Notes/ul-flex.jpg)
+![image](../../imgs/ul-flex.jpg)
 
 真机上的显示效果，可以看出下面的元素都浮在了 ul 元素上。
-![image](../../Front-End-Development-Notes/ul-flex-02.jpg)
+![image](../../imgs/ul-flex-02.jpg)
 
 排查发现是因为 ul 标签设置了 flex 布局，导致在部分低版本浏览器内核上会显示有问题

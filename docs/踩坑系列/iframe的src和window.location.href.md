@@ -2,7 +2,7 @@
 
 特殊情况下，`iframe` 嵌套网页脚本获取到的 `window.location.href` 与 `iframe` 的 `src` 属性并不一致。
 
-![image](../../Front-End-Development-Notes/iframe-01.jpg)
+![image](../../imgs/iframe-01.jpg)
 
 ### 复现
 

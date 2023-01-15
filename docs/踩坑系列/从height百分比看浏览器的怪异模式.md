@@ -22,7 +22,7 @@
 
 在浏览器打开之前，我们可以看出这个文档非常之简单，按照我们的理论知识，`test` 这个 dom 设置了 `height: 50%`，但是其父元素并没有设置高度，默认是 `height: auto`，理论上 `test` 这个 dom 节点 `50%` 的高度不会起作用。此时打开浏览器看看？结果如下：
 
-![image](../../Front-End-Development-Notes/height.jpg)
+![image](../../imgs/height.jpg)
 
 **_所以这是为什么?_**
 
@@ -44,7 +44,7 @@
 ```
 
 打开浏览器，可以看到：
-![image](../../Front-End-Development-Notes/height2.jpg)
+![image](../../imgs/height2.jpg)
 
 **_这才是我们切图仔认知中的 height 百分比吧？_**
 
@@ -53,13 +53,13 @@
 ### 真实线上问题排查的难度
 
 由于业务背景原因，我们采用 handlebar + egg 服务端渲染的模式由 node 团队返回 html 文档。而 node 团队为了优化，做了缓存。具体看下面
-![image](../../Front-End-Development-Notes/height3.jpg)
+![image](../../imgs/height3.jpg)
 
 由于命中了缓存 node 团队的同学在`DOCTYPE`声明前面插入了一段脚本(估计是 node 同学前端基础不过关，标准上插入的 script 标签要么在 head 下面，要么在 body 下)，浏览器在收到这个 html 文档时，由于没有在第一行解析到`DOCTYPE`声明，因此浏览器切换到 `怪异模式`，按照
 `怪异模式` 解析文档流。
 
 下面是没有命中缓存时的结果
-![image](../../Front-End-Development-Notes/height4.jpg)
+![image](../../imgs/height4.jpg)
 可以看出页面显示正常
 
 由于这个脚本只在生产环境插入，本地开发所以复现不出这个问题，一开始出现 `height: 100%` 异常的时候，根本没想到会是 `DOCTYPE` 声明异常导致的。

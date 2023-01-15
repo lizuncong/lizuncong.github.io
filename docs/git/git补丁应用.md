@@ -10,7 +10,7 @@
 git log
 ```
 
-![image](../../Front-End-Development-Notes/git-3.jpg)
+![image](../../imgs/git-3.jpg)
 复制需要生成补丁的 commit id，即那次修改的 commit 记录
 
 ### 2.git format-patch

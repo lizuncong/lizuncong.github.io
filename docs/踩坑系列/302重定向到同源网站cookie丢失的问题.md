@@ -104,21 +104,21 @@ const devConfig = {
 
 先来看下 cookie 面板，可以看到有设置了一个 cookie
 
-![image](../../Front-End-Development-Notes/302-01.jpg)
+![image](../../imgs/302-01.jpg)
 
 点击 `点击发起鉴权请求` 按钮
 
-![image](../../Front-End-Development-Notes/302-02.jpg)
+![image](../../imgs/302-02.jpg)
 
 首先向第三方提供的鉴权服务 `http://localhost:4000/api/auth` 发起请求，这个请求肯定是跨域请求。但由于是简单请求，不需要发起预检请求。请求成功后，重定向回我们的前端服务
 
-![image](../../Front-End-Development-Notes/302-03.jpg)
+![image](../../imgs/302-03.jpg)
 
 可以看到重定向回来的请求，浏览器认为这是一个跨域请求，并不会在请求头中携带 cookie，为什么？？？
-![image](../../Front-End-Development-Notes/302-04.jpg)
+![image](../../imgs/302-04.jpg)
 
 手动发起的同样的请求，cookie 是正常的：
-![image](../../Front-End-Development-Notes/302-05.jpg)
+![image](../../imgs/302-05.jpg)
 
 ### 猜测
 
@@ -126,6 +126,6 @@ const devConfig = {
 
 当我们发起一个对第三方域名接口的访问时，如果这个接口又重定向回我们自己的接口，浏览器会认为我们自己的接口是第三方域名发起的(通过下图的 Initial 可以看出)，因此浏览器认为这是一个跨域的请求
 
-![image](../../Front-End-Development-Notes/302-02.jpg)
+![image](../../imgs/302-02.jpg)
 
 如果有朋友知道原因，还请帮忙解答一下

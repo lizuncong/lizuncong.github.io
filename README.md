@@ -70,4 +70,4 @@
 为了在查看本仓库时有一个很好的体验，可以安装一个谷歌插件："Octotree - GitHub code tree"。这个插件使得在浏览器上查看 github 仓库时，能像
 IDE 一样组织目录。方便阅读。如下：
 
-![image](../../Front-End-Development-Notes/octotree.png)
+![image](../../imgs/octotree.png)

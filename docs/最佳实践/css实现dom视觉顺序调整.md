@@ -11,8 +11,8 @@ css 并不能修改 dom 的结构，调整 dom 的位置。dom 的结构及位�
 ### 业务背景
 
 如下图
-![image](../../Front-End-Development-Notes/css-order.jpg)
-![image](../../Front-End-Development-Notes/css-order2.jpg)
+![image](../../imgs/css-order.jpg)
+![image](../../imgs/css-order2.jpg)
 
 业务需求如下：
 

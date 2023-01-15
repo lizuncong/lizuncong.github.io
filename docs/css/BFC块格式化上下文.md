@@ -58,9 +58,9 @@ Block Formatting Context 块格式化上下文。
 ```
 
 效果：
-![image](../../Front-End-Development-Notes/BFC03.png)
+![image](../../imgs/BFC03.png)
 
-![image](../../Front-End-Development-Notes/BFC04.png)
+![image](../../imgs/BFC04.png)
 
 #### 不会和浮动的兄弟元素重叠
 
@@ -96,9 +96,9 @@ Block Formatting Context 块格式化上下文。
 ```
 
 效果：
-![image](../../Front-End-Development-Notes/BFC01.png)
+![image](../../imgs/BFC01.png)
 
-![image](../../Front-End-Development-Notes/BFC02.png)
+![image](../../imgs/BFC02.png)
 
 #### 当元素高度没有设置时，会被元素内部的浮动元素撑开
 
@@ -134,6 +134,6 @@ Block Formatting Context 块格式化上下文。
 ```
 
 效果：
-![image](../../Front-End-Development-Notes/BFC05.png)
+![image](../../imgs/BFC05.png)
 
-![image](../../Front-End-Development-Notes/BFC06.png)
+![image](../../imgs/BFC06.png)

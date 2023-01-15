@@ -42,7 +42,7 @@
 
 在浏览器查看 `html` 元素的 `font-size`
 
-![image](../../Front-End-Development-Notes/rem-01.jpg)
+![image](../../imgs/rem-01.jpg)
 
 可以看到 `html` 的 `font-size` 为 12px。那么按理它内部所有的元素的 `rem` 单位都是要乘以这个 12，比如
 
@@ -54,7 +54,7 @@ div {
 
 但实际上，我们看下 `block` 元素的高度，即红色部分：
 
-![image](../../Front-End-Development-Notes/rem-02.jpg)
+![image](../../imgs/rem-02.jpg)
 
 我们设置的 `block` 的样式：
 

@@ -41,11 +41,11 @@ const columns = [
 
 效果如下：
 
-![image](../../Front-End-Development-Notes/table-01.jpg)
+![image](../../imgs/table-01.jpg)
 
 假设现在有如下需求：
 
-![image](../../Front-End-Development-Notes/table-02.jpg)
+![image](../../imgs/table-02.jpg)
 
 如上图所示，尺码列数不固定，即有多少列尺码需要后端返回给前端。然后尺码的下单数可以输入填写
 同时统计总数。此时后端返回的 columns 和 dataSource 理论上应该要满足如下代码所示：
@@ -346,4 +346,4 @@ const Index = memo(() => (
 
 简单且方便呀。。。。。效果如下：
 
-![image](../../Front-End-Development-Notes/table-03.jpg)
+![image](../../imgs/table-03.jpg)

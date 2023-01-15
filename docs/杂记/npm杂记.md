@@ -44,7 +44,7 @@
 
 关于 dependencies，devDependencies，peerDependencies 的差别可以看下图：
 
-![image](../../Front-End-Development-Notes/npm-01.png)
+![image](../../imgs/npm-01.png)
 
 如图，rui-mobile 中有 peerDependencies，dependencies，devDependencies
 

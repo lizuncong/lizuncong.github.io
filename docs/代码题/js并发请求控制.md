@@ -5,15 +5,15 @@
 emmmm，装 X 点，从内存使用角度来说，前端控制并发数，对浏览器来说会友好点，毕竟同时 new 1000 个 xhr 对象内存也是可观的。
 
 下图是没有限制并发数，同时发起 1000 个请求的内存使用情况：
-![image](../../Front-End-Development-Notes/request.jpg)
+![image](../../imgs/request.jpg)
 
 下图是限制最多并发 50 个请求，其余请求前端控制排队依次发起：
-![image](../../Front-End-Development-Notes/request03.jpg)
+![image](../../imgs/request03.jpg)
 
 ### 场景 1
 
 如果短时间内发起大量的请求，比如 1000 个请求过来了，前端控制最多只有`Max`个请求在处理，后面的请求排队等候。如果有请求完成，则后面的请求补位，如下图：
-![image](../../Front-End-Development-Notes/request01.png)
+![image](../../imgs/request01.png)
 
 前端代码实现：
 

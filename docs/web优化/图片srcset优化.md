@@ -21,7 +21,7 @@
 
 下面的表格显示了浏览器会选择哪张图片:
 
-![image](../../Front-End-Development-Notes/srcset-01.jpg)
+![image](../../imgs/srcset-01.jpg)
 
 可以看出，浏览器会先算出图片的宽度再乘以设备像素比，然后选择最接近的图片
 

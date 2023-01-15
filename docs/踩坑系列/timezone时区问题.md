@@ -8,7 +8,7 @@ new Date().toLocaleString("en-US", {
 });
 ```
 
-![image](../../Front-End-Development-Notes/timezone.png)
+![image](../../imgs/timezone.png)
 
 ## 解决方法
 

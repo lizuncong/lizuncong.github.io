@@ -11,9 +11,9 @@
 
 > 当子元素内容少时，确实能实现水平居中。但是如果子元素内容过多时，水平滚动就出现了问题。子元素最左边无法滚动到视野内。
 
-![image](../../Front-End-Development-Notes/flex-01.jpg)
+![image](../../imgs/flex-01.jpg)
 
-![image](../../Front-End-Development-Notes/flex-02.jpg)
+![image](../../imgs/flex-02.jpg)
 
 从图中可以看出，滚动条已经到达容器最左边了，但是方块 4 前面的 1,2,3 无法滚动到视野内。代码如下：
 
@@ -112,7 +112,7 @@
   }
 ```
 
-![image](../../Front-End-Development-Notes/flex-03.jpg)
+![image](../../imgs/flex-03.jpg)
 
 ##### 解决方法 2
 

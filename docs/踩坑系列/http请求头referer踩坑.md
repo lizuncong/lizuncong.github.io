@@ -38,15 +38,15 @@
 
 查看控制台：
 
-![image](../../Front-End-Development-Notes/referer-01.jpg)
+![image](../../imgs/referer-01.jpg)
 
 服务器 500，有点意思
 
 postman 看下：
-![image](../../Front-End-Development-Notes/referer-02.jpg)
+![image](../../imgs/referer-02.jpg)
 
 referer 设置为用户的域名：
-![image](../../Front-End-Development-Notes/referer.jpg)
+![image](../../imgs/referer.jpg)
 
 postman 看到正常响应了图片内容
 

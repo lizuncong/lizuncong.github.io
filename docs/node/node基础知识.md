@@ -25,7 +25,7 @@ Node.js 使用事件驱动模型，当 web server 接收到请求，就把它关
 
 在事件驱动模型中，会生成一个主循环来监听事件，当检测到事件时触发回调函数。
 
-![image](../../Front-End-Development-Notes/nodeevent.jpg)
+![image](../../imgs/nodeevent.jpg)
 
 整个事件驱动的流程就是这么实现的，非常简洁。有点类似于观察者模式，事件相当于一个主题(Subject)，而所有注册到这个事件上的处理函数相当于观察者(Observer)。
 

@@ -9,10 +9,10 @@
 假设已有的项目 A 地址为：https://github.com/xxx/pro-a.git
 
 1. 在 github 中创建一个新的项目 B
-   ![image](../../Front-End-Development-Notes/git-1.jpg)
+   ![image](../../imgs/git-1.jpg)
 
 2.输入项目 B 的仓库名称
-![image](../../Front-End-Development-Notes/git-2.jpg)
+![image](../../imgs/git-2.jpg)
 
 3.导入成功。此时项目 B 中依然会保留着项目 A 的历史提交记录以及分支！！
 

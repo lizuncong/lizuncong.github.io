@@ -1,6 +1,6 @@
 ## 效果
 
-![image](../../Front-End-Development-Notes/shadow.jpg)
+![image](../../imgs/shadow.jpg)
 
 ## 源码
 

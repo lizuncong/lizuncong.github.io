@@ -17,7 +17,7 @@ react 官网给出对于`useLayoutEffect`的介绍：
 # Demo
 
 1. 效果如下
-   ![image](../../Front-End-Development-Notes/effect-01.jpg)
+   ![image](../../imgs/effect-01.jpg)
 
 点击 `1.使用useEffect` 或者 `2.使用useLayoutEffect` 可以切换使用哪个 effect。
 点击 header 的 `展开` 或者 `收起` 按钮可以显示或者隐藏红色区域的内容。

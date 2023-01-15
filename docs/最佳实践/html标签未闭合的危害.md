@@ -29,7 +29,7 @@
 
 正常情况下：div#C 的 height:100%是相对于它的直接父节点，即 div#B。
 
-![image](../../Front-End-Development-Notes/tag-01.png)
+![image](../../imgs/tag-01.png)
 
 异常情况，height:100%相对于第一个具有确定高度的祖先元素
 
@@ -57,7 +57,7 @@
 </html>
 ```
 
-![image](../../Front-End-Development-Notes/tag-02.png)
+![image](../../imgs/tag-02.png)
 
 ## <head>
 
@@ -83,7 +83,7 @@
 </head>
 ```
 
-![image](../../Front-End-Development-Notes/tag-03.png)
+![image](../../imgs/tag-03.png)
 
 ### `<script>`标签闭合异常
 
@@ -114,7 +114,7 @@
 </head>
 ```
 
-![image](../../Front-End-Development-Notes/tag-04.png)
+![image](../../imgs/tag-04.png)
 
 ### `<style>`标签闭合异常
 
@@ -143,7 +143,7 @@
 </head>
 ```
 
-![image](../../Front-End-Development-Notes/tag-05.png)
+![image](../../imgs/tag-05.png)
 
 ### `<style>`里面的 class 花括号缺失的情况
 
@@ -164,7 +164,7 @@
 </head>
 ```
 
-![image](../../Front-End-Development-Notes/tag-06.png)
+![image](../../imgs/tag-06.png)
 
 ### `<body>`
 
@@ -187,7 +187,7 @@
 ```
 
 这里，div#A 和 div#B 的闭合标签缺失，页面正常渲染，因为浏览器会自动修正，危害几乎没有
-![image](../../Front-End-Development-Notes/tag-07.png)
+![image](../../imgs/tag-07.png)
 
 #### `<body>`中插入`<style>`标签但是闭合异常
 
@@ -279,7 +279,7 @@ let doc = parser.parseFromString(str, "text/xml");
 console.log(doc);
 ```
 
-![image](../../Front-End-Development-Notes/tag-08.png)
+![image](../../imgs/tag-08.png)
 
 好处就是浏览器原生 API，兼容性较好
 

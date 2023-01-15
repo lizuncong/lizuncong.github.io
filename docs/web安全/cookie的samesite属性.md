@@ -43,7 +43,7 @@
 
 - Lax。Lax 规则稍稍放宽，大多数情况也是不发送第三方 Cookie，但是导航到目标网址的 Get 请求除外。导航到目标网址的 GET 请求，只包括三种情况：链接，预加载请求，GET 表单。详见下表。
 
-![image](../../Front-End-Development-Notes/same-site01.jpg)
+![image](../../imgs/same-site01.jpg)
 
 - None 允许跨站携带 cookie。如果将 samesite 设置为 None，前提是必须同时设置 Secure 属性（Cookie 只能通过 HTTPS 协议发送），否则无效。
 

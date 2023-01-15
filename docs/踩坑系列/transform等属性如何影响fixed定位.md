@@ -1,7 +1,7 @@
 在此前很长一段时间内，我都以为 `position:fixed` 定位都是相对于浏览器窗口的。直到有一天，我发现我错了。。。。。。。
 
 这是一个正常的 fixed 定位：
-![image](../../Front-End-Development-Notes/fixed-01.jpg)
+![image](../../imgs/fixed-01.jpg)
 
 一个正常的 fixed 定位代码如下：
 
@@ -69,7 +69,7 @@
 ```
 
 刷新浏览器，会发现效果如下图：
-![image](../../Front-End-Development-Notes/fixed-02.jpg)
+![image](../../imgs/fixed-02.jpg)
 
 ##### 原因
 

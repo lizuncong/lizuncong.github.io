@@ -68,4 +68,4 @@ CDN 从技术上全面解决了由于网络带宽小，用户访问量打，网�
 这里需要注意的是，启用 CDN 加速服务需要将源站域名指向加速域名，再由加速域名提供 IP 地址，需要在 DNS 服务商处为域名添加 CNAME 记录，
 从而达到内容分发加速的效果
 
-![image](../../Front-End-Development-Notes/alicdn.jpg)
+![image](../../imgs/alicdn.jpg)
