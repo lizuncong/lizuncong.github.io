@@ -599,7 +599,7 @@ module.exports = function (webpackEnv) {
           {
             from: path.join(
               __dirname,
-              "../Front-End-Development-Notes"
+              "../imgs"
             ),
             to: "../build/imgs",
           }
