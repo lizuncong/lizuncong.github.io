@@ -47,6 +47,7 @@ export default Index;
 const generateRoute = () => {
   let temp = `import React from "react";
 import { createHashRouter } from "react-router-dom";
+import Home from "../pages/home";
 import App from "../App";`;
   MENUS.forEach((menu, idx) => {
     menu.children.forEach((page, index) => {
@@ -84,6 +85,14 @@ const router = createHashRouter([
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "/",
+        element: (
+          <React.Suspense fallback={<div>loading...</div>}>
+            <Home />
+          </React.Suspense>
+        )
+      },
       ${routes}
     ],
   },
