@@ -47,6 +47,7 @@ export default Index;
 const generateRoute = () => {
   let temp = `import React from "react";
 import { createHashRouter } from "react-router-dom";
+import { Spin } from 'antd';
 import Home from "../localPages/home";
 import App from "../App";`;
   MENUS.forEach((menu, idx) => {
@@ -69,7 +70,7 @@ import App from "../App";`;
         `{
         path: "${filename}",
         element: (
-          <React.Suspense fallback={<div>loading...</div>}>
+          <React.Suspense fallback={<div className="loading"><Spin size="large" /></div>}>
             <A${idx}${index} />
           </React.Suspense>
         ),
@@ -88,7 +89,7 @@ const router = createHashRouter([
       {
         path: "/",
         element: (
-          <React.Suspense fallback={<div>loading...</div>}>
+          <React.Suspense fallback={<div className="loading"><Spin size="large" /></div>}>
             <Home />
           </React.Suspense>
         )

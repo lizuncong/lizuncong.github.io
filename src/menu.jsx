@@ -2,23 +2,6 @@ import { NavLink } from "react-router-dom";
 
 const MENU = [
      {
-      label: "SEO优化",
-      key: "SEO优化",
-      children: [
-        
-         {
-         label: <NavLink to="/SEO优化/SEO优化指南">SEO优化指南</NavLink>,
-         key: "/SEO优化/SEO优化指南.md",
-       },
-      
-         {
-         label: <NavLink to="/SEO优化/SEO优化清单">SEO优化清单</NavLink>,
-         key: "/SEO优化/SEO优化清单.md",
-       },
-      
-     ],
-    },
-     {
       label: "cicd",
       key: "cicd",
       children: [
@@ -90,6 +73,23 @@ const MENU = [
          {
          label: <NavLink to="/git/基于已有项目仓库初始化另一个新项目并保持git记录">基于已有项目仓库初始化另一个新项目并保持git记录</NavLink>,
          key: "/git/基于已有项目仓库初始化另一个新项目并保持git记录.md",
+       },
+      
+     ],
+    },
+     {
+      label: "SEO优化",
+      key: "SEO优化",
+      children: [
+        
+         {
+         label: <NavLink to="/SEO优化/SEO优化指南">SEO优化指南</NavLink>,
+         key: "/SEO优化/SEO优化指南.md",
+       },
+      
+         {
+         label: <NavLink to="/SEO优化/SEO优化清单">SEO优化清单</NavLink>,
+         key: "/SEO优化/SEO优化清单.md",
        },
       
      ],
@@ -189,23 +189,6 @@ const MENU = [
      ],
     },
      {
-      label: "node",
-      key: "node",
-      children: [
-        
-         {
-         label: <NavLink to="/node/node基础知识">node基础知识</NavLink>,
-         key: "/node/node基础知识.md",
-       },
-      
-         {
-         label: <NavLink to="/node/node多进程的实现">node多进程的实现</NavLink>,
-         key: "/node/node多进程的实现.md",
-       },
-      
-     ],
-    },
-     {
       label: "less",
       key: "less",
       children: [
@@ -238,6 +221,35 @@ const MENU = [
          {
          label: <NavLink to="/less/自定义函数">自定义函数</NavLink>,
          key: "/less/自定义函数.md",
+       },
+      
+     ],
+    },
+     {
+      label: "node",
+      key: "node",
+      children: [
+        
+         {
+         label: <NavLink to="/node/node基础知识">node基础知识</NavLink>,
+         key: "/node/node基础知识.md",
+       },
+      
+         {
+         label: <NavLink to="/node/node多进程的实现">node多进程的实现</NavLink>,
+         key: "/node/node多进程的实现.md",
+       },
+      
+     ],
+    },
+     {
+      label: "redux",
+      key: "redux",
+      children: [
+        
+         {
+         label: <NavLink to="/redux/redux及react-redux">redux及react-redux</NavLink>,
+         key: "/redux/redux及react-redux.md",
        },
       
      ],
@@ -317,60 +329,6 @@ const MENU = [
      ],
     },
      {
-      label: "redux",
-      key: "redux",
-      children: [
-        
-         {
-         label: <NavLink to="/redux/redux及react-redux">redux及react-redux</NavLink>,
-         key: "/redux/redux及react-redux.md",
-       },
-      
-     ],
-    },
-     {
-      label: "web优化",
-      key: "web优化",
-      children: [
-        
-         {
-         label: <NavLink to="/web优化/GPU加速">GPU加速</NavLink>,
-         key: "/web优化/GPU加速.md",
-       },
-      
-         {
-         label: <NavLink to="/web优化/web优化总结">web优化总结</NavLink>,
-         key: "/web优化/web优化总结.md",
-       },
-      
-         {
-         label: <NavLink to="/web优化/web性能指标及前端监控体系">web性能指标及前端监控体系</NavLink>,
-         key: "/web优化/web性能指标及前端监控体系.md",
-       },
-      
-         {
-         label: <NavLink to="/web优化/什么是CDN">什么是CDN</NavLink>,
-         key: "/web优化/什么是CDN.md",
-       },
-      
-         {
-         label: <NavLink to="/web优化/使用webp优化图片资源">使用webp优化图片资源</NavLink>,
-         key: "/web优化/使用webp优化图片资源.md",
-       },
-      
-         {
-         label: <NavLink to="/web优化/图片srcset优化">图片srcset优化</NavLink>,
-         key: "/web优化/图片srcset优化.md",
-       },
-      
-         {
-         label: <NavLink to="/web优化/高性能浏览器网络">高性能浏览器网络</NavLink>,
-         key: "/web优化/高性能浏览器网络.md",
-       },
-      
-     ],
-    },
-     {
       label: "webpack",
       key: "webpack",
       children: [
@@ -418,80 +376,43 @@ const MENU = [
      ],
     },
      {
-      label: "web安全",
-      key: "web安全",
+      label: "web优化",
+      key: "web优化",
       children: [
         
          {
-         label: <NavLink to="/web安全/SQL注入">SQL注入</NavLink>,
-         key: "/web安全/SQL注入.md",
+         label: <NavLink to="/web优化/GPU加速">GPU加速</NavLink>,
+         key: "/web优化/GPU加速.md",
        },
       
          {
-         label: <NavLink to="/web安全/XSS攻击与防御">XSS攻击与防御</NavLink>,
-         key: "/web安全/XSS攻击与防御.md",
+         label: <NavLink to="/web优化/web优化总结">web优化总结</NavLink>,
+         key: "/web优化/web优化总结.md",
        },
       
          {
-         label: <NavLink to="/web安全/cookie">cookie</NavLink>,
-         key: "/web安全/cookie.md",
+         label: <NavLink to="/web优化/web性能指标及前端监控体系">web性能指标及前端监控体系</NavLink>,
+         key: "/web优化/web性能指标及前端监控体系.md",
        },
       
          {
-         label: <NavLink to="/web安全/cookie的samesite属性">cookie的samesite属性</NavLink>,
-         key: "/web安全/cookie的samesite属性.md",
+         label: <NavLink to="/web优化/什么是CDN">什么是CDN</NavLink>,
+         key: "/web优化/什么是CDN.md",
        },
       
          {
-         label: <NavLink to="/web安全/csrf笔记">csrf笔记</NavLink>,
-         key: "/web安全/csrf笔记.md",
+         label: <NavLink to="/web优化/使用webp优化图片资源">使用webp优化图片资源</NavLink>,
+         key: "/web优化/使用webp优化图片资源.md",
        },
       
          {
-         label: <NavLink to="/web安全/web常见安全问题及防御">web常见安全问题及防御</NavLink>,
-         key: "/web安全/web常见安全问题及防御.md",
+         label: <NavLink to="/web优化/图片srcset优化">图片srcset优化</NavLink>,
+         key: "/web优化/图片srcset优化.md",
        },
       
          {
-         label: <NavLink to="/web安全/传输安全">传输安全</NavLink>,
-         key: "/web安全/传输安全.md",
-       },
-      
-         {
-         label: <NavLink to="/web安全/密码安全">密码安全</NavLink>,
-         key: "/web安全/密码安全.md",
-       },
-      
-         {
-         label: <NavLink to="/web安全/点击劫持">点击劫持</NavLink>,
-         key: "/web安全/点击劫持.md",
-       },
-      
-         {
-         label: <NavLink to="/web安全/跨域">跨域</NavLink>,
-         key: "/web安全/跨域.md",
-       },
-      
-     ],
-    },
-     {
-      label: "前端路由",
-      key: "前端路由",
-      children: [
-        
-         {
-         label: <NavLink to="/前端路由/hash">hash</NavLink>,
-         key: "/前端路由/hash.md",
-       },
-      
-         {
-         label: <NavLink to="/前端路由/history">history</NavLink>,
-         key: "/前端路由/history.md",
-       },
-      
-         {
-         label: <NavLink to="/前端路由/前端路由原理">前端路由原理</NavLink>,
-         key: "/前端路由/前端路由原理.md",
+         label: <NavLink to="/web优化/高性能浏览器网络">高性能浏览器网络</NavLink>,
+         key: "/web优化/高性能浏览器网络.md",
        },
       
      ],
@@ -554,13 +475,23 @@ const MENU = [
      ],
     },
      {
-      label: "动画",
-      key: "动画",
+      label: "前端路由",
+      key: "前端路由",
       children: [
         
          {
-         label: <NavLink to="/动画/轮播图卷轴动画">轮播图卷轴动画</NavLink>,
-         key: "/动画/轮播图卷轴动画.md",
+         label: <NavLink to="/前端路由/hash">hash</NavLink>,
+         key: "/前端路由/hash.md",
+       },
+      
+         {
+         label: <NavLink to="/前端路由/history">history</NavLink>,
+         key: "/前端路由/history.md",
+       },
+      
+         {
+         label: <NavLink to="/前端路由/前端路由原理">前端路由原理</NavLink>,
+         key: "/前端路由/前端路由原理.md",
        },
       
      ],
@@ -573,6 +504,75 @@ const MENU = [
          {
          label: <NavLink to="/加密算法/RSA算法流程概述">RSA算法流程概述</NavLink>,
          key: "/加密算法/RSA算法流程概述.md",
+       },
+      
+     ],
+    },
+     {
+      label: "web安全",
+      key: "web安全",
+      children: [
+        
+         {
+         label: <NavLink to="/web安全/SQL注入">SQL注入</NavLink>,
+         key: "/web安全/SQL注入.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/XSS攻击与防御">XSS攻击与防御</NavLink>,
+         key: "/web安全/XSS攻击与防御.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/cookie">cookie</NavLink>,
+         key: "/web安全/cookie.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/cookie的samesite属性">cookie的samesite属性</NavLink>,
+         key: "/web安全/cookie的samesite属性.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/csrf笔记">csrf笔记</NavLink>,
+         key: "/web安全/csrf笔记.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/web常见安全问题及防御">web常见安全问题及防御</NavLink>,
+         key: "/web安全/web常见安全问题及防御.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/传输安全">传输安全</NavLink>,
+         key: "/web安全/传输安全.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/密码安全">密码安全</NavLink>,
+         key: "/web安全/密码安全.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/点击劫持">点击劫持</NavLink>,
+         key: "/web安全/点击劫持.md",
+       },
+      
+         {
+         label: <NavLink to="/web安全/跨域">跨域</NavLink>,
+         key: "/web安全/跨域.md",
+       },
+      
+     ],
+    },
+     {
+      label: "动画",
+      key: "动画",
+      children: [
+        
+         {
+         label: <NavLink to="/动画/轮播图卷轴动画">轮播图卷轴动画</NavLink>,
+         key: "/动画/轮播图卷轴动画.md",
        },
       
      ],
@@ -670,28 +670,6 @@ const MENU = [
      ],
     },
      {
-      label: "杂记",
-      key: "杂记",
-      children: [
-        
-         {
-         label: <NavLink to="/杂记/npm杂记">npm杂记</NavLink>,
-         key: "/杂记/npm杂记.md",
-       },
-      
-         {
-         label: <NavLink to="/杂记/web事件循环机制">web事件循环机制</NavLink>,
-         key: "/杂记/web事件循环机制.md",
-       },
-      
-         {
-         label: <NavLink to="/杂记/前端题目">前端题目</NavLink>,
-         key: "/杂记/前端题目.md",
-       },
-      
-     ],
-    },
-     {
       label: "学习计划",
       key: "学习计划",
       children: [
@@ -719,6 +697,79 @@ const MENU = [
          {
          label: <NavLink to="/学习计划/5年回顾">5年回顾</NavLink>,
          key: "/学习计划/5年回顾.md",
+       },
+      
+     ],
+    },
+     {
+      label: "杂记",
+      key: "杂记",
+      children: [
+        
+         {
+         label: <NavLink to="/杂记/npm杂记">npm杂记</NavLink>,
+         key: "/杂记/npm杂记.md",
+       },
+      
+         {
+         label: <NavLink to="/杂记/web事件循环机制">web事件循环机制</NavLink>,
+         key: "/杂记/web事件循环机制.md",
+       },
+      
+         {
+         label: <NavLink to="/杂记/前端题目">前端题目</NavLink>,
+         key: "/杂记/前端题目.md",
+       },
+      
+     ],
+    },
+     {
+      label: "浏览器兼容",
+      key: "浏览器兼容",
+      children: [
+        
+         {
+         label: <NavLink to="/浏览器兼容/css">css</NavLink>,
+         key: "/浏览器兼容/css.md",
+       },
+      
+         {
+         label: <NavLink to="/浏览器兼容/getStyleProperty">getStyleProperty</NavLink>,
+         key: "/浏览器兼容/getStyleProperty.md",
+       },
+      
+     ],
+    },
+     {
+      label: "模块系统",
+      key: "模块系统",
+      children: [
+        
+         {
+         label: <NavLink to="/模块系统/JS模块循环加载原理(待整理)">JS模块循环加载原理(待整理)</NavLink>,
+         key: "/模块系统/JS模块循环加载原理(待整理).md",
+       },
+      
+         {
+         label: <NavLink to="/模块系统/JS模块系统">JS模块系统</NavLink>,
+         key: "/模块系统/JS模块系统.md",
+       },
+      
+         {
+         label: <NavLink to="/模块系统/Node模块机制">Node模块机制</NavLink>,
+         key: "/模块系统/Node模块机制.md",
+       },
+      
+     ],
+    },
+     {
+      label: "浏览器渲染",
+      key: "浏览器渲染",
+      children: [
+        
+         {
+         label: <NavLink to="/浏览器渲染/CRP关键渲染路径-从输入URL到页面呈现都发生了什么">CRP关键渲染路径-从输入URL到页面呈现都发生了什么</NavLink>,
+         key: "/浏览器渲染/CRP关键渲染路径-从输入URL到页面呈现都发生了什么.md",
        },
       
      ],
@@ -831,57 +882,6 @@ const MENU = [
          {
          label: <NavLink to="/最佳实践/页面复用还是组件复用">页面复用还是组件复用</NavLink>,
          key: "/最佳实践/页面复用还是组件复用.md",
-       },
-      
-     ],
-    },
-     {
-      label: "模块系统",
-      key: "模块系统",
-      children: [
-        
-         {
-         label: <NavLink to="/模块系统/JS模块循环加载原理(待整理)">JS模块循环加载原理(待整理)</NavLink>,
-         key: "/模块系统/JS模块循环加载原理(待整理).md",
-       },
-      
-         {
-         label: <NavLink to="/模块系统/JS模块系统">JS模块系统</NavLink>,
-         key: "/模块系统/JS模块系统.md",
-       },
-      
-         {
-         label: <NavLink to="/模块系统/Node模块机制">Node模块机制</NavLink>,
-         key: "/模块系统/Node模块机制.md",
-       },
-      
-     ],
-    },
-     {
-      label: "浏览器兼容",
-      key: "浏览器兼容",
-      children: [
-        
-         {
-         label: <NavLink to="/浏览器兼容/css">css</NavLink>,
-         key: "/浏览器兼容/css.md",
-       },
-      
-         {
-         label: <NavLink to="/浏览器兼容/getStyleProperty">getStyleProperty</NavLink>,
-         key: "/浏览器兼容/getStyleProperty.md",
-       },
-      
-     ],
-    },
-     {
-      label: "浏览器渲染",
-      key: "浏览器渲染",
-      children: [
-        
-         {
-         label: <NavLink to="/浏览器渲染/CRP关键渲染路径-从输入URL到页面呈现都发生了什么">CRP关键渲染路径-从输入URL到页面呈现都发生了什么</NavLink>,
-         key: "/浏览器渲染/CRP关键渲染路径-从输入URL到页面呈现都发生了什么.md",
        },
       
      ],
