@@ -5,7 +5,8 @@
   "repository": "https://github.com/lizuncong/Front-End-Development-Notes.git",
   "author": "lizuncong <2900170896@qq.com>",
   "license": "MIT",
-    "dependencies": {
+  "dependencies": {
+    "@ant-design/icons": "^5.0.0",
     "@babel/core": "^7.16.0",
     "@excalidraw/excalidraw": "^0.13.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",

@@ -47,7 +47,7 @@ export default Index;
 const generateRoute = () => {
   let temp = `import React from "react";
 import { createHashRouter } from "react-router-dom";
-import Home from "../pages/home";
+import Home from "../localPages/home";
 import App from "../App";`;
   MENUS.forEach((menu, idx) => {
     menu.children.forEach((page, index) => {

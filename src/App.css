@@ -10,17 +10,54 @@ body,
   height: 100%;
   background-color: white;
 }
+
 .App .left {
   width: 250px;
+}
+.home {
+  padding: 40px;
 }
 .App .right {
   flex: 1;
   overflow: auto;
 }
-
+.menu {
+  display: none;
+}
 .App .canvas {
   flex: 1;
   box-sizing: border-box;
   border: 1px solid black;
 }
 
+@media screen and (max-width: 760px) {
+  .App {
+    position: relative;
+  }
+  .home {
+    padding: 20px;
+  }
+  .menu {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: white;
+    font-size: 30px;
+  }
+  .App .left {
+    position: absolute;
+    transition: all 0.3s;
+    transform: translateX(-100%);
+  }
+  .left.open {
+    transform: translateX(0);
+    overflow: auto;
+    top: 0;
+    height: 100%;
+    box-shadow: 0px 6px 18px rgb(0 0 0 / 20%);
+  }
+  .markdown-body {
+    padding: 20px !important;
+  }
+}
