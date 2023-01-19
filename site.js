@@ -15,9 +15,9 @@ const MENUS = [];
 
 const generateJSX = (dir, filename) => {
   return new Promise((resove, reject) => {
-    fs.mkdir(`./src/pages/${dir}`, { recursive: true }, (err) => {
+    fs.mkdir(`./src/dynamicPages/${dir}`, { recursive: true }, (err) => {
       fs.writeFile(
-        `./src/pages/${dir}/${filename}.jsx`,
+        `./src/dynamicPages/${dir}/${filename}.jsx`,
         `import React from "react";
 import MarkDown from "@/components/markdown";
 import shape from "@docs/${dir}/${filename}.md";
@@ -112,6 +112,7 @@ export default router;`;
 
 const getMenus = async (dir) => {
   const res = await readDir(dir);
+  console.log('res...', res)
   await Promise.all(
     res.map(async (temp) => {
       const children = [];
