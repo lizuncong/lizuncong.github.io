@@ -3,3 +3,5 @@ node_modules
 src/dynamic/*
 src/dynamic
 build
+
+**/*/.DS_Store

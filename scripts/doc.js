@@ -6,6 +6,7 @@ const dynamicPages = path.join(process.cwd(), "./src/dynamic/pages");
 const dynamicMenus = path.join(process.cwd(), "./src/dynamic/menus.jsx");
 const dynamicRoutes = path.join(process.cwd(), "./src/dynamic/routes.jsx");
 const dynamicPagesImp = "@/dynamic/pages/";
+const whiteList = [];
 // 判断是否是文件夹
 const isDirectory = async (dir) => {
   return new Promise((resolve, reject) => {
@@ -79,7 +80,7 @@ const generatePagesJSX = async (files) => {
         const filename = path.relative(root, fileObj.key);
 
         await new Promise((resolve, reject) => {
-          if (filename.includes("DS_Store")) {
+          if (whiteList.includes(filename)) {
             resolve();
             return;
           }
@@ -126,7 +127,7 @@ const generateMenus = async (files) => {
   },`;
       } else {
         const p = path.relative(root, file.key);
-        if (filename.includes("DS_Store")) {
+        if (whiteList.includes(filename)) {
           return;
         }
         template =
@@ -161,7 +162,7 @@ const generateRoutes = async (files) => {
       if (child.children) {
         template = template + generate(`${idx}${index}`, child.children);
       } else {
-        if (child.key.includes("DS_Store")) {
+        if (whiteList.includes(child.key)) {
           return;
         }
         template =
@@ -184,7 +185,7 @@ const generateRoutes = async (files) => {
       if (child.children) {
         str = str + generateImports(`${idx}${index}`, child.children);
       } else {
-        if (child.key.includes("DS_Store")) {
+        if (whiteList.includes(child.key)) {
           return;
         }
         str =
@@ -218,6 +219,7 @@ const generateRoutes = async (files) => {
   });
 };
 const work = async () => {
+  await makeDir(dynamicPages);
   const files = await getAllFiles(root);
   await generatePagesJSX(files);
   await generateMenus(files);
@@ -225,4 +227,4 @@ const work = async () => {
   console.log("文档生成完毕！");
 };
 
-module.exports = work
+module.exports = work;
