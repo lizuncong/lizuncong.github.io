@@ -1,10 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 const docDir = "docs";
-const root = path.join(__dirname, `./${docDir}/`);
-const dynamicPages = path.join(__dirname, "./src/dynamic/pages");
-const dynamicMenus = path.join(__dirname, "./src/dynamic/menus.jsx");
-const dynamicRoutes = path.join(__dirname, "./src/dynamic/routes.jsx");
+const root = path.join(process.cwd(), `./${docDir}/`);
+const dynamicPages = path.join(process.cwd(), "./src/dynamic/pages");
+const dynamicMenus = path.join(process.cwd(), "./src/dynamic/menus.jsx");
+const dynamicRoutes = path.join(process.cwd(), "./src/dynamic/routes.jsx");
 const dynamicPagesImp = "@/dynamic/pages/";
 // 判断是否是文件夹
 const isDirectory = async (dir) => {
@@ -225,4 +225,4 @@ const work = async () => {
   console.log("文档生成完毕！");
 };
 
-work();
+module.exports = work
