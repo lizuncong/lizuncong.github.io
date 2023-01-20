@@ -159,7 +159,7 @@ const generateRoutes = async (files) => {
     let template = "";
     children.forEach((child, index) => {
       if (child.children) {
-        template = template + generate(index + 1, child.children);
+        template = template + generate(`${idx}${index}`, child.children);
       } else {
         if (child.key.includes("DS_Store")) {
           return;
@@ -182,7 +182,7 @@ const generateRoutes = async (files) => {
     let str = "";
     children.forEach((child, index) => {
       if (child.children) {
-        str = str + generateImports(index + 1, child.children);
+        str = str + generateImports(`${idx}${index}`, child.children);
       } else {
         if (child.key.includes("DS_Store")) {
           return;
