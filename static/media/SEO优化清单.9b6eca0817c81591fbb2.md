@@ -1,1 +1,0 @@
-https://ahrefs.com/blog/seo-checklist/
