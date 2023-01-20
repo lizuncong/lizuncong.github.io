@@ -27,7 +27,7 @@ const readDir = (dir) => {
         return reject(err);
       }
       const res = await Promise.all(
-        files.map(async (file) => {
+        files.filter(item => item[0] !== '.').map(async (file) => {
           const isDir = await isDirectory(dir + file);
           if (isDir) {
             const children = await readDir(dir + file + "/");
