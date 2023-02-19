@@ -11,7 +11,7 @@ electron 代码在这里：[electron-app](https://github.com/lizuncong/electron-
 
 ## 内存分析方法
 
-- chrome dev tools memory
+- chrome dev tools memory.
 - process.memoryUsage
 - webFrame.getResourceUsage。electron 提供的一个 API，可以获取渲染进程缓存所使用的内存开销。同时 electron 还可以使用`webFrame.clearCache`清除缓存
 
