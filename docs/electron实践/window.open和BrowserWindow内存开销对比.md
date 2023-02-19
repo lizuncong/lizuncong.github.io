@@ -5,6 +5,10 @@
 - 操作系统：macOS Mojave
 - Electron 版本：8.5.1
 
+本次实验所使用的前端代码在这里：[web-cross-platform-application](https://github.com/lizuncong/web-cross-platform-application)
+
+electron 代码在这里：[electron-app](https://github.com/lizuncong/electron-app)
+
 ## 内存分析方法
 
 - chrome dev tools memory
