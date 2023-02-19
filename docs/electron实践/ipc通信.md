@@ -6,6 +6,14 @@ electron 主进程和渲染进程通过 ipc 进行通信，而 ipc 通信又分�
 - 双向通信：渲染进程通过`ipcRender.invoke`给主进程发消息，同时主进程通过`ipcMain.handle`监听渲染进程的消息并返回结果给渲染进程
 - 单向通信：主进程通过`win.webContents.send`给渲染进程发消息，渲染进程通过`ipcRenderer.on`监听主进程的消息
 
+主进程和渲染进程能够访问的 API 的异同，如下图所示：
+
+![images](../../imgs/ipc-01.jpg)
+
+主进程和渲染进程基于 ipc 通信的图示：
+
+![images](../../imgs/ipc-02.jpg)
+
 ## 渲染进程
 
 通过 preload.js 往渲染进程注入通信脚本。新建 preload.js，内容如下：
