@@ -1,5 +1,3 @@
-
-
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
@@ -107,7 +105,7 @@ module.exports = function (webpackEnv) {
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, preProcessorOpt) => {
     const loaders = [
       isEnvDevelopment && require.resolve("style-loader"),
       isEnvProduction && {
@@ -181,6 +179,7 @@ module.exports = function (webpackEnv) {
           loader: require.resolve(preProcessor),
           options: {
             sourceMap: true,
+            ...preProcessorOpt,
           },
         }
       );
@@ -323,7 +322,7 @@ module.exports = function (webpackEnv) {
         }),
         ...(modules.webpackAliases || {}),
         "@": path.resolve(__dirname, "../src"),
-        "@docs": path.resolve(__dirname, "../docs")
+        "@docs": path.resolve(__dirname, "../docs"),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -522,7 +521,15 @@ module.exports = function (webpackEnv) {
                     mode: "icss",
                   },
                 },
-                "less-loader"
+                "less-loader",
+                {
+                  lessOptions: {
+                    modifyVars: {
+                      // 'primary-color': '#08CCAB',
+                    },
+                    javascriptEnabled: true,
+                  },
+                }
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -597,12 +604,9 @@ module.exports = function (webpackEnv) {
       new CopyPlugin({
         patterns: [
           {
-            from: path.join(
-              __dirname,
-              "../imgs"
-            ),
+            from: path.join(__dirname, "../imgs"),
             to: "../build/imgs",
-          }
+          },
         ],
       }),
       // Inlines the webpack runtime script. This script is too small to warrant
