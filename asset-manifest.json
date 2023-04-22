@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.e740dd57.css",
-    "main.js": "/static/js/main.ad5ce7f3.js",
+    "main.js": "/static/js/main.bb87d395.js",
     "A0000.css": "/static/css/A0000.003daf60.chunk.css",
     "A0000.js": "/static/js/A0000.e0782432.chunk.js",
     "A0001.css": "/static/css/A0001.003daf60.chunk.css",
@@ -163,7 +163,7 @@
     "A05511.css": "/static/css/A05511.003daf60.chunk.css",
     "A05511.js": "/static/js/A05511.c744024d.chunk.js",
     "A0560.css": "/static/css/A0560.003daf60.chunk.css",
-    "A0560.js": "/static/js/A0560.e83a91dc.chunk.js",
+    "A0560.js": "/static/js/A0560.1681a7b8.chunk.js",
     "A0561.css": "/static/css/A0561.003daf60.chunk.css",
     "A0561.js": "/static/js/A0561.d1606b81.chunk.js",
     "A0570.css": "/static/css/A0570.003daf60.chunk.css",
@@ -775,6 +775,7 @@
     "index.html": "/index.html",
     "static/media/Object.create实现.md": "/static/media/Object.create实现.945cbf0d74fe3c23ac7b.md",
     "static/media/transaction事务.md": "/static/media/transaction事务.4cd5852f86d6afe9a606.md",
+    "static/media/匹配规则.md": "/static/media/匹配规则.44183656132fcda2f293.md",
     "static/media/serviceWorker.md": "/static/media/serviceWorker.cbaee93f73b25416de7e.md",
     "static/media/js实现复制粘贴保留原格式.md": "/static/media/js实现复制粘贴保留原格式.4e026a064abcccc28cb0.md",
     "static/media/移动端首屏优化.md": "/static/media/移动端首屏优化.da1ef8e7fd2e9454bf9d.md",
@@ -814,11 +815,10 @@
     "static/media/plugin开发指南.md": "/static/media/plugin开发指南.31d6cfe0d16ae931b73c.md",
     "static/media/sourcemap原理.md": "/static/media/sourcemap原理.31d6cfe0d16ae931b73c.md",
     "static/media/webAssembly.md": "/static/media/webAssembly.31d6cfe0d16ae931b73c.md",
-    "static/media/匹配规则.md": "/static/media/匹配规则.31d6cfe0d16ae931b73c.md",
     "static/media/如何提高webpack构建速度.md": "/static/media/如何提高webpack构建速度.31d6cfe0d16ae931b73c.md",
     "static/media/生产环境如何运用sourcemap定义js错误.md": "/static/media/生产环境如何运用sourcemap定义js错误.31d6cfe0d16ae931b73c.md",
     "main.e740dd57.css.map": "/static/css/main.e740dd57.css.map",
-    "main.ad5ce7f3.js.map": "/static/js/main.ad5ce7f3.js.map",
+    "main.bb87d395.js.map": "/static/js/main.bb87d395.js.map",
     "A0000.003daf60.chunk.css.map": "/static/css/A0000.003daf60.chunk.css.map",
     "A0000.e0782432.chunk.js.map": "/static/js/A0000.e0782432.chunk.js.map",
     "A0001.003daf60.chunk.css.map": "/static/css/A0001.003daf60.chunk.css.map",
@@ -980,7 +980,7 @@
     "A05511.003daf60.chunk.css.map": "/static/css/A05511.003daf60.chunk.css.map",
     "A05511.c744024d.chunk.js.map": "/static/js/A05511.c744024d.chunk.js.map",
     "A0560.003daf60.chunk.css.map": "/static/css/A0560.003daf60.chunk.css.map",
-    "A0560.e83a91dc.chunk.js.map": "/static/js/A0560.e83a91dc.chunk.js.map",
+    "A0560.1681a7b8.chunk.js.map": "/static/js/A0560.1681a7b8.chunk.js.map",
     "A0561.003daf60.chunk.css.map": "/static/css/A0561.003daf60.chunk.css.map",
     "A0561.d1606b81.chunk.js.map": "/static/js/A0561.d1606b81.chunk.js.map",
     "A0570.003daf60.chunk.css.map": "/static/css/A0570.003daf60.chunk.css.map",
@@ -1256,6 +1256,6 @@
   },
   "entrypoints": [
     "static/css/main.e740dd57.css",
-    "static/js/main.ad5ce7f3.js"
+    "static/js/main.bb87d395.js"
   ]
 }
