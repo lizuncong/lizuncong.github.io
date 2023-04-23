@@ -6,24 +6,31 @@
 
 但是对于服务器而言，不带斜杠表示文件，带斜杠表示目录。服务器对这两者的处理不同。如果我们不带斜杠，服务器首先会查找是否有 demo 这个文件，如果有，则将 demo 文件返回给浏览器。如果没有，则会继续查找是否有 demo 这个目录，如果有，则将 demo 目录下的 index.html 文件返回给浏览器。可以看出，对服务器而言，带斜杠的性能会好点
 
-**我们今天重点要讲的一个区别是，对于前端静态资源来说。如果用户带或者不带斜杠访问我们的网站差别很大。**
+**我们今天重点要讲的一个区别是，对于前端动态 import 来说。如果用户带或者不带斜杠访问我们的网站差别很大。**
 
 用户可以通过 http://www.myhost.com/demo 或者 http://www.myhost.com/demo/ 访问我们的网站，这两种方式都是返回下面的 html 文件：
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
-  <head> </head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>相对路径</title>
+  </head>
   <body>
     <div id="root">带或者不带斜杠对相对路径的影响</div>
-    <script src="/static/chunk.js"></script>
+    <script>
+      import("./dynamic-chunk.js").then((res) => {
+        console.log("res...", res);
+      });
+    </script>
   </body>
 </html>
 ```
 
-如果用户不带斜杠访问 http://www.myhost.com/demo，那么静态资源`/static/chunk.js`，由于采用的是相对路径，浏览器会实际请求的是 `http://www.myhost.com/static/chunk.js`，就会导致资源访问失败
+如果用户不带斜杠访问 http://www.myhost.com/demo，那么动态import实际上请求的是`http://www.myhost.com/dynamic-chunk.js`，就会导致资源访问失败
 
-如果用户带斜杠访问 http://www.myhost.com/demo/，浏览器实际请求的是 `http://www.myhost.com/demo/static/chunk.js`，资源请求成功。
+如果用户带斜杠访问 http://www.myhost.com/demo/，浏览器实际请求的是 `http://www.myhost.com/demo/dynamic-chunk.js`，资源请求成功。
 
 所以造成这一区别的具体原因是什么？
 
