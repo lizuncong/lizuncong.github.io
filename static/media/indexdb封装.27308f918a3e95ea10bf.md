@@ -12,44 +12,38 @@ class DBStorage {
   constructor(dbName, storeName) {
     const request = window.indexedDB.open(dbName);
     request.onupgradeneeded = () => request.result.createObjectStore(storeName);
-    const dbPromise = promisify(request);
-
-    this.execute = async (operationMode, callback) => {
-      const db = await dbPromise;
-      const store = db.transaction(storeName, operationMode).objectStore(storeName);
-      return callback(store);
-    };
+    this.dbPromise = promisify(request);
+    this.storeName = storeName;
   }
-  setItem(key, value) {
-    return this.execute('readwrite', store => {
-      store.put(value, key);
-      return promisify(store.transaction);
-    });
+  async getStore(operationMode, storeName = this.storeName) {
+    const db = await this.dbPromise;
+    return db.transaction(storeName, operationMode).objectStore(storeName);
+  }
+  async setItem(key, value) {
+    const store = await this.getStore('readwrite');
+    return promisify(store.put(value, key));
   }
   // 出于性能考虑，插入多个数据时优先使用这个方法, setManyItems([key: 'img', value: '11'])
-  setManyItems(items) {
-    return this.execute('readwrite', store => {
-      items.forEach(item => store.put(item.value, item.key));
-      return promisify(store.transaction);
-    });
+  async setManyItems(items) {
+    const store = await this.getStore('readwrite');
+    items.forEach(item => store.put(item.value, item.key));
+    return promisify(store.transaction);
   }
-  getItem(key) {
-    return this.execute('readonly', store => promisify(store.get(key)));
+  async getItem(key) {
+    const store = await this.getStore('readonly');
+    return promisify(store.get(key));
   }
-  removeItem(key) {
-    return this.execute('readwrite', store => {
-      return promisify(store.delete(key));
-    });
+  async removeItem(key) {
+    const store = await this.getStore('readwrite');
+    return promisify(store.delete(key));
   }
-  clear() {
-    return this.execute('readwrite', store => {
-      return promisify(store.clear());
-    });
+  async clear() {
+    const store = await this.getStore('readwrite');
+    return promisify(store.clear());
   }
 }
 
 const dbStorage = new DBStorage('mars-teacher', 'kv');
-
 export default dbStorage;
 
 // dbStorage.setItem('elements', [1,2,3,4,5])
