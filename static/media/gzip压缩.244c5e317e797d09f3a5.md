@@ -1,0 +1,1 @@
+具体可以看[谷歌响应压缩策略](https://cloud.google.com/cdn/docs/dynamic-compression?hl=zh-cn#compression-modes)
