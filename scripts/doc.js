@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require('crypto');
 const docDir = "docs";
 const root = path.join(process.cwd(), `./${docDir}/`);
 const dynamicPages = path.join(process.cwd(), "./src/dynamic/pages");
@@ -7,6 +8,9 @@ const dynamicMenus = path.join(process.cwd(), "./src/dynamic/menus.jsx");
 const dynamicRoutes = path.join(process.cwd(), "./src/dynamic/routes.jsx");
 const dynamicPagesImp = "@/dynamic/pages/";
 const whiteList = [];
+const digestMessage = (message) => {
+  return 'A_' + crypto.createHash('md5').update(message).digest('hex');
+}
 // 判断是否是文件夹
 const isDirectory = async (dir) => {
   return new Promise((resolve, reject) => {
@@ -171,7 +175,7 @@ const generateRoutes = async (files) => {
              path: "/${path.relative(root, child.key)}",
              element: (
                 <React.Suspense fallback={<div className="loading"><Spin size="large" /></div>}>
-                <A${idx}${index} />
+                <${child.componentName} />
                 </React.Suspense>
              ),
            },\n`;
@@ -188,9 +192,11 @@ const generateRoutes = async (files) => {
         if (whiteList.includes(child.key)) {
           return;
         }
+        const componentName = digestMessage(child.key)
+        child.componentName = componentName;
         str =
           str +
-          `const A${idx}${index} = React.lazy(() => import(/* webpackChunkName: "A${idx}${index}" */ "${dynamicPagesImp}${path.relative(
+          `const ${componentName} = React.lazy(() => import(/* webpackChunkName: "A${idx}${index}" */ "${dynamicPagesImp}${path.relative(
             root,
             child.key
           )}"));\n`;
