@@ -9,8 +9,31 @@
 <body>
     <div>
         <button id="btn">生成zip文件</button>
+        <br />
+        <input id="uploadInput" type="file" multiple />
     </div>
     <script>
+        const uploadInput = document.getElementById("uploadInput");
+        uploadInput.addEventListener(
+            "change",
+            () => {
+                const file = uploadInput.files[0]
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const uint8arr = new Uint8Array(e.target.result)
+                    console.log(uint8arr)
+                };
+                reader.onerror = function (e) {
+                    console.log('error', e.target.error);
+                };
+                reader.readAsArrayBuffer(file);
+            },
+            false
+        );
+
+
+
+
         function s2ab(s) {
             let buf = new ArrayBuffer(s.length);
             let view = new Uint8Array(buf);
@@ -18,21 +41,39 @@
             return buf;
         }
 
-
-     
-
+        //   [local file header 1]
+        //   [encryption header 1]
+        //   [file data 1]
+        //   [data descriptor 1]
+        //   . 
+        //   .
+        //   .
+        //   [local file header n]
+        //   [encryption header n]
+        //   [file data n]
+        //   [data descriptor n]
+        //   [archive decryption header] 
+        //   [archive extra data record] 
+        //   [central directory header 1]
+        //   .
+        //   .
+        //   .
+        //   [central directory header n]
+        //   [zip64 end of central directory record]
+        //   [zip64 end of central directory locator] 
+        //   [end of central directory record]
         const bytes = [
             /*******************************local file header start****************************************/
             'PK\x03\x04',   // local file header signature     4 bytes  (0x04034b50)
-            '\x0A\x00',     // version needed to extract       2 bytes
-            '\x00\x00',     // general purpose bit flag        2 bytes
-            '\x00\x00',     // compression method              2 bytes
+            '\x0A\x00',     // version needed to extract       2 bytes 代表待处理压缩文件的级别，比如说有文件夹、内容用XX方式压缩、用XX方式加密等等都是不同的值
+            '\x00\x00',     // general purpose bit flag        2 bytes 内容的编码格式、是否加密等描述信息
+            '\x00\x00',     // compression method              2 bytes 压缩方式，默认不压缩
             // 01010(10点) 000000(0分) 00000(0秒) => \x50\x00
             '\x00\x50',     // last mod file time              2 bytes 早上10点
             //  0101010(42) 0111(7) 11001(25) => \x54\xf9
             '\xF9\x54',     // last mod file date              2 bytes 2022年7月25日
             '\xe3\xe5\x95\xb0', // crc-32                      4 bytes
-            '\x0c\x00\x00\x00', // compressed size             4 bytes
+            '\x0c\x00\x00\x00', // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
             '\x0c\x00\x00\x00', // uncompressed size           4 bytes
             // 文件名长度为9
             '\x09\x00',     // file name length                2 bytes
@@ -41,16 +82,37 @@
             'Hello.txt', // file name (variable size)
             // extra field(variable size)由于没有extra field，所以file name后面就是file data
             /*******************************local file header end****************************************/
-        
+
             /********************************file data start************************************************************/
             'Hello World\n', // file data
-            /********************************file data start************************************************************/
-            'PK\x01\x02', '\x14\x00', '\x0A\x00', '\x00\x00', '\x00\x00',
-            '\x00\x50', '\xF9\x54', '\xe3\xe5\x95\xb0', '\x0c\x00\x00\x00',
-            '\x0c\x00\x00\x00', '\x09\x00', '\x00\x00', '\x00\x00',
-            '\x00\x00', '\x00\x00', '\x00\x00\x00\x00', '\x00\x00\x00\x00',
-            'Hello.txt', 'PK\x05\x06', '\x00\x00', '\x00\x00', '\x01\x00',
-            '\x01\x00', '\x37\x00\x00\x00', '\x33\x00\x00\x00', '\x00\x00'
+            /********************************file data end************************************************************/
+            /*********************************Data descriptor start***************************************************/
+            'PK\x01\x02',
+            '\x14\x00',
+            '\x0A\x00',
+            '\x00\x00',
+            '\x00\x00',
+            '\x00\x50',
+            '\xF9\x54',
+            '\xe3\xe5\x95\xb0',
+            '\x0c\x00\x00\x00',
+            '\x0c\x00\x00\x00',
+            '\x09\x00',
+            '\x00\x00',
+            '\x00\x00',
+            '\x00\x00',
+            '\x00\x00',
+            '\x00\x00\x00\x00',
+            '\x00\x00\x00\x00',
+            'Hello.txt',
+            'PK\x05\x06',
+            '\x00\x00',
+            '\x00\x00',
+            '\x01\x00',
+            '\x01\x00',
+            '\x37\x00\x00\x00',
+            '\x33\x00\x00\x00',
+            '\x00\x00'
         ].join('');
         btn.onclick = () => {
             const temp = s2ab(bytes)
