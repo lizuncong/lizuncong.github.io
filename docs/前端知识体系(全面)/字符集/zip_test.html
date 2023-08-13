@@ -49,11 +49,11 @@
         //   .
         //   .
         //   [local file header n]
-        //   [encryption header n]
+        //   [encryption header n] /// 如果文件有加密的话，必须要有这个头
         //   [file data n]
         //   [data descriptor n]
-        //   [archive decryption header] 
-        //   [archive extra data record] 
+        //   [archive decryption header]  // 如果中央目录有加密，则必须要有这个头
+        //   [archive extra data record]  
         //   [central directory header 1]
         //   .
         //   .
@@ -73,8 +73,8 @@
             //  0101010(42) 0111(7) 11001(25) => \x54\xf9
             '\xF9\x54',     // last mod file date              2 bytes 2022年7月25日
             '\xe3\xe5\x95\xb0', // crc-32                      4 bytes
-            '\x0c\x00\x00\x00', // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
-            '\x0c\x00\x00\x00', // uncompressed size           4 bytes
+            '\x0f\x00\x00\x00', // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
+            '\x0f\x00\x00\x00', // uncompressed size           4 bytes
             // 文件名长度为9
             '\x09\x00',     // file name length                2 bytes
             // extra field length为0，说明没有extra field
@@ -84,35 +84,41 @@
             /*******************************local file header end****************************************/
 
             /********************************file data start************************************************************/
-            'Hello World\n', // file data
+            'Hello World\xE6\x88\x91\n', // file data
             /********************************file data end************************************************************/
-            /*********************************Data descriptor start***************************************************/
-            'PK\x01\x02',
-            '\x14\x00',
-            '\x0A\x00',
-            '\x00\x00',
-            '\x00\x00',
-            '\x00\x50',
-            '\xF9\x54',
-            '\xe3\xe5\x95\xb0',
-            '\x0c\x00\x00\x00',
-            '\x0c\x00\x00\x00',
-            '\x09\x00',
-            '\x00\x00',
-            '\x00\x00',
-            '\x00\x00',
-            '\x00\x00',
-            '\x00\x00\x00\x00',
-            '\x00\x00\x00\x00',
-            'Hello.txt',
-            'PK\x05\x06',
-            '\x00\x00',
-            '\x00\x00',
-            '\x01\x00',
-            '\x01\x00',
-            '\x37\x00\x00\x00',
-            '\x33\x00\x00\x00',
-            '\x00\x00'
+            /*********************************由于通用标识第3位为0，即没有加密，所以没有数据描述符字段。Data descriptor***************************************************/
+            /********************************Central directory structure中央目录结构(文件夹记录) start************************************************************/
+                /********************************Central directory structure File header start************************************************************/
+            'PK\x01\x02', // central file header signature   4 bytes  (0x02014b50)
+            '\x14\x00',   // version made by                 2 bytes
+            '\x0A\x00',   // version needed to extract       2 bytes
+            '\x00\x00',   // general purpose bit flag        2 bytes
+            '\x00\x00',   // compression method              2 bytes
+            '\x00\x50',   // last mod file time              2 bytes
+            '\xF9\x54',   // last mod file date              2 bytes
+            '\xe3\xe5\x95\xb0', // crc-32                          4 bytes
+            '\x0c\x00\x00\x00', // compressed size                 4 bytes
+            '\x0c\x00\x00\x00', // uncompressed size               4 bytes
+            '\x09\x00', //  file name length                2 bytes
+            '\x00\x00', // extra field length              2 bytes
+            '\x00\x00', // file comment length             2 bytes
+            '\x00\x00', // disk number start               2 bytes
+            '\x00\x00', // internal file attributes        2 bytes
+            '\x00\x00\x00\x00',// external file attributes        4 bytes
+            '\x00\x00\x00\x00', // relative offset of local header 4 bytes
+            'Hello.txt', // file name (variable size)
+                /********************************Central directory structure File header end************************************************************/
+            /********************************Central directory structure中央目录结构(文件夹记录) end************************************************************/
+            /********************************End of central directory record start************************************************************/
+            'PK\x05\x06', // end of central dir signature    4 bytes  (0x06054b50)
+            '\x00\x00', // number of this disk             2 bytes
+            '\x00\x00', // number of the disk with the start of the central directory  2 bytes
+            '\x01\x00', // total number of entries in the central directory on this disk  2 bytes
+            '\x01\x00', // total number of entries in the central directory           2 bytes
+            '\x37\x00\x00\x00', // size of the central directory  offset of start of central directory with respect to 4 bytes
+            '\x33\x00\x00\x00', // the starting disk number 4 bytes
+            '\x00\x00' // .ZIP file comment length        2 bytes
+            /********************************End of central directory record end************************************************************/
         ].join('');
         btn.onclick = () => {
             const temp = s2ab(bytes)
