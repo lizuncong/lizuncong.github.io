@@ -117,13 +117,14 @@ const generatePagesJSX = async (files) => {
           } else if(fileObj.type === 'html') {
          
             const content = fs.readFileSync(`${fileObj.key}.html`)
-            const publicPath = fileObj.key.replace('/Users/lizuncong/Documents/ReactProjects/lizuncong.github.io/docs', '/Users/lizuncong/Documents/ReactProjects/lizuncong.github.io/public/html')
+            const publicPath = path.join(process.cwd(), `./public/html`)
             const dynamicDir = path.join(
-              '/Users/lizuncong/Documents/ReactProjects/lizuncong.github.io/public/html',
+              publicPath,
               path.relative(root, fileObj.key).replace(fileObj.label, '')
             );
+      
             await makeDir(dynamicDir);
-            fs.writeFileSync(`${publicPath}.html`, content)
+            fs.writeFileSync(`${dynamicDir}/${fileObj.label}.html`, content)
             fs.writeFile(
               `${path.join(dynamicPages, filename)}.jsx`,
               `import React from "react";
