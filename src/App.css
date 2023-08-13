@@ -17,6 +17,7 @@ body,
 
 .App .left {
   width: 250px;
+  z-index: 10;
 }
 .App .left .ant-menu {
   height: auto !important;
