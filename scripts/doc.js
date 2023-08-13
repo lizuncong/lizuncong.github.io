@@ -41,10 +41,13 @@ const readDir = (dir) => {
               children,
             };
           } else {
-            const fileName = file.replace(".md", "");
+            const items = file.split('.')
+            const type = items[items.length - 1]
+            const fileName = file.replace(`.${type}`, "");
             return {
               label: fileName,
               key: `${dir}${fileName}`,
+              type
             };
           }
         })
@@ -83,33 +86,66 @@ const generatePagesJSX = async (files) => {
       } else {
         const filename = path.relative(root, fileObj.key);
 
-        await new Promise((resolve, reject) => {
+        await new Promise(async (resolve, reject) => {
           if (whiteList.includes(filename)) {
             resolve();
             return;
           }
-          fs.writeFile(
-            `${path.join(dynamicPages, filename)}.jsx`,
-            `import React from "react";
-import MarkDown from "@/components/markdown";
-import shape from "@${docDir}/${filename}.md";
-
-function Index() {
-  return <MarkDown src={shape} />;
-}
-
-export default Index;`,
-            function (err) {
-              // 如果err为true，则文件写入失败，并返回失败信息
-              if (err) {
-                reject(err);
-                return console.log("文件写入失败！" + err.message);
+          if(fileObj.type === 'md'){
+            fs.writeFile(
+              `${path.join(dynamicPages, filename)}.jsx`,
+              `import React from "react";
+  import MarkDown from "@/components/markdown";
+  import shape from "@${docDir}/${filename}.md";
+  
+  function Index() {
+    return <MarkDown src={shape} />;
+  }
+  
+  export default Index;`,
+              function (err) {
+                // 如果err为true，则文件写入失败，并返回失败信息
+                if (err) {
+                  reject(err);
+                  return console.log("文件写入失败！" + err.message);
+                }
+                resolve();
+                // 若文件写入成功，将显示“文件写入成功”
+                // console.log("文件写入成功！");
               }
-              resolve();
-              // 若文件写入成功，将显示“文件写入成功”
-              // console.log("文件写入成功！");
-            }
-          );
+            );
+          } else if(fileObj.type === 'html') {
+         
+            const content = fs.readFileSync(`${fileObj.key}.html`)
+            const publicPath = fileObj.key.replace('/Users/lizuncong/Documents/ReactProjects/lizuncong.github.io/docs', '/Users/lizuncong/Documents/ReactProjects/lizuncong.github.io/public/html')
+            const dynamicDir = path.join(
+              '/Users/lizuncong/Documents/ReactProjects/lizuncong.github.io/public/html',
+              path.relative(root, fileObj.key).replace(fileObj.label, '')
+            );
+            await makeDir(dynamicDir);
+            fs.writeFileSync(`${publicPath}.html`, content)
+            fs.writeFile(
+              `${path.join(dynamicPages, filename)}.jsx`,
+              `import React from "react";
+
+              function Index() {
+                return <iframe frameBorder={0} className="doc-iframe" src='html/${filename}.html' />;
+              }
+              
+              export default Index;`,
+              function (err) {
+                // 如果err为true，则文件写入失败，并返回失败信息
+                if (err) {
+                  reject(err);
+                  return console.log("文件写入失败！" + err.message);
+                }
+                resolve();
+                // 若文件写入成功，将显示“文件写入成功”
+                // console.log("文件写入成功！");
+              }
+            );
+          }
+
         });
       }
     })
