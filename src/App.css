@@ -16,6 +16,8 @@ body,
 }
 
 .App .left {
+  display: flex;
+  flex-direction: column;
   width: 250px;
   z-index: 10;
 }
