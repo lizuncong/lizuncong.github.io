@@ -22,7 +22,7 @@ body,
   z-index: 10;
 }
 .App .left .ant-menu {
-  height: auto !important;
+  /* height: auto !important; */
 }
 .home {
   padding: 40px;
