@@ -5,6 +5,10 @@ body,
   overflow: hidden;
 }
 
+.github {
+  background-color: white;
+  padding: 12px 24px 0px 24px;
+}
 .App {
   display: flex;
   height: 100%;
@@ -13,6 +17,9 @@ body,
 
 .App .left {
   width: 250px;
+}
+.App .left .ant-menu {
+  height: auto !important;
 }
 .home {
   padding: 40px;
