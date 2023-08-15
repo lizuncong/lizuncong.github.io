@@ -10,26 +10,26 @@
     <div>
         <button id="btn">生成zip文件</button>
         <br />
-        <input id="uploadInput" type="file" multiple />
+        <!-- <input id="uploadInput" type="file" multiple /> -->
     </div>
     <script>
-        const uploadInput = document.getElementById("uploadInput");
-        uploadInput.addEventListener(
-            "change",
-            () => {
-                const file = uploadInput.files[0]
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const uint8arr = new Uint8Array(e.target.result)
-                    console.log(uint8arr)
-                };
-                reader.onerror = function (e) {
-                    console.log('error', e.target.error);
-                };
-                reader.readAsArrayBuffer(file);
-            },
-            false
-        );
+        // const uploadInput = document.getElementById("uploadInput");
+        // uploadInput.addEventListener(
+        //     "change",
+        //     () => {
+        //         const file = uploadInput.files[0]
+        //         const reader = new FileReader();
+        //         reader.onload = function (e) {
+        //             const uint8arr = new Uint8Array(e.target.result)
+        //             console.log(uint8arr)
+        //         };
+        //         reader.onerror = function (e) {
+        //             console.log('error', e.target.error);
+        //         };
+        //         reader.readAsArrayBuffer(file);
+        //     },
+        //     false
+        // );
 
         function s2ab(s) {
             let buf = new ArrayBuffer(s.length);
@@ -73,7 +73,7 @@
             '\xe3\xe5\x95\xb0', // crc-32                      4 bytes
             '\x0f\x00\x00\x00', // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
             '\x0f\x00\x00\x00', // uncompressed size           4 bytes
-            // 文件名长度为9
+            // 文件名长度为14
             '\x0E\x00',     // file name length                2 bytes
             // extra field length为0，说明没有extra field
             '\x00\x00',     // extra field length              2 bytes
@@ -93,8 +93,8 @@
             '\x00\x50',   // last mod file time              2 bytes
             '\xF9\x54',   // last mod file date              2 bytes
             '\xe3\xe5\x95\xb0', // crc-32                          4 bytes
-            '\x0c\x00\x00\x00', // compressed size                 4 bytes
-            '\x0c\x00\x00\x00', // uncompressed size               4 bytes
+            '\x0f\x00\x00\x00', // compressed size                 4 bytes
+            '\x0f\x00\x00\x00', // uncompressed size               4 bytes
             '\x0E\x00', //  file name length                2 bytes
             '\x00\x00', // extra field length              2 bytes
             '\x00\x00', // file comment length             2 bytes
@@ -115,8 +115,8 @@
             '\x00\x50',   // last mod file time              2 bytes
             '\xF9\x54',   // last mod file date              2 bytes
             '\xe3\xe5\x95\xb0', // crc-32                          4 bytes
-            '\x0c\x00\x00\x00', // compressed size                 4 bytes
-            '\x0c\x00\x00\x00', // uncompressed size               4 bytes
+            '\x0d\x00\x00\x00', // compressed size                 4 bytes
+            '\x0d\x00\x00\x00', // uncompressed size               4 bytes
             '\x0A\x00', //  file name length                2 bytes
             '\x00\x00', // extra field length              2 bytes
             '\x00\x00', // file comment length             2 bytes
