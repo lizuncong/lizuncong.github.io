@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ZIP文件协议解析</title>
+  </head>
+
+  <body>
+    <div>
+      <div>点击下面按钮，生成一个没有压缩的zip文件</div>
+      <button id="btn">生成zip文件</button>
+      <br />
+    </div>
+    <script>
+      function s2ab(s) {
+        let buf = new ArrayBuffer(s.length);
+        let view = new Uint8Array(buf);
+        for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      }
+      const fileData = "HelloWorld1\n";
+      const size = "\x0c\x00\x00\x00"; // 文件内容占据12个字节
+      const filenameLength = "\x09\x00"; // 文件名称占据9个字节
+      const fileName = "Hello.txt"; // 文件名称
+      const relativeOffsetOfLocalHeader = "\x00\x00\x00\x00"; //本地文件头开始位置为0
+      const lastModFileTime = "\x00\x40"; // 01000(8点) 000000(0分) 00000(0秒) => \x40\x00  -> 早上8点0分0秒
+      const lastModFileDate = "\x01\x57"; //  0101011(43) 1000(8) 00001(1) => \x57\x01  -> 2023年8月1日
+
+      const offsetOfCentralDirectory = "\x33\x00\x00\x00"; // 中央目录开始的位置：51个字节，即第52个字节开始就是中央目录的位置
+      const sizeOfTheCentralDirectory = "\x37\x00\x00\x00"; // 中央目录占据的字节大小: 55个字节
+      const totalEntries = "\x01\x00"; // 总共有一个文件
+      const crc32 = "\x3a\x81\xaf\x99"; // 99af813a   -> 可以使用https://www.23bei.com/tool/231.html在线生成
+
+      const localFileHeaderBytes = [
+        "PK\x03\x04", // local file header signature 4 bytes  (0x04034b50)
+        "\x0A\x00", // version needed to extract 2 bytes 代表待处理压缩文件的级别，比如说有文件夹、内容用XX方式压缩、用XX方式加密等等都是不同的值
+        "\x00\x00", // general purpose bit flag 2 bytes 内容的编码格式、是否加密等描述信息
+        "\x00\x00", // compression method  2 bytes 压缩方式，默认不压缩
+        lastModFileTime, // last mod file time  2 bytes
+        lastModFileDate, // last mod file date  2 bytes
+        crc32, // crc-32   4 bytes
+        size, // compressed size  4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
+        size, // uncompressed size  4 bytes
+        filenameLength, // file name length  2 bytes
+        "\x00\x00", // extra field length  2 bytes extra field length为0，说明没有extra field
+        fileName, // file name (variable size)
+        // extra field(variable size)由于没有extra field，所以file name后面紧跟着file data
+      ];
+      const centralDirectoryStructureBytes = [
+        "PK\x01\x02", // central file header signature   4 bytes  (0x02014b50)
+        "\x14\x00", // version made by                 2 bytes
+        "\x0A\x00", // version needed to extract       2 bytes
+        "\x00\x00", // general purpose bit flag        2 bytes
+        "\x00\x00", // compression method              2 bytes
+        lastModFileTime, // last mod file time              2 bytes
+        lastModFileDate, // last mod file date              2 bytes
+        crc32, // crc-32                          4 bytes
+        size, // compressed size                 4 bytes
+        size, // uncompressed size               4 bytes
+        filenameLength, //  file name length                2 bytes
+        "\x00\x00", // extra field length              2 bytes
+        "\x00\x00", // file comment length             2 bytes
+        "\x00\x00", // disk number start               2 bytes
+        "\x00\x00", // internal file attributes        2 bytes
+        "\x00\x00\x00\x00", // external file attributes        4 bytes
+        relativeOffsetOfLocalHeader, // relative offset of local header 4 bytes
+        fileName, // file name (variable size)
+      ];
+
+      const endOfCentralDirectoryRecordBytes = [
+        "PK\x05\x06", // end of central dir signature    4 bytes  (0x06054b50)
+        "\x00\x00", // number of this disk             2 bytes
+        "\x00\x00", // number of the disk with the start of the central directory  2 bytes
+        totalEntries, // total number of entries in the central directory on this disk  2 bytes
+        totalEntries, // total number of entries in the central directory           2 bytes
+        sizeOfTheCentralDirectory, // 55 size of the central directory   4 bytes 文件夹头部总长度
+        offsetOfCentralDirectory, // 文件内容的长度（local file header + filedata的长度，这里是51） offset of start of central directory with respect to the starting disk number 4 bytes
+        "\x00\x00", // .ZIP file comment length        2 bytes
+      ];
+      const bytes = [
+        ...localFileHeaderBytes, // 本地文件头
+        fileData, // file data 文件数据
+        ...centralDirectoryStructureBytes, // 中央目录头
+        ...endOfCentralDirectoryRecordBytes, // 中央目录记录结尾
+      ].join("");
+      btn.onclick = () => {
+        const temp = s2ab(bytes);
+        console.log("temp..", temp);
+        let blob = new Blob([temp], { type: "application/octet-stream" });
+        let url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "abc.zip";
+        a.click();
+      };
+    </script>
+  </body>
+</html>
