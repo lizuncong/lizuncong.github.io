@@ -46,6 +46,10 @@
       const fileName = "Hello.txt" // 长度9
       const lastModFileTime = "\x00\x50"
       const lastModFileDate = "\xF9\x54"
+      const offsetOfCentralDirectory = "\x33\x00\x00\x00"
+      const sizeOfTheCentralDirectory = "\x37\x00\x00\x00";
+      const totalEntries = "\x01\x00";
+
       const bytes = [
         /*******************************local file header start****************************************/
         "PK\x03\x04", // local file header signature     4 bytes  (0x04034b50)
@@ -97,10 +101,10 @@
         "PK\x05\x06", // end of central dir signature    4 bytes  (0x06054b50)
         "\x00\x00", // number of this disk             2 bytes
         "\x00\x00", // number of the disk with the start of the central directory  2 bytes
-        "\x01\x00", // total number of entries in the central directory on this disk  2 bytes
-        "\x01\x00", // total number of entries in the central directory           2 bytes
-        "\x37\x00\x00\x00", // size of the central directory   4 bytes 文件夹头部总长度
-        "\x33\x00\x00\x00", // 文件内容的长度（local file header + filedata的长度，这里是51） offset of start of central directory with respect to the starting disk number 4 bytes
+        totalEntries, // total number of entries in the central directory on this disk  2 bytes
+        totalEntries, // total number of entries in the central directory           2 bytes
+        sizeOfTheCentralDirectory, // 55 size of the central directory   4 bytes 文件夹头部总长度
+        offsetOfCentralDirectory, // 文件内容的长度（local file header + filedata的长度，这里是51） offset of start of central directory with respect to the starting disk number 4 bytes
         "\x00\x00", // .ZIP file comment length        2 bytes
         /********************************End of central directory record end************************************************************/
       ].join("");
