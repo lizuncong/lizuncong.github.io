@@ -40,12 +40,15 @@
       const fileSize3 = "\x0c\x00\x00\x00"; // 12
       const relativeOffsetOfLocalHeader3 = "\x6B\x00\x00\x00";  // file1+file2的大小
 
-      const lastModFileTime = "\x00\x50";
-      const lastModFileDate = "\xF9\x54";
+      const lastModFileTime = "\x00\x40" // 01000(8点) 000000(0分) 00000(0秒) => \x40\x00  -> 早上8点0分0秒
+      const lastModFileDate = "\x01\x57" //  0101011(43) 1000(8) 00001(1) => \x57\x01  -> 2023年8月1日
+      
 
       const offsetOfCentralDirectory = "\xA4\x00\x00\x00"; // 51 + 56 + 57= 164
       const sizeOfTheCentralDirectory = "\xB0\x00\x00\x00"; // 55 + 60 + 61 = 176
       const totalEntries = "\x03\x00";
+
+      const crc32 = "\x3a\x81\xaf\x99" // 99af813a   -> 可以使用https://www.23bei.com/tool/231.html在线生成
 
       // 30bytes + 9(filename) + 12(filedata) = 51
       const file1 = [
@@ -54,11 +57,9 @@
         "\x0A\x00", // version needed to extract       2 bytes 代表待处理压缩文件的级别，比如说有文件夹、内容用XX方式压缩、用XX方式加密等等都是不同的值
         "\x00\x00", // general purpose bit flag        2 bytes 内容的编码格式、是否加密等描述信息
         "\x00\x00", // compression method              2 bytes 压缩方式，默认不压缩
-        // 01010(10点) 000000(0分) 00000(0秒) => \x50\x00
-        lastModFileTime, // last mod file time              2 bytes 早上10点
-        //  0101010(42) 0111(7) 11001(25) => \x54\xf9
-        lastModFileDate, // last mod file date              2 bytes 2022年7月25日
-        "\xe3\xe5\x95\xb0", // crc-32                      4 bytes
+        lastModFileTime, // last mod file time              2 bytes
+        lastModFileDate, // last mod file date              2 bytes
+        crc32, // crc-32                      4 bytes
         fileSize, // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
         fileSize, // uncompressed size           4 bytes
         // 文件名长度为9
@@ -79,12 +80,9 @@
         "\x0A\x00", // version needed to extract       2 bytes 代表待处理压缩文件的级别，比如说有文件夹、内容用XX方式压缩、用XX方式加密等等都是不同的值
         "\x00\x00", // general purpose bit flag        2 bytes 内容的编码格式、是否加密等描述信息
         "\x00\x00", // compression method              2 bytes 压缩方式，默认不压缩
-        // 01010(10点) 000000(0分) 00000(0秒) => \x50\x00
-        lastModFileTime, // last mod file time              2 bytes 早上10点
-        //  0101010(42) 0111(7) 11001(25) => \x54\xf9
-        lastModFileDate, // last mod file date              2 bytes 2022年7月25日
-        // 90914c18
-        "\x18\x4c\x91\x90", // crc-32                      4 bytes
+        lastModFileTime, // last mod file time              2 bytes
+        lastModFileDate, // last mod file date              2 bytes
+        crc32, // crc-32                      4 bytes
         fileSize2, // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
         fileSize2, // uncompressed size           4 bytes
         // 文件名长度为9
@@ -105,12 +103,9 @@
         "\x0A\x00", // version needed to extract       2 bytes 代表待处理压缩文件的级别，比如说有文件夹、内容用XX方式压缩、用XX方式加密等等都是不同的值
         "\x00\x00", // general purpose bit flag        2 bytes 内容的编码格式、是否加密等描述信息
         "\x00\x00", // compression method              2 bytes 压缩方式，默认不压缩
-        // 01010(10点) 000000(0分) 00000(0秒) => \x50\x00
-        lastModFileTime, // last mod file time              2 bytes 早上10点
-        //  0101010(42) 0111(7) 11001(25) => \x54\xf9
-        lastModFileDate, // last mod file date              2 bytes 2022年7月25日
-        // 90914c18
-        "\x18\x4c\x91\x90", // crc-32                      4 bytes
+        lastModFileTime, // last mod file time              2 bytes
+        lastModFileDate, // last mod file date              2 bytes
+        crc32, // crc-32                      4 bytes
         fileSize3, // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
         fileSize3, // uncompressed size           4 bytes
         // 文件名长度为9
@@ -134,7 +129,7 @@
         "\x00\x00", // compression method              2 bytes
         lastModFileTime, // last mod file time              2 bytes
         lastModFileDate, // last mod file date              2 bytes
-        "\xe3\xe5\x95\xb0", // crc-32                          4 bytes
+        crc32, // crc-32                          4 bytes
         fileSize, // compressed size                 4 bytes
         fileSize, // uncompressed size               4 bytes
         filenameLength, //  file name length                2 bytes
@@ -159,7 +154,7 @@
         "\x00\x00", // compression method              2 bytes
         lastModFileTime, // last mod file time              2 bytes
         lastModFileDate, // last mod file date              2 bytes
-        "\x18\x4c\x91\x90", // crc-32                      4 bytes
+        crc32, // crc-32                      4 bytes
         fileSize2, // compressed size                 4 bytes
         fileSize2, // uncompressed size               4 bytes
         filenameLength2, //  file name length                2 bytes
@@ -185,7 +180,7 @@
         "\x00\x00", // compression method              2 bytes
         lastModFileTime, // last mod file time              2 bytes
         lastModFileDate, // last mod file date              2 bytes
-        "\x18\x4c\x91\x90", // crc-32                      4 bytes
+        crc32, // crc-32                      4 bytes
         fileSize3, // compressed size                 4 bytes
         fileSize3, // uncompressed size               4 bytes
         filenameLength3, //  file name length                2 bytes
