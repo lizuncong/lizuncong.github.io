@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>读取文件demo</title>
+  </head>
+  <body>
+    <div>
+      <div>上传一个zip文件，并在控制台查看内存存储方式</div>
+      <input id="uploadInput" type="file" multiple />
+      <br />
+    </div>
+    <script>
+      const uploadInput = document.getElementById("uploadInput");
+      uploadInput.addEventListener(
+        "change",
+        () => {
+          const file = uploadInput.files[0];
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const uint8arr = new Uint8Array(e.target.result);
+            console.log(uint8arr);
+          };
+          reader.onerror = function (e) {
+            console.log("error", e.target.error);
+          };
+          reader.readAsArrayBuffer(file);
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
