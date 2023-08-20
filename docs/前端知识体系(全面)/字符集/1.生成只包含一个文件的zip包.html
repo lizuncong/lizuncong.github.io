@@ -47,6 +47,7 @@
       const size = "\x0c\x00\x00\x00" // 12
       const filenameLength = "\x09\x00" // 9
       const fileName = "Hello.txt" // 长度9
+      const relativeOffsetOfLocalHeader = "\x00\x00\x00\x00"; 
       const lastModFileTime = "\x00\x50"
       const lastModFileDate = "\xF9\x54"
       const offsetOfCentralDirectory = "\x33\x00\x00\x00"
@@ -96,7 +97,7 @@
         "\x00\x00", // disk number start               2 bytes
         "\x00\x00", // internal file attributes        2 bytes
         "\x00\x00\x00\x00", // external file attributes        4 bytes
-        "\x00\x00\x00\x00", // relative offset of local header 4 bytes
+        relativeOffsetOfLocalHeader, // relative offset of local header 4 bytes
         fileName, // file name (variable size)
         /********************************Central directory structure File header end************************************************************/
         /********************************Central directory structure中央目录结构(文件夹记录) end************************************************************/
@@ -118,11 +119,9 @@
         let url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "123.zip";
+        a.download = "abc.zip";
         a.click();
-        setTimeout(() => {
-          // URL.revokeObjectURL(url);
-        }, 10000);
+  
       };
     </script>
   </body>

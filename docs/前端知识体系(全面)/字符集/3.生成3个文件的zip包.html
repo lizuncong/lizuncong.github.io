@@ -7,9 +7,11 @@
 
   <body>
     <div>
-      <div>生成包含一个文件及一个文件夹的zip包，文件数量2个</div>
+      <div>
+        生成包含一个文件及一个文件夹(文件夹里面有2个文件)的zip包，文件数量3个
+      </div>
       <br />
-      <button id="btn">生成zip文件</button>
+      <button id="btn">生成zip包</button>
       <br />
     </div>
     <script>
@@ -30,16 +32,20 @@
       const filenameLength2 = "\x0e\x00"; // 14
       const fileData2 = "HelloWorld2\n"; // 12
       const fileSize2 = "\x0c\x00\x00\x00"; // 12
-      const relativeOffsetOfLocalHeader2 = "\x33\x00\x00\x00"; 
+      const relativeOffsetOfLocalHeader2 = "\x33\x00\x00\x00";  // file1的大小
 
+      const fileName3 = "test/hello2.txt"; // 长度15
+      const filenameLength3 = "\x0f\x00"; // 15
+      const fileData3 = "HelloWorld3\n"; // 12
+      const fileSize3 = "\x0c\x00\x00\x00"; // 12
+      const relativeOffsetOfLocalHeader3 = "\x6B\x00\x00\x00";  // file1+file2的大小
 
       const lastModFileTime = "\x00\x50";
       const lastModFileDate = "\xF9\x54";
 
-
-      const offsetOfCentralDirectory = "\x6B\x00\x00\x00"; // 51 + 56 = 107
-      const sizeOfTheCentralDirectory = "\x73\x00\x00\x00"; // 55 + 60 = 115
-      const totalEntries = "\x02\x00";
+      const offsetOfCentralDirectory = "\xA4\x00\x00\x00"; // 51 + 56 + 57= 164
+      const sizeOfTheCentralDirectory = "\xB0\x00\x00\x00"; // 55 + 60 + 61 = 176
+      const totalEntries = "\x03\x00";
 
       // 30bytes + 9(filename) + 12(filedata) = 51
       const file1 = [
@@ -92,6 +98,31 @@
         /********************************file1 data end************************************************************/
       ];
 
+      // 30bytes + 15(filename) + 12(filedata) = 57
+      const file3 = [
+        /*******************************local file1 header start****************************************/
+        "PK\x03\x04", // local file header signature     4 bytes  (0x04034b50)
+        "\x0A\x00", // version needed to extract       2 bytes 代表待处理压缩文件的级别，比如说有文件夹、内容用XX方式压缩、用XX方式加密等等都是不同的值
+        "\x00\x00", // general purpose bit flag        2 bytes 内容的编码格式、是否加密等描述信息
+        "\x00\x00", // compression method              2 bytes 压缩方式，默认不压缩
+        // 01010(10点) 000000(0分) 00000(0秒) => \x50\x00
+        lastModFileTime, // last mod file time              2 bytes 早上10点
+        //  0101010(42) 0111(7) 11001(25) => \x54\xf9
+        lastModFileDate, // last mod file date              2 bytes 2022年7月25日
+        // 90914c18
+        "\x18\x4c\x91\x90", // crc-32                      4 bytes
+        fileSize3, // compressed size             4 bytes 文件压缩长度信息，如果不做压缩，这里的size均为数据的长度
+        fileSize3, // uncompressed size           4 bytes
+        // 文件名长度为9
+        filenameLength3, // file name length                2 bytes
+        // extra field length为0，说明没有extra field
+        "\x00\x00", // extra field length              2 bytes
+        fileName3, // file name (variable size)
+        /*******************************local file1 header end****************************************/
+        /********************************file1 data start************************************************************/
+        fileData3, // file data
+        /********************************file1 data end************************************************************/
+      ];
       // 46(固定bytes) + 9(filename) = 55
       const centralDirectoryOfFile1 = [
         /********************************Central directory structure中央目录结构(文件夹记录) start************************************************************/
@@ -142,11 +173,39 @@
         /********************************Central directory structure File header end************************************************************/
         /********************************Central directory structure中央目录结构(文件夹记录) end************************************************************/
       ];
+
+      // 46(固定bytes) + 15(filename) = 61
+      const centralDirectoryOfFile3 = [
+        /********************************Central directory structure中央目录结构(文件夹记录) start************************************************************/
+        /********************************Central directory structure File header start************************************************************/
+        "PK\x01\x02", // central file header signature   4 bytes  (0x02014b50)
+        "\x14\x00", // version made by                 2 bytes
+        "\x0A\x00", // version needed to extract       2 bytes
+        "\x00\x00", // general purpose bit flag        2 bytes
+        "\x00\x00", // compression method              2 bytes
+        lastModFileTime, // last mod file time              2 bytes
+        lastModFileDate, // last mod file date              2 bytes
+        "\x18\x4c\x91\x90", // crc-32                      4 bytes
+        fileSize3, // compressed size                 4 bytes
+        fileSize3, // uncompressed size               4 bytes
+        filenameLength3, //  file name length                2 bytes
+        "\x00\x00", // extra field length              2 bytes
+        "\x00\x00", // file comment length             2 bytes
+        "\x00\x00", // disk number start               2 bytes
+        "\x00\x00", // internal file attributes        2 bytes
+        "\x00\x00\x00\x00", // external file attributes        4 bytes
+        relativeOffsetOfLocalHeader3, // local header的偏移量，此处是file1 + file2的大小 relative offset of local header 4 bytes
+        fileName3, // file name (variable size)
+        /********************************Central directory structure File header end************************************************************/
+        /********************************Central directory structure中央目录结构(文件夹记录) end************************************************************/
+      ];
       const bytes = [
         ...file1,
         ...file2,
+        ...file3,
         ...centralDirectoryOfFile1,
         ...centralDirectoryOfFile2,
+        ...centralDirectoryOfFile3,
         /********************************End of central directory record start************************************************************/
         "PK\x05\x06", // end of central dir signature    4 bytes  (0x06054b50)
         "\x00\x00", // number of this disk             2 bytes
@@ -168,6 +227,7 @@
         a.href = url;
         a.download = "abc.zip";
         a.click();
+
       };
     </script>
   </body>
