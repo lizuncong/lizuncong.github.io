@@ -23,18 +23,22 @@
       const filenameLength = "\x09\x00"; // 9
       const fileData = "HelloWorld1\n";
       const fileSize = "\x0c\x00\x00\x00"; // 12
+      const relativeOffsetOfLocalHeader = "\x00\x00\x00\x00"; 
+
 
       const fileName2 = "test/hello.txt"; // 长度14
       const filenameLength2 = "\x0e\x00"; // 14
       const fileData2 = "HelloWorld2\n"; // 12
       const fileSize2 = "\x0c\x00\x00\x00"; // 12
+      const relativeOffsetOfLocalHeader2 = "\x33\x00\x00\x00"; 
+
 
       const lastModFileTime = "\x00\x50";
       const lastModFileDate = "\xF9\x54";
 
 
       const offsetOfCentralDirectory = "\x6B\x00\x00\x00"; // 51 + 56 = 107
-      const sizeOfTheCentralDirectory = "\x73\x00\x00\x00"; // 55 + 55 = 115
+      const sizeOfTheCentralDirectory = "\x73\x00\x00\x00"; // 55 + 60 = 115
       const totalEntries = "\x02\x00";
 
       // 30bytes + 9(filename) + 12(filedata) = 51
@@ -108,7 +112,7 @@
         "\x00\x00", // disk number start               2 bytes
         "\x00\x00", // internal file attributes        2 bytes
         "\x00\x00\x00\x00", // external file attributes        4 bytes
-        "\x00\x00\x00\x00", // relative offset of local header 4 bytes
+        relativeOffsetOfLocalHeader, // relative offset of local header 4 bytes
         fileName, // file name (variable size)
         /********************************Central directory structure File header end************************************************************/
         /********************************Central directory structure中央目录结构(文件夹记录) end************************************************************/
@@ -133,7 +137,7 @@
         "\x00\x00", // disk number start               2 bytes
         "\x00\x00", // internal file attributes        2 bytes
         "\x00\x00\x00\x00", // external file attributes        4 bytes
-        "\x33\x00\x00\x00", // local header的偏移量，此处是file1的大小 relative offset of local header 4 bytes
+        relativeOffsetOfLocalHeader2, // local header的偏移量，此处是file1的大小 relative offset of local header 4 bytes
         fileName2, // file name (variable size)
         /********************************Central directory structure File header end************************************************************/
         /********************************Central directory structure中央目录结构(文件夹记录) end************************************************************/
@@ -149,8 +153,8 @@
         "\x00\x00", // number of the disk with the start of the central directory  2 bytes
         totalEntries, // total number of entries in the central directory on this disk  2 bytes
         totalEntries, // total number of entries in the central directory           2 bytes
-        sizeOfTheCentralDirectory, // 55 size of the central directory   4 bytes 文件夹头部总长度
-        offsetOfCentralDirectory, // 文件内容的长度（local file header + filedata的长度，这里是51） offset of start of central directory with respect to the starting disk number 4 bytes
+        sizeOfTheCentralDirectory, // size of the central directory   4 bytes 文件夹头部总长度
+        offsetOfCentralDirectory, // 文件内容的长度（local file header + filedata的长度） offset of start of central directory with respect to the starting disk number 4 bytes
         "\x00\x00", // .ZIP file comment length        2 bytes
         /********************************End of central directory record end************************************************************/
       ].join("");
@@ -162,11 +166,8 @@
         let url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "123.zip";
+        a.download = "abc.zip";
         a.click();
-        setTimeout(() => {
-          // URL.revokeObjectURL(url);
-        }, 10000);
       };
     </script>
   </body>
