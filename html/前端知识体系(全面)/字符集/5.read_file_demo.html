@@ -16,10 +16,14 @@
         "change",
         () => {
           const file = uploadInput.files[0];
+          console.log('File 对象，只读不能写：', file)
           const reader = new FileReader();
           reader.onload = function (e) {
+            console.log('Array Buffer对象，只读不能写：',e.target.result)
             const uint8arr = new Uint8Array(e.target.result);
-            console.log(uint8arr);
+            console.log('Uint8Array对象，可读写：', uint8arr);
+            const dv = new DataView(e.target.result)
+            console.log('DataView对象，可读写：', dv);
           };
           reader.onerror = function (e) {
             console.log("error", e.target.error);
