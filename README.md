@@ -1,5 +1,7 @@
 > 前端知识体系(全面)目录用来收集前端基础知识、八股文等。踩坑系列用于收集一些我所遇到的比较有意思有难度的 bug。最佳实践是我在做项目过程中的一些思考。readme 这里只将一部分文章列出来当作索引，具体可以看各个目录下的文章。建议安装一个谷歌浏览器插件："Octotree - GitHub code tree"，方便在 github 查看源码
 
+### 常用工具
+- [https://jsbin.com/?html,css,output](https://jsbin.com/?html,css,output)
 ### 踩坑系列
 
 按 debug 难度从高到低排列
