@@ -1,25 +1,26 @@
-const fs = require('fs')
+const http = require('http')
 
-setTimeout(() => {
-    // 新的事件循环的起点
-    console.log('settimeout')
-}, 0);
-
-setImmediate(() => {
-    console.log('setImmediate')
+const server = http.createServer((req, res) => {
+    res.write(`${startCount() + nextCount()}`)
+    res.end();
 })
 
-// 将会在新的事件循环中的pending callbacks阶段执行
-fs.readFile('./README.md', { encoding: 'utf-8' }, (err, data) => {
-    if (err) throw err;
-    console.log('read file success')
+server.listen(4000, () => {
+    console.log('server start http://127.0.0.1:4000')
 })
 
-// 该部分将会在首次事件循环中执行
-Promise.resolve().then(() => {
-    console.log('promise: poll callback')
-})
+function startCount(){
+    let sum = 0;
+    for(let i = 0; i < 500000000;i++){
+        sum = sum + i
+    }
+    return sum
+}
 
-// 首次事件循环执行
-console.log('1')
-
+function nextCount(){
+    let sum = 0;
+    for(let i = 500000000; i < 1000000000;i++){
+        sum = sum + i
+    }
+    return sum
+}
