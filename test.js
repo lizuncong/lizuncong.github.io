@@ -1,20 +1,72 @@
 const http = require('http');
-const rp = require('request-promise');
+const cpuOverload = new (require('./cpuOverload'))(10, 80, 0.8);
 
-const port = 5000;
-const server = http.createServer(async (req, res) => {
-    let sum = 0;
-    if (req.url === '/bad') {
-        const result = await rp.get(`http://127.0.0.1:4000`)
-        const sumData = JSON.parse(result);
-        if (sumData && sumData.data) {
-            sum = sumData.data.sum
-        }
+/**
+ * 定义两个服务路径
+ * normal 是负责输出 hello world 的路径
+ * bad 是负责复杂计算的路径
+ */
+const routerMapping = {
+    '/v1/cpu': {
+        'method': 'bad'
+    },
+    '/v1/normal': {
+        'method': 'normal'
     }
-    res.write(`${sum}`);
-    res.end();
+};
+
+/**
+ * 创建 http 服务，简单返回
+ */
+const server = http.createServer(async (req, res) => {
+    const pathname = req.url;
+    // 过滤非拉取用户信息请求
+    if (!routerMapping[pathname]) {
+        res.write('path not found')
+        res.end();
+        return;
+    }
+
+    // 请求拦截，避免 cpu 过载
+    if (!cpuOverload.isAvailable(pathname)) {
+        res.write('server error')
+        res.end();
+        return
+    }
+
+    try {
+        if (req.url === '/v1/cpu') {
+            let sum = 0;
+            for (let i = 0; i < 10000000000; i++) {
+                sum = sum + i;
+            }
+            res.write(`sum：${sum}`)
+            res.end();
+            return;
+        }
+        if (req.url === '/v1/normal') {
+            res.write(`hello world`)
+            res.end();
+            return;
+        }
+    } catch (error) {
+        // 异常时，需要返回 500 错误码给前端
+        console.log(error);
+        res.write('server error')
+        res.end();
+        return
+    }
+
 })
 
-server.listen(port, () => {
-    console.log(`server start http://127.0.0.1:${port}`)
+// 启动服务
+server.listen(4000, () => {
+    console.log('server start at http://127.0.0.1:4000');
 })
+
+/**
+ * 处理 cpu 信息采集
+ */
+cpuOverload.check().then().catch(err => {
+    console.log(err)
+});
