@@ -1,5 +1,5 @@
 const http = require('http');
-const cpuOverload = new (require('./cpuOverload'))(10, 80, 0.8);
+const cpuOverload = new (require('./cpu'))(10, 80, 0.8);
 
 /**
  * 定义两个服务路径
