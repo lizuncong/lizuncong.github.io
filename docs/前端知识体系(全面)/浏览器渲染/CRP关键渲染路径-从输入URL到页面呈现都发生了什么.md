@@ -7,7 +7,7 @@
 - 拿到资源文件后，浏览器开始解析并构建dom树和cssom树。这中间又涉及两种过程。
     + 如果有js脚本，那么cssom树的构建会阻塞js的执行，js的执行会阻塞dom树的构建
     + 如果没有js脚本，那么cssom树的构建和dom树的构建是并行的，当然大部分网页都会包含js脚本。
-_ 有了cssom树和dom树后，就开始构建render tree。render tree并不是和dom树--对应的，render tree并不包含display:none等元素，以及style，link，head这些标签。
+- 有了cssom树和dom树后，就开始构建render tree。render tree并不是和dom树--对应的，render tree并不包含display:none等元素，以及style，link，head这些标签。
 - 构建完render tree，布局（Layout，也叫重排）阶段会为每个节点计算精确的位置和大小信息。
 - 布局阶段完成后，就是绘制阶段（paint），将各个节点绘制到屏幕上，页面就呈现出来了。
 
