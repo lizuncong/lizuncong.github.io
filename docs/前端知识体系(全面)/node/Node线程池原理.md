@@ -1,6 +1,6 @@
 ## Node.js架构
 
-![image](../../../../imgs/node_01.jpg)
+![image](../../../imgs/node_01.jpg)
 
 - 最上层是我们自己写的javascript代码
 - 中间的NodeJS层是Node提供给我们的一些内置模块，比如fs、path等。
@@ -11,7 +11,7 @@
 
 首先要了解的是，在内部，v8和libuv几乎很少包含js代码，基本都是C++代码。因此作为javascript开发人员，我们可能并不希望全部编写C++代码。如下图所示
 
-![image](../../../../imgs/node_02.jpg)
+![image](../../../imgs/node_02.jpg)
 
 
 这就是Nodejs的目的之一，提供给我们一个很好的接口来关联我们项目中的javascript到运行在我们计算机上的C++去实际解释和执行。
@@ -19,7 +19,7 @@
 
 另外，Nodejs提供了一些内置模块，比如http、fs、crypto、path等模块。这些模块都有非常一致的API。他们最终都引用了libuv库中相关的功能
 
-![image](../../../../imgs/node_03.jpg)
+![image](../../../imgs/node_03.jpg)
 
 
 因此，我们可能不想直接访问C++代码，我们希望在项目中使用javascript函数。通过Node.js，我们不必直接访问libuv库中的C++代码
@@ -28,7 +28,7 @@
 ## Node.js模块实现
 以Nodejs内置模块crypto中的pbkdf2函数为例：
 
-![image](../../../../imgs/node_04.jpg)
+![image](../../../imgs/node_04.jpg)
 
 通过查看这个函数的源码，我们可以了解Node.js如何在内部使用libuv库以及v8引擎
 
@@ -36,7 +36,7 @@ pbkdf2.js源码在[https://github.com/nodejs/node/blob/main/lib/internal/crypto/
 
 这里简单介绍下Nodejs源码项目目录
 
-![image](../../../../imgs/node_05.jpg)
+![image](../../../imgs/node_05.jpg)
 
 这里最重要的就是lib和src目录，其中：
 - lib存放的是Node.js内置模块的源码，比如fs、path等模块的源码。
@@ -44,37 +44,37 @@ pbkdf2.js源码在[https://github.com/nodejs/node/blob/main/lib/internal/crypto/
 
 通过查看pbkdf2.js中pbkdf2函数的实现可以发现：
 
-![image](../../../../imgs/node_06.jpg)
+![image](../../../imgs/node_06.jpg)
 
 PBKDF2Job就是pbkdf2的C++实现。
 
 internalBinding就是nodejs将js和c++联系起来的地方，是js和c++的桥梁。
 
-![image](../../../../imgs/node_07.jpg)
+![image](../../../imgs/node_07.jpg)
 
 下面是node crypto模块的全部C++实现代码
 
-![image](../../../../imgs/node_08.jpg)
+![image](../../../imgs/node_08.jpg)
 
 下面是PBKDF2函数导出的地方
 
-![image](../../../../imgs/node_09.jpg)
+![image](../../../imgs/node_09.jpg)
 
 PBKDF2实现的地方：
 
-![image](../../../../imgs/node_10.jpg)
+![image](../../../imgs/node_10.jpg)
 
 
 ## 线程
 与线程有关的最重要的是调度。操作系统能够决定在任何给定时刻及时处理哪个线程
 
-![image](../../../../imgs/node_11.jpg)
+![image](../../../imgs/node_11.jpg)
 
 CPU每秒能处理的指令是有限的。需要确保紧急线程不必等待太长时间才能执行。
 
 为了更快地处理线程或在给定时间处理更多线程，我们可以使用多核CPU
 
-![image](../../../../imgs/node_12.jpg)
+![image](../../../imgs/node_12.jpg)
 
 从技术上讲，一个内核可以处理多个线程。但这解决不了优先级的问题。
 
@@ -87,7 +87,7 @@ CPU每秒能处理的指令是有限的。需要确保紧急线程不必等待�
 
 从硬盘读取或者写入数据，称之为IO。IO操作是非常耗时的。在IO阶段，CPU等待硬盘读取文件并返回内容。在这段时间内，线程1无法处理其他任务，一直在等待硬盘读取完成。操作系统调度程序能够检测到这一段暂停时间或者两个指令之间的暂停时间，它可以决定暂停第一个线程，然后执行线程2。线程2执行完成后就可以继续执行线程1。
 
-![image](../../../../imgs/node_13.jpg)
+![image](../../../imgs/node_13.jpg)
 
 
 因此，有两种方式可以提高我们的处理速度：
@@ -102,7 +102,7 @@ CPU每秒能处理的指令是有限的。需要确保紧急线程不必等待�
 
 详情可以点击[这里](https://nodejs.org/zh-cn/docs/guides/dont-block-the-event-loop)查看
 
-![image](../../../../imgs/node_14.jpg)
+![image](../../../imgs/node_14.jpg)
 
 我们可以将事件循环看作是一个控制结构，它决定应该执行什么操作。了解事件循环的工作方式是极其重要的，因为node的许多性能问题最终都归结为事件循环的行为方式。因此，从本质上讲，如果我们理解事件循环机制，那么就可以很好的理解nodejs中的性能问题
 
@@ -207,16 +207,16 @@ Node事件循环是单线程。也就是说，执行我们自己写的代码的�
 
 因此，简单的说node是单线程并不完全正确。
 
-![image](../../../../imgs/node_15.jpg)
+![image](../../../imgs/node_15.jpg)
 
 
 如下面代码所示，pbkdf2函数的执行大约需要548毫秒。
 
-![image](../../../../imgs/node_16.jpg)
+![image](../../../imgs/node_16.jpg)
 
 我们再来看下调用两次pbkdf2函数的结果咋样，如下所示：
 
-![image](../../../../imgs/node_17.jpg)
+![image](../../../imgs/node_17.jpg)
 
 
 上面的结果有两点需要注意的地方：
@@ -226,12 +226,12 @@ Node事件循环是单线程。也就是说，执行我们自己写的代码的�
 
 如果node是单线程的话，那么crypto.pbkdf2的执行应该是串行的，上面两个函数的执行时间应该是累加的才对，同时打印顺序应该也是按照执行顺序来的才对。如下图所示
 
-![image](../../../../imgs/node_18.jpg)
+![image](../../../imgs/node_18.jpg)
 
 
 但实际上，crypto.pbkdf2函数是多线程的，谁先执行完就执行谁的回调函数，真实执行情况如下
 
-![image](../../../../imgs/node_19.jpg)
+![image](../../../imgs/node_19.jpg)
 
 
 ## libuv线程池
@@ -239,7 +239,7 @@ Node事件循环是单线程。也就是说，执行我们自己写的代码的�
 
 下面图示是crypto.pbkdf2函数的实际运行情况
 
-![image](../../../../imgs/node_20.jpg)
+![image](../../../imgs/node_20.jpg)
 
 libuv会将一些昂贵的计算操作放在事件循环线程之外，也就是线程池中执行。默认情况下，线程池由四个线程组成，可用于计算密集型任务。
 
@@ -249,12 +249,12 @@ libuv会将一些昂贵的计算操作放在事件循环线程之外，也就是
 
 很明显，node不是真正的单线程，因为node还使用其他线程来执行一些计算密集型的任务
 
-![image](../../../../imgs/node_21.jpg)
+![image](../../../imgs/node_21.jpg)
 
 
 ### 关于线程池的几个问题
 
-![image](../../../../imgs/node_22.jpg)
+![image](../../../imgs/node_22.jpg)
 
 在前面事件循环的伪代码中，我们定义了一个`pendingOperations`数组。然后在我们想要检查事件循环是否应该继续运行的时候，我们检查线程池内是否还有任何挂起的操作。因此，`pendingOperations`实质上表示的是正在线程池中执行的任务。因此，只要线程池中仍有一些代码或一些任务排队等待运行，我们的程序将继续执行事件循环。
 
@@ -281,7 +281,7 @@ console.log('end')
 
 执行这段代码，控制台输出：
 
-![image](../../../../imgs/node_23.jpg)
+![image](../../../imgs/node_23.jpg)
 
 可以看到，crypto.pbkdf2函数的执行大概耗时537毫秒。
 
@@ -313,7 +313,7 @@ console.log('end')
 
 控制台执行，注意这里可以多执行几次观察结果
 
-![image](../../../../imgs/node_24.jpg)
+![image](../../../imgs/node_24.jpg)
 
 可以得出以下几点结论：
 - 回调函数的执行顺序是不确定的
@@ -322,7 +322,7 @@ console.log('end')
 
 执行过程如下图所示
 
-![image](../../../../imgs/node_25.jpeg)
+![image](../../../imgs/node_25.jpeg)
 
 这里我们调用了四次`crypto.pbkdf2`函数，也就是有4个任务需要执行。线程池有4个线程，意味着线程池能同时处理4个任务。我电脑中的CPU有4个内核，这4个内核轮流执行4个线程，平均每个内核执行1个线程，平均耗时560毫秒左右。因此可以看到4个回调函数几乎同时执行完成，耗时差不多。
 
@@ -368,11 +368,11 @@ console.log('end')
 如下图所示：
 
 
-![image](../../../../imgs/node_26.jpg)
+![image](../../../imgs/node_26.jpg)
 
 原理如下：
 
-![image](../../../../imgs/node_27.jpeg)
+![image](../../../imgs/node_27.jpeg)
 
 #### demo4：改变线程池大小为5
 这次我们改变线程池的大小为5，这意味着线程池能同时5个任务。可以通过
@@ -416,12 +416,12 @@ console.log('end')
 我们只有4个内核，却需要处理线程池中的5个线程，这4个内核需要轮流执行这5个线程，相当于每个内核需要处理1.25个线程。因此，执行完这5个任务大概耗时1.25 * 560 = 700毫秒。而且这5个任务是几乎同时完成的。
 
 
-![image](../../../../imgs/node_28.jpg)
+![image](../../../imgs/node_28.jpg)
 
 
 执行原理：
 
-![image](../../../../imgs/node_29.jpeg)
+![image](../../../imgs/node_29.jpeg)
 
 
 有点意思。实际上我们可以继续加大线程池数量，再细细品一下这个原理
@@ -463,7 +463,7 @@ console.log('end')
 
 执行上面的代码，可以发现这6个任务几乎同时完成，耗时大概在840毫秒左右。
 
-![image](../../../../imgs/node_30.jpg)
+![image](../../../imgs/node_30.jpg)
 
 > 上面的执行时间有误差是因为CPU轮流执行这些线程时，切换线程也是需要时间的
 
@@ -499,7 +499,7 @@ doRequest(1);
 
 多次执行下面的代码，可以发现耗时大概在270毫秒。
 
-![image](../../../../imgs/node_31.jpg)
+![image](../../../imgs/node_31.jpg)
 
 
 然后，多次调用`doRequest`
@@ -530,14 +530,14 @@ doRequest(7);
 
 执行结果如下图所示：
 
-![image](../../../../imgs/node_32.jpg)
+![image](../../../imgs/node_32.jpg)
 
 
 可以发现，这7个请求几乎都是在同一时间完成，这和我们之前在线程池中看到的行为截然不同，并不像`crypto.pbkdf2`一样需要排队等待线程池处理。
 
 node提供的内置标准库中，一些函数利用了libuv的线程池。同样，也存在一些函数是直接调用libuv中内置的一些操作系统代码。如下图所示
 
-![image](../../../../imgs/node_33.jpg)
+![image](../../../imgs/node_33.jpg)
 
 因此，在本例中，libuv看到我们正在尝试发出HTTP请求，libuv也没法直接处理所有这些涉及网络请求的超低级操作。因此，libuv将请求委托给底层操作系统。所以实际上是我们的操作系统执行真正的HTTP请求，libuv只是被用来发出请求，然后等待操作系统返回这个请求的响应。
 
@@ -554,14 +554,14 @@ node提供的内置标准库中，一些函数利用了libuv的线程池。同�
 
 这也是为什么，当我们通过http.createServer创建一个服务并监听端口时，应用程序就会在终端中一直执行而不会退出的原因。
 
-![image](../../../../imgs/node_34.jpg)
+![image](../../../imgs/node_34.jpg)
 
 
 ## 小结
 
 Nodejs事件循环流程图：
 
-![image](../../../../imgs/node_35.jpg)
+![image](../../../imgs/node_35.jpg)
 
 
 ## 示例
@@ -612,7 +612,7 @@ doHash(4)
 
 结果如下：
 
-![image](../../../../imgs/node_36.jpg)
+![image](../../../imgs/node_36.jpg)
 
 
 
@@ -623,7 +623,7 @@ doHash(4)
 - 为什么在FS前面恰好有且仅有一个Hash输出
 - 为什么总是doRequest先执行
 
-![image](../../../../imgs/node_37.jpg)
+![image](../../../imgs/node_37.jpg)
 
 
 FS Module和crypto.pbkdf2都使用了线程池。HTTP模块直接使用底层操作系统执行操作
@@ -633,7 +633,7 @@ FS Module和crypto.pbkdf2都使用了线程池。HTTP模块直接使用底层操
 
 下面图示是fs.readFile函数的执行流程
 
-![image](../../../../imgs/node_38.jpg)
+![image](../../../imgs/node_38.jpg)
 
 
 当我们第一次调用fs.readFile时，nodejs并不会直接转到硬盘并立即启动。它会先查看硬盘上的文件，并尝试收集有关该文件的一些统计数据，比如文件大小。整个过程包含一次到磁盘的往返时间。当nodejs获取完该文件的统计信息后，它就能够知道文件的预期大小是多少。然后就可以开始读取文件。因此，nodejs会再次读取硬盘，获取文件内容，并将结果返回给我们的应用程序，最后调用我们的回调函数。
@@ -641,7 +641,7 @@ FS Module和crypto.pbkdf2都使用了线程池。HTTP模块直接使用底层操
 
 这里需要重点关注的是，出现了两个明显的`Pause`，如下图所示。
 
-![image](../../../../imgs/node_39.jpg)
+![image](../../../imgs/node_39.jpg)
 
 两次暂停：
 
@@ -650,7 +650,7 @@ FS Module和crypto.pbkdf2都使用了线程池。HTTP模块直接使用底层操
 
 接下来我们看下面这张图，它真正解释发生了什么
 
-![image](../../../../imgs/node_40.jpg)
+![image](../../../imgs/node_40.jpg)
 
 
 首先要认识到http模块调用根本不涉及线程池，它直接调用底层操作系统。它发出请求，一旦我们得到响应，就会将结果返回到我们的事件循环线程中。
@@ -722,7 +722,7 @@ doHash(4)
 ```
 这里我们增加了一个额外的线程，它可以100%负责处理文件系统调用。
 
-![image](../../../../imgs/node_41.jpg)
+![image](../../../imgs/node_41.jpg)
 
 
 如果我们将线程池大小改成1
@@ -768,7 +768,7 @@ doHash(4)
 
 结果如下。首先，这1个线程将对文件系统调用执行一些初始工作。然后等待硬盘返回文件统计信息，在这个过程中，这1个线程会继续处理所有的4个dohash，一旦所有这些doHash都完成，它将继续处理文件系统调用
 
-![image](../../../../imgs/node_42.jpg)
+![image](../../../imgs/node_42.jpg)
 
 >实际上，硬盘返回结果后，会在线程池任务队列后面添加一个任务等待线程池调度。
 
@@ -781,7 +781,7 @@ doHash(4)
 ### Blocking the Event Loop
 首先我们需要记住的是，只要有请求进入我们的服务器，他就会在我们的事件循环线程中处理。请求进入我们的服务器，事件循环线程对其进行处理，然后生成响应。
 
-![image](../../../../imgs/node_43.jpg)
+![image](../../../imgs/node_43.jpg)
 
 如果某个请求处理比较耗时，很明显就会阻塞其他请求。比如下面的demo，我们使用一个doWork函数调用阻塞了整个事件循环。
 
@@ -806,20 +806,20 @@ app.listen(3000)
 
 我们在浏览器中同时打开两个tab页，同时发起两个请求。如下图所示，在左边的标签页刷新后，立即切换到右边的标签页然后立即刷新。可以看到左边标签页的请求耗时5秒，而右边耗时差不多10秒。这是因为事件循环是单线程的。只有等到左边的请求处理完成，node服务器才能继续处理右边的请求。
 
-![image](../../../../imgs/node_44.jpg)
+![image](../../../imgs/node_44.jpg)
 
-![image](../../../../imgs/node_45.jpg)
+![image](../../../imgs/node_45.jpg)
 
 
 ### Cluster mode
 当我们开始在node应用中使用cluster， 意味着我们启动了多个node进程。总会有一个父进程或一种类似的统领进程，称为cluster manager。cluster manager负责监视我们的单个的进程实例的健康。比如下图所示都是我们的应用程序正在运行的实例。这是运行在一台计算机上的多个实例。cluster manager本身并不实际执行任何应用程序代码。换句话说，cluster manager实际上并不负责处理传入的请求或从数据库中读取数据。相反，cluster manager负责监控每个单独实例的运行状况。cluster manager可以启动单个实例，也可以停止或者重启它们，还可以向它们发送数据。这些单个实例负责实际处理传入的请求，比如访问数据库，处理身份验证等。
 
-![image](../../../../imgs/node_46.jpg)
+![image](../../../imgs/node_46.jpg)
 
 
 当我们以cluster mode运行时，流程如下。worker instance负责处理这些传入请求。
 
-![image](../../../../imgs/node_47.jpg)
+![image](../../../imgs/node_47.jpg)
 
 
 下面是cluster 模式的简单demo，这里只有一个进程实例，意味着只有一个事件循环实例。
@@ -898,10 +898,10 @@ if(cluster.isMaster){
 
 如下图所示，先刷新左边标签页，然后立即刷新右边标签页。可以发现/fast的请求很快就完成了。
 
-![image](../../../../imgs/node_48.jpg)
+![image](../../../imgs/node_48.jpg)
 
 
-![image](../../../../imgs/node_49.jpg)
+![image](../../../imgs/node_49.jpg)
 
 
 如果只开启一个进程实例，如下：
@@ -947,9 +947,9 @@ if(cluster.isMaster){
 
 先刷新左边标签页，然后立即刷新右边标签页，结果如下图：
 
-![image](../../../../imgs/node_49.jpg)
+![image](../../../imgs/node_49.jpg)
 
-![image](../../../../imgs/node_50.jpg)
+![image](../../../imgs/node_50.jpg)
 
 
 ### Benchmarking Server Performance
@@ -966,7 +966,7 @@ ab -c 50 -n 500 localhost:3000/fast
 
 
 
-![image](../../../../imgs/node_51.jpg)
+![image](../../../imgs/node_51.jpg)
 
 `Requests per second`表示服务器每秒处理的请求数。
 `Time per request:   23.833ms`表示平均每个请求花费的时间
@@ -1045,7 +1045,7 @@ ab -c 1 -n 1 localhost:3000/
 
 结果如下，可以发现请求耗时547毫秒左右
 
-![image](../../../../imgs/node_52.jpg)
+![image](../../../imgs/node_52.jpg)
 
 
 在开始继续我们的测试用例前，我们先了解下ab发起并发请求的一个特性。实际上，当我们使用发起并发请求时，ab总是会尝试先发起一个请求，等到第一个请求结果回来后，说明被测试的服务器是正常的。只有确保了服务器是能够正常响应的，ab才会继续发起后面的并发请求。
@@ -1106,7 +1106,7 @@ ab -c 3 -n 4 localhost:3000/
 
 结果如下：
 
-![image](../../../../imgs/node_53.jpg)
+![image](../../../imgs/node_53.jpg)
 
 
 如果第一个请求报错，则ab不会再发起后面的并发请求
@@ -1158,7 +1158,7 @@ if (cluster.isMaster) {
 
 结果如下：
 
-![image](../../../../imgs/node_54.jpg)
+![image](../../../imgs/node_54.jpg)
 
 了解了ab的特性后，让我们回到我们的基准测试代码：
 
@@ -1207,7 +1207,7 @@ if (cluster.isMaster) {
 
 由于后面两个并发请求几乎同时到达的，但是我们只有一个进程实例，然后这个进程实例的线程池只有一个线程，我们的服务器一次只能处理一个pbkdf2函数的计算。
 
-![image](../../../../imgs/node_55.jpg)
+![image](../../../imgs/node_55.jpg)
 
 
 
@@ -1253,7 +1253,7 @@ if (cluster.isMaster) {
 
 从下面的结果可以看出，后面两个请求显然是几乎并行处理的。
 
-![image](../../../../imgs/node_56.jpg)
+![image](../../../imgs/node_56.jpg)
 
 可以看到，当我们增加进程实例时，貌似能够提升我们服务器的性能。因为我们可以一个进程处理一个请求，从而提高我们服务器的并发能力。
 
@@ -1302,7 +1302,7 @@ if (cluster.isMaster) {
 
 ```
 
-![image](../../../../imgs/node_57.jpg)
+![image](../../../imgs/node_57.jpg)
 
 实际上，这依赖于计算机CPU的配置。比如我的计算机CPU有4个内核。这意味着我的计算机处理传入请求的能力有限。这里有6个进程，每个进程的线程池中有1个线程，也就是在同一时间，有6个线程等待CPU调度，4个内核轮流执行这6个线程，很显然，每个内核平均执行1.5个线程。如果一个pbkdf2耗时550毫秒，那么平均每个内核需要执行550 * 1.5=825毫秒，也就是一个请求需要耗时825毫秒左右。这还是理想情况，没考虑CPU在进程之间切换的时间开销。这也是为啥我们从控制台的输出得到850毫秒左右的请求耗时。
 
@@ -1354,7 +1354,7 @@ if (cluster.isMaster) {
 
 从下图可以看出，最快的请求只需要555毫秒即可处理完成。而最慢的请求需要1135毫秒处理完成。因此，虽然我们使用了更少的进程，但实际上我们最终的性能是变得更好的。
 
-![image](../../../../imgs/node_58.jpg)
+![image](../../../imgs/node_58.jpg)
 
 
 因此，通过大幅增加应用程序内部的子进程数量，使其超出计算机CPU的内核数量，将对我们的服务性能产生净负面的影响。
@@ -1396,35 +1396,35 @@ app.listen(3000)
 pm2 start index.js -i 0
 ```
 
-![image](../../../../imgs/node_59.jpg)
+![image](../../../imgs/node_59.jpg)
 
 
 ```bash
 pm2 delete index
 ```
 
-![image](../../../../imgs/node_60.jpg)
+![image](../../../imgs/node_60.jpg)
 
 
 ```bash
 pm2 list
 ```
 
-![image](../../../../imgs/node_61.jpg)
+![image](../../../imgs/node_61.jpg)
 
 
 ```bash
 pm2 show index
 ```
 
-![image](../../../../imgs/node_62.jpg)
+![image](../../../imgs/node_62.jpg)
 
 
 ```bash
 pm2 monit
 ```
 
-![image](../../../../imgs/node_63.jpg)
+![image](../../../imgs/node_63.jpg)
 
 
 
