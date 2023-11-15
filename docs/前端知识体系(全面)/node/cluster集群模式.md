@@ -50,7 +50,7 @@ fetch('http://localhost:3000/fast').then(res => {
 ![image](../../../imgs/cluster_03.jpg)
 
 
-下面是cluster 模式的简单demo，这里只有一个进程实例，意味着只有一个事件循环实例。
+下面是cluster 模式的简单demo，这里只有一个进程实例，意味着只有一个事件循环线程。
 
 新建一个index.js文件，代码如下：
 ```js
@@ -74,8 +74,111 @@ if(cluster.isMaster){
         doWork(5000)
         res.send('Hi there')
     })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
     
     app.listen(3000)
 }
 
+```
+
+如果先请求/，紧接着请求/fast接口，如下图。会发现/fast请求被阻塞了
+
+![image](../../../imgs/cluster_04.jpg)
+
+
+下面的代码开启了2个进程实例，意味着有2个事件循环线程，也就是2个独立的服务。
+
+```js
+const cluster = require('cluster')
+const express = require('express')
+
+console.log(cluster.isMaster)
+
+if(cluster.isMaster){
+    // 下面调用了2次cluster.fork函数，意味着当我们在终端执行node index.js时，还会再额外执行2次index.js，
+    // 只不过另外2次的cluster.isMaster设置为false
+    cluster.fork();
+    cluster.fork();
+} else {
+    const app = express();
+
+    const doWork = (duration) => {
+        const start = Date.now();
+        while(Date.now() - start < duration){}
+    }
+    app.get('/', (req, res) => {
+        doWork(5000)
+        res.send('Hi there')
+    })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
+    
+    app.listen(3000)
+}
+```
+如下图，可以发现/fast请求不会被阻塞了。这是因为这里我们有两个进程，一个进程处理/请求，另一个进程处理/fast请求。
+![image](../../../imgs/cluster_05.jpg)
+
+
+## 服务器性能测试
+这里我们使用Mac自带的`ab`工具对性能进行测试。以下面的代码为例
+```js
+const cluster = require('cluster')
+const express = require('express')
+
+console.log(cluster.isMaster)
+
+if(cluster.isMaster){
+    cluster.fork();
+} else {
+    const app = express();
+
+    const doWork = (duration) => {
+        const start = Date.now();
+        while(Date.now() - start < duration){}
+    }
+    app.get('/', (req, res) => {
+        doWork(5000)
+        res.send('Hi there')
+    })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
+    
+    app.listen(3000)
+}
+```
+启动服务后，使用`ab`进行测试：
+
+```bash
+ab -c 50 -n 500 localhost:3000/fast
+```
+`-n 500`表示总共发起500个请求
+
+`-c 50`表示并发50个请求，这意味着要尝试同时发起50个请求，确保在任何给定时间点始终有50个请求在运行并等待处理。当然，后面50个请求除外
+
+![image](../../../imgs/node_51.jpg)
+
+`Requests per second`表示服务器每秒处理的请求数。
+`Time per request:   23.833ms`表示平均每个请求花费的时间
+
+下面表示的是请求时间的分布范围。比如
+
+ `50% 19`表示50%的请求在70ms内得到处理或响应。
+
+ `100%  35`表示至少有一个请求需要35ms的时间才能做出响应。
+```bash
+Percentage of the requests served within a certain time (ms)
+  50%     19
+  66%     21
+  75%     22
+  80%     23
+  90%     30
+  95%     33
+  98%     35
+  99%     35
+ 100%     35 (longest request)
 ```
