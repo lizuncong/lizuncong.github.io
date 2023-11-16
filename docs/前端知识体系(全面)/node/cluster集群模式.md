@@ -182,3 +182,49 @@ Percentage of the requests served within a certain time (ms)
   99%     35
  100%     35 (longest request)
 ```
+
+### Cluster Mode对性能的影响
+为了方便观察Cluster Mode开启的进程数量对性能有什么影响，下面的例子将线程池大小调整为1。
+```js
+process.env.UV_THREADPOOL_SIZE = 1;
+
+const cluster = require('cluster')
+
+console.log(cluster.isMaster)
+
+if (cluster.isMaster) {
+    cluster.fork();
+    // cluster.fork();
+    // cluster.fork();
+    // cluster.fork();
+} else {
+    const express = require('express')
+    const crypto = require('crypto')
+    const app = express();
+
+    app.get('/', (req, res) => {
+        crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+            res.send('Hi there')
+        })
+    })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
+
+    app.listen(3000)
+}
+
+```
+启动服务，使用ab测试单个请求耗时：
+
+```bash
+ab -c 1 -n 1 localhost:3000/
+```
+
+结果如下，可以发现请求耗时559毫秒左右
+
+![image](../../../imgs/node_52.jpg)
+
+
+500 500 1000 1500
+500 1000 1500 1500
