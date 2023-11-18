@@ -123,7 +123,7 @@ if(cluster.isMaster){
 ![image](../../../imgs/cluster_05.jpg)
 
 
-## 服务器性能测试
+## 性能测试工具简介
 这里我们使用Mac自带的`ab`工具对性能进行测试。以下面的代码为例
 ```js
 const cluster = require('cluster')
@@ -183,7 +183,7 @@ Percentage of the requests served within a certain time (ms)
  100%     35 (longest request)
 ```
 
-### Cluster Mode对性能的影响
+## Cluster 如何影响服务器性能
 为了方便观察Cluster Mode开启的进程数量对性能有什么影响，下面的例子将线程池大小调整为1。
 ```js
 process.env.UV_THREADPOOL_SIZE = 1;
@@ -194,16 +194,16 @@ console.log(cluster.isMaster)
 
 if (cluster.isMaster) {
     cluster.fork();
-    // cluster.fork();
-    // cluster.fork();
-    // cluster.fork();
 } else {
     const express = require('express')
     const crypto = require('crypto')
     const app = express();
-
     app.get('/', (req, res) => {
+        let startTime = Date.now();
+        console.log('接受请求：', startTime)
         crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+            console.log('请求耗时：', Date.now() - startTime)
+
             res.send('Hi there')
         })
     })
@@ -226,5 +226,226 @@ ab -c 1 -n 1 localhost:3000/
 ![image](../../../imgs/node_52.jpg)
 
 
-500 500 1000 1500
-500 1000 1500 1500
+有了基准值后，我们增加请求的数量以及并发数。这次总共发起三个请求，并发数为2。
+
+```bash
+ab -c 2 -n 3 localhost:3000/
+```
+
+由于后面两个并发请求几乎同时到达的，但是我们只有一个进程实例，然后这个进程实例的线程池只有一个线程，我们的服务器一次只能处理一个pbkdf2函数的计算。
+
+![image](../../../imgs/node_55.jpg)
+
+
+在单进程的情况下，我们的服务是没法很好的处理并发请求的。我们可以尝试着增加我们的进程数量，修改我们的demo，这次我们使用两个进程实例：
+
+```js
+process.env.UV_THREADPOOL_SIZE = 1;
+
+const cluster = require('cluster')
+
+console.log(cluster.isMaster)
+
+if (cluster.isMaster) {
+    cluster.fork();
+    cluster.fork();
+} else {
+    const express = require('express')
+    const crypto = require('crypto')
+    const app = express();
+    app.get('/', (req, res) => {
+        let startTime = Date.now();
+        console.log('接受请求：', startTime)
+        crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+            console.log('请求耗时：', Date.now() - startTime)
+
+            res.send('Hi there')
+        })
+    })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
+
+    app.listen(3000)
+}
+
+```
+
+同样的，我们还是发起总共3个请求，并发数为2。同一时刻最多有2个请求到达我们的服务器，得益于cluster的负载均衡能力，假设我们第一个进程处理第一个请求，第二个请求到达服务器时，cluser主线程发现第二个进程在空闲状态，于是将第二个请求转发给第二个进程处理。
+
+从下面的结果可以看出，后面两个请求显然是几乎并行处理的。
+
+![image](../../../imgs/node_56.jpg)
+
+可以看到，当我们增加进程实例时，貌似能够提升我们服务器的性能。因为我们可以一个进程处理一个请求，从而提高我们服务器的并发能力。
+
+
+
+## Cluster 是不是进程数量越多越好
+从上面的demo可以看到，我们增加cluster进程数量，能够提高我们服务器的并发能力。那么，是不是进程实例越多越好呢？
+
+为了验证进程实例越多，服务器性能是不是越好，我们看下面的demo。这次我们创建了6个子进程。
+
+```js
+process.env.UV_THREADPOOL_SIZE = 1;
+
+const cluster = require('cluster')
+
+console.log(cluster.isMaster)
+
+if (cluster.isMaster) {
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+} else {
+    const express = require('express')
+    const crypto = require('crypto')
+    const app = express();
+    app.get('/', (req, res) => {
+        let startTime = Date.now();
+        console.log('接受请求：', startTime)
+        crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+            console.log('请求耗时：', Date.now() - startTime)
+
+            res.send('Hi there')
+        })
+    })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
+
+    app.listen(3000)
+}
+
+```
+
+
+下面我们发起总共7个请求，并发数量为6
+```bash
+ab -c 6 -n 7 localhost:3000/
+```
+结果如下：
+![image](../../../imgs/node_57.jpg)
+
+实际上，这依赖于计算机CPU的配置。比如我的计算机CPU有4个内核。这意味着我的计算机处理传入请求的能力有限。我们这次启动的服务中有6个进程，每个进程的线程池中有1个线程，也就是服务器最多只能同时处理6个请求。这里我们发起7个请求，并发数为6，意味着同一时间最多有6个请求到达我们的服务器。刚好能够被我们的6个进程实例处理，每个进程的线程池又只有一个线程，因此相当于每个线程池处理1个请求，那就是有6个线程等待CPU调度，4个内核轮流执行这6个线程，很显然，每个内核平均执行1.5个线程。如果一个pbkdf2耗时550毫秒，那么平均每个内核需要执行550 * 1.5=825毫秒，也就是一个请求需要耗时825毫秒左右。这还是理想情况，没考虑CPU在进程之间切换的时间开销。这也是为啥我们从控制台的输出得到850毫秒左右的请求耗时。
+
+因此，尽管我们能够同时处理所有这些传入的请求，但最终结果是我们的整体性能受到影响。因为我们的CPU需要同时调度处理这6个请求。
+
+
+
+这次，我们只创建4个进程实例，数量保持和我们计算机CPU内核数一样。
+
+```js
+process.env.UV_THREADPOOL_SIZE = 1;
+
+const cluster = require('cluster')
+
+console.log(cluster.isMaster)
+
+if (cluster.isMaster) {
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+} else {
+    const express = require('express')
+    const crypto = require('crypto')
+    const app = express();
+    app.get('/', (req, res) => {
+        let startTime = Date.now();
+        console.log('接受请求：', startTime)
+        crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+            console.log('请求耗时：', Date.now() - startTime)
+
+            res.send('Hi there')
+        })
+    })
+    app.get('/fast', (req, res) => {
+        res.send('This was fast!')
+    })
+
+    app.listen(3000)
+}
+
+
+```
+
+从下图可以看出，最快的请求只需要555毫秒即可处理完成。而最慢的请求需要1135毫秒处理完成。因此，虽然我们使用了更少的进程，但实际上我们最终的性能是变得更好的。
+
+![image](../../../imgs/node_58.jpg)
+
+
+因此，通过大幅增加应用程序内部的子进程数量，使其超出计算机CPU的内核数量，将对我们的服务性能产生净负面的影响。
+
+
+## 使用PM2开启cluster mode
+一般在生产环境中，我们并不直接使用 nodejs 的cluster模块开启多进程实例，而是使用pm2。pm2提供了进程守护，比如进程实例挂了自动重启等能力。
+
+一般在开发环境不使用pm2
+
+新建index.js文件：
+```js
+const express = require('express')
+const crypto = require('crypto')
+
+
+const app = express();
+
+app.get('/', (req, res) => {
+    let startTime = Date.now();
+    console.log('接受请求：', startTime)
+    crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+        console.log('请求耗时：', Date.now() - startTime)
+
+        res.send('Hi there')
+    })
+})
+
+app.get('/fast', (req, res) => {
+    res.send('This was fast!')
+})
+
+app.listen(3000)
+
+
+```
+
+### 启动服务
+
+```bash
+pm2 start index.js -i 0
+```
+
+![image](../../../imgs/node_59.jpg)
+
+### 停止服务
+```bash
+pm2 delete index
+```
+
+![image](../../../imgs/node_60.jpg)
+
+### 列举所有进程
+
+```bash
+pm2 list
+```
+
+![image](../../../imgs/node_61.jpg)
+
+### 显示进程信息
+```bash
+pm2 show index
+```
+
+![image](../../../imgs/node_62.jpg)
+
+### 进程监控
+```bash
+pm2 monit
+```
+
+![image](../../../imgs/node_63.jpg)
