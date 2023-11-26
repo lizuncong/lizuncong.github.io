@@ -1,0 +1,183 @@
+## 事件循环简介
+
+事件循环详细介绍可以看Node.js官方文档：[The Node.js Event Loop, Timers, and process.nextTick()](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/)
+
+
+
+下面是事件循环各阶段的顺序。每个阶段都有个待执行的先进先出的回调队列。当事件循环进入某个阶段时，它会执行这个阶段的操作，然后执行这个阶段的任务队列。如果任务队列全部执行完成，或者执行的任务数量达到了上限，那么事件循环就会进入下一阶段。
+
+![image](../../../imgs/even_01.jpg)
+
+- timers。执行setTimeout和setInterval的回调。
+- pending callbacks。执行系统操作相关或者线程池相关的回调，例如tcp udp。这里面执行的是伪代码中的pendingOSTasks以及pendingOperations
+- idle，prepare。只在内部使用。
+- poll。检索新的I/O事件；执行与I/O相关的回调（除了关闭回调、计时器调度的回调和setImmediate（）之外，几乎所有回调都执行）；node将在适当的时候在这个阶段阻塞。
+- check。执行setImmediate的回调
+- close callbacks。执行close事件的回调, 比如`socket.on('close', ...).`
+
+
+## 事件循环流程
+
+Nodejs事件循环流程图：
+
+![image](../../../imgs/node_35.jpg)
+
+- 从上往下执行同步代码，将不同的任务添加至相应的队列
+- 所有同步代码执行完后，会去执行满足条件的微任务。node中微任务有promise、process.nextTick。其中process.nextTick优先级最高。
+- 所有微任务代码执行后会执行timer队列中满足条件的宏任务
+- timer中的所有宏任务执行完成后就会依次切换队列
+- 注意：在完成队列切换之前会先清空微任务队列
+
+## 实践
+
+### 案例1
+```js
+setTimeout(() => { 
+    console.log('setTimeout')
+})
+
+Promise.resolve().then(() => {
+    console.log('p1')
+})
+
+console.log('start')
+
+process.nextTick(() => {
+    console.log('tick')
+})
+
+setImmediate(() => {
+    console.log('setImmediate')
+})
+
+console.log('end')
+```
+
+输出：
+```bash
+start
+end
+tick
+p1
+setTimeout
+setImmediate
+```
+
+在这个案例中，我们只需要关注node事件循环中的3个阶段：timer、poll、 check。执行流程如下：
+
+1.当同步任务执行完成后，首先输出的是
+```bash
+start
+end
+```
+
+此时各事件队列状态如下：
+
+![image](../../../imgs/eventloop_01.jpg)
+
+2.同步代码执行完成后，检查微任务队列中是否有需要执行的任务。这里有一个p1和tick，但process.nextTick的优先级最高的。因此输出如下：
+```bash
+start
+end
+tick
+p1
+```
+此时微任务队列已经清空，状态如下：
+
+![image](../../../imgs/eventloop_02.jpg)
+
+3.微任务队列清空以后，事件循环开始进入timer阶段。发现有setTimeout回调需要执行，因此输出：
+
+```bash
+start
+end
+tick
+p1
+setTimeout
+```
+此时状态如下：
+
+![image](../../../imgs/eventloop_03.jpg)
+
+4.timer阶段的队列清空以后，事件循环依次切换到pending callbacks、idle prepare、poll阶段，这几个阶段均没有任务。
+
+5.事件循环切换到check阶段，发现有setImmediate回调需要执行，因此输出：
+```bash
+start
+end
+tick
+p1
+setTimeout
+setImmediate
+```
+
+
+## 以下待整理
+
+
+
+当我们启动一个node应用程序时，node会创建一个线程，执行我们所有的代码。这个线程就是我们所说的主线程，也叫事件循环线程。
+
+详情可以点击[这里](https://nodejs.org/zh-cn/docs/guides/dont-block-the-event-loop)查看
+
+![image](../../../imgs/node_14.jpg)
+
+我们可以将事件循环看作是一个控制结构，它决定应该执行什么操作。了解事件循环的工作方式是极其重要的，因为node的许多性能问题最终都归结为事件循环的行为方式。因此，从本质上讲，如果我们理解事件循环机制，那么就可以很好的理解nodejs中的性能问题
+
+
+## 事件循环伪代码
+可以通过伪代码的方式理解事件循环。每次事件循环在我们的node应用程序中运行时，我们称之为一tick。
+
+
+事件循环伪代码：
+
+```js
+// node myFile.js
+
+
+// New timers，tasks，operations are recorded from myFile running
+// 因此如果我们的myFile文件中使用了http服务监听请求，那么我们的程序将不会退出。
+myFile.runContents();
+
+const pendingTimers = [];
+const pendingOSTasks = [];
+const pendingOperations = [];
+
+// 在shouldContinue函数中，nodejs将执行三个单独的检查以决定事件循环是否应该继续。
+function shouldContinue(){
+    // Check one: Any pending setTimeout，setInterval，setImmediate 首先，先检查是否有setTimeout、setInterval、setImmediate注册的回调函数
+    // Check two: Any pending OS tasks?(Like server listening to port) 其次，检查是否有任何挂起的操作系统任务。比如检查是否服务器仍在监听传入的请求。
+    // Check three：Any pending long running operations?(Like fs module) 。检查是否存在长时间运行的操作。和第二次检查有点类似。但两者之间有明显的区别。长时间运行的操作的示例：FS模块的回调函数
+    return pendingTimers.length || pendingOSTasks.length || pendingOperations.length
+}
+// shouldContinue返回true时，事件循环将继续运行。返回false时，事件循环将结束，程序执行到底部，并退出
+// Entire body executes in one 'tick'
+while(shouldContinue()){
+    // 1.Node looks at pendingTimers and sees if any functions are ready to be called. setTimeout，setInterval
+
+    // 2.Node looks at pendingOSTasks and pendingOperations and calls relevant callbakcs
+
+    // 3.Pause execution。Continue when... (暂停执行，在暂停期间，node等待新的事件发生。node just sits around and got no other work to do，it just going to waint until it see):
+    //      - a new pendingOSTask is done. Like a new request has come in one some port that we are listening to.
+    //      - a new pendingOperation is done. Like we fetch some file of the hard drive
+    //      - a timer is about to complete. Like a timer for one of the setTimeout or setIntervals is about to 
+    // expire and the relevant function needs to be called
+    // Then once that pause is complete bacause we presumably see that something is 
+    // about to occur we then continue with the last two steps inside of the event loop
+
+    // 4. Look at pendingTimers. Call any setImmediate
+
+    // 5. Handle any 'close' events.本质上讲，事件循环中的最后一步只是处理清理代码和清理
+}
+
+
+
+
+// exit back to terminal
+
+
+```
+
+>pendingOperations实质上表示的是正在线程池中执行的任务。因此，只要线程池中仍有一些代码或一些任务排队等待运行，我们的程序将继续执行事件循环。当我们启动node应用程序时，node内部会创建类似pendingOSTasks的数组表示所有挂起的请求或者与底层操作系统相关的操作。只要该数组中仍有一些活跃的请求或者操作，node就会继续运行。一旦所有底层操作系统调用都完成了，事件循环也就结束了，应用就会退出。这也是为什么，当我们通过http.createServer创建一个服务并监听端口时，应用程序就会在终端中一直执行而不会退出的原因。
+
+
