@@ -111,6 +111,85 @@ setTimeout
 setImmediate
 ```
 
+### 案例2
+```js
+setTimeout(() => {
+    console.log('settimeout1')
+    Promise.resolve().then(() => {
+        console.log('p1')
+    })
+    process.nextTick(() => {
+        console.log('t1')
+    })
+})
+
+Promise.resolve().then(() => {
+    console.log('p2')
+})
+
+console.log('start')
+
+
+setTimeout(() => {
+    console.log('settimeout2')
+    Promise.resolve().then(() => {
+        console.log('p3')
+    })
+    process.nextTick(() => {
+        console.log('t2')
+    })
+})
+setImmediate(() => {
+    console.log('setImmediate')
+})
+
+console.log('end')
+```
+
+### 案例3
+```js
+setTimeout(() => {
+    console.log('timeout')
+})
+
+setImmediate(() => {
+    console.log('immediate')
+})
+```
+控制台多次执行这段代码，可以发现，输出顺序并不是固定的。
+
+这是因为`setTimeout(callback, 0)`虽然第二个参数是0，但是有误差的，并不是立即就执行的。
+
+如果延迟较大，事件切换进入timer阶段时发现没有任务执行，就依次切换到check阶段，执行`setImmediate`。然后第二轮循环回到timer阶段，发现有任务，执行`setTimeout`
+
+如果没有延迟，则`setTimeout`回调立即加入timer阶段的事件队列。第一轮事件循环开始时，timer阶段就有任务需要执行，因此先执行`setTimeout`的回调。然后再执行`setImmediate`的回调。
+
+如果把上面的代码包裹在`fs.readFile`中执行，可以发现执行顺序就是固定的，先打印`immediate`，再打印`timeout`
+```js
+const fs = require('fs')
+fs.readFile('./test.js', () => {
+    setTimeout(() => {
+        console.log('timeout')
+    })
+    
+    setImmediate(() => {
+        console.log('immediate')
+    })
+})
+```
+
+这是因为`fs.readFile`的回调是在poll阶段执行的，`fs.readFile`回调执行完成后，此时timer阶段就有一个`setTimeout`回调需要执行，check阶段就有一个`setImmediate`回调需要执行。事件循环依次进入check阶段，因此`setImmediate`的回调先执行。第二轮事件循环来到了timer阶段，`setTimeout`后执行。
+
+## Node与浏览器事件循环的区别
+- 任务队列数不同
+    + 浏览器只有宏任务和微任务队列
+    + Node有6个事件队列
+- 微任务执行时机不同
+    + 浏览器中先执行完所有微任务，再执行宏任务
+    + Node在事件队列切换时会去清空微任务
+- 微任务优先级不同
+
+
 
 ## 以下待整理
 
