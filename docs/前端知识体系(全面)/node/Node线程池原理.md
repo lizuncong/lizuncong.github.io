@@ -25,6 +25,22 @@
 因此，我们可能不想直接访问C++代码，我们希望在项目中使用javascript函数。通过Node.js，我们不必直接访问libuv库中的C++代码
 
 
+### libuv
+在Node.js中，libuv用于处于异步方法。libuv有两种方式处理异步方法：
+- 操作系统的异步机制。比如网络I/O操作，libuv将网络I/O操作委托给操作系统底层处理。
+- 线程池。比如文件读取模块fs.readFile，密码模块的crypto.pbkdf2函数，libuv将这些操作委托到线程池处理。Linux使用epoll，MacOS使用Kqueue，Window使用IO Completion Port
+
+只要有可能，libuv就会使用操作系统原生的异步机制，以避免阻塞主线程。
+
+由于这是操作系统内核的一部分，每个操作系统的实现机制不同。
+
+依赖于操作系统原生的异步机制，使得Node具有很强的扩展性，因为唯一的限制是操作系统内核
+
+>https.request是网络I/O操作，不是CPU密集型操作。它并不使用线程池。Libuv将网络I/O操作委托给操作系统内核，然后轮询内核看看请求是否完成了。
+
+![image](../../../imgs/node_65.jpg)
+
+
 ## Node.js模块实现
 以Nodejs内置模块crypto中的pbkdf2函数为例：
 
