@@ -58,7 +58,7 @@ Nodejs事件循环流程图：
 ## 实验
 
 
-### Microtask Queues
+### Microtask Queue
 微任务队列执行顺序是：
 - 优先执行process.nextTick的回调，只有清空了process.nextTick队列，才会将控制权交给Promise队列
 - 然后执行Promise队列，如果在Promise回调中调度了process.nextTick，那也只能等到Promsie队列清空，才会将控制权交给process.nextTick队列。
@@ -109,7 +109,7 @@ next tick5
 
 > 微任务队列的执行，首先是检查process.nextTick队列，只有process.nextTick队列全部清空后。再检查promise队列，只有promise队列全部清空后，再检查process.nextTick队列。只有当process.nextTick队列和promise队列都完全清空后，控制权才交给事件循环。
 
-### Timer Queues
+### Timer Queue
 我们知道事件循环在进入下一阶段前，会先清空微任务队列。那如果在事件循环的某个阶段中，有个任务又调度了微任务，那微任务又是咋样执行的？
 
 实际上，在Node 11及以上，如果在宏任务中又调度了微任务，那么宏任务执行完后，会先清空微任务队列，再回来接着继续执行宏任务。
@@ -140,6 +140,42 @@ setTimeout(() => {
     console.log('timer3')
 }, 0);
 ```
+
+### I/O Queue
+```js
+const fs = require('fs')
+
+setTimeout(() => {
+    console.log('timer 1')
+}, 0);
+
+fs.readFile('test.js', () => {
+    console.log('read file')
+})
+```
+
+如果多执行几次，会发现控制台输出的顺序不确定，如下：
+
+![image](../../../imgs/node_69.jpg)
+
+实际上，当我们设置setTimeout第二个参数为0时，理论上表示的是0毫秒的延迟，也就是需要立即执行。
+
+![image](../../../imgs/node_70.jpg)
+
+但是在chromium的底层实现中
+
+```bash
+double intervalMilliseconds = std::max(oneMillisecond, interval * oneMillisecond);
+```
+
+可以看出，如果我们传递的interval为0，那么intervalMilliseconds的值为oneMillisecond，也就是1毫秒。因此setTimeout(cb, 0)也会存在1毫秒的延迟。问题来了，1毫秒的延迟如何影响上面的执行顺序？
+
+当我们设置0毫秒的延迟时，事件循环开始时需要检查1毫秒是否已过。如果事件循环在0.05毫秒时进入计时器，此时setTimeout的回调还没到时执行，timer queue为空。因此事件循环依次进入I/O queue。执行fs.readFile的回调。如果CPU繁忙，在1.01毫秒时事件循环开始，并进入timer queue，此时timer queue有一个任务需要执行，打印timer 1。然后依次进入I/O queue。
+
+因为CPU繁忙程度的不确定性，以及setTimeout(cb, 0)有1毫秒的延迟，因此我们没法保证在第一轮事件循环开始时，能否立即执行setTimeout(cb, 0)的回调。
+
+![image](../../../imgs/node_71.jpg)
+
 
 ### 案例1
 ```js
