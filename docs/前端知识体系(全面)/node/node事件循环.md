@@ -1,4 +1,28 @@
+## 异步代码执行(Async Code Execution)
+JavaScript is a synchronous, blocking, single-threaded language. 
+
+To make async programming possible, we need the help of libuv
+
+### Few Questions
+Whenever an async task completes in libuv, at what point does Node decide to run the associated callback function on the call stack?
+
+What about async methods like setTimeout and setInterval which also delay the execution of a callback function
+
+If two async tasks such as setTimeout and readFile complete at the same time, how does Node decide which callback function to run first on the call stack
+
+
+Event Loop is a C program and is part of libuv. It is a design pattern that orchestrates or co-ordinates the execution of synchronous and asynchronous code in Node.js
+
+
+![image](../../../imgs/node_66.jpg)
+
+>timer queue、I/O queue、check queue、close queue都是libuv的一部分，而microtask queue并不是libuv的一部分
+
+
+
 ## 事件循环简介
+
+事件循环是libuv的一部分。
 
 事件循环详细介绍可以看Node.js官方文档：[The Node.js Event Loop, Timers, and process.nextTick()](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/)
 
@@ -28,7 +52,94 @@ Nodejs事件循环流程图：
 - timer中的所有宏任务执行完成后就会依次切换队列
 - 注意：在完成队列切换之前会先清空微任务队列
 
-## 实践
+### process.nextTick
+不鼓励使用process.nextTick，因为这会导致事件循环没法执行，处于饥饿状态。
+
+## 实验
+
+
+### Microtask Queues
+微任务队列执行顺序是：
+- 优先执行process.nextTick的回调，只有清空了process.nextTick队列，才会将控制权交给Promise队列
+- 然后执行Promise队列，如果在Promise回调中调度了process.nextTick，那也只能等到Promsie队列清空，才会将控制权交给process.nextTick队列。
+```js
+process.nextTick(() => {
+    console.log('next tick1')
+})
+
+process.nextTick(() => {
+    console.log('next tick2')
+    process.nextTick(() => {
+        console.log('next tick3')
+    })
+})
+
+process.nextTick(() => {
+    console.log('next tick4')
+})
+
+Promise.resolve().then(() => {
+    console.log('promise 1')
+})
+
+Promise.resolve().then(() => {
+    console.log('promise 2')
+    process.nextTick(() => {
+        console.log('next tick5')
+    })
+})
+
+Promise.resolve().then(() => {
+    console.log('promise 3')
+})
+```
+
+输出：
+```bash
+next tick1
+next tick2
+next tick4
+next tick3
+promise 1
+promise 2
+promise 3
+next tick5
+```
+在这个案例中，虽然promise2又调用了process.nextTick，但控制权仍在promise队列中，此时nodejs依旧是先执行完promise 3，然后检查nextTick队列发现还有一个next tick5的回调需要执行。
+
+> 微任务队列的执行，首先是检查process.nextTick队列，只有process.nextTick队列全部清空后。再检查promise队列，只有promise队列全部清空后，再检查process.nextTick队列。只有当process.nextTick队列和promise队列都完全清空后，控制权才交给事件循环。
+
+### Timer Queues
+我们知道事件循环在进入下一阶段前，会先清空微任务队列。那如果在事件循环的某个阶段中，有个任务又调度了微任务，那微任务又是咋样执行的？
+
+实际上，在Node 11及以上，如果在宏任务中又调度了微任务，那么宏任务执行完后，会先清空微任务队列，再回来接着继续执行宏任务。
+
+而在Node11以前，如果在宏任务中又调度了微任务，那么只有等到所有的宏任务都执行完后，才会清空微任务队列。
+
+比如下面的例子，在Node 11及以上版本时，打印如下：
+
+![image](../../../imgs/node_68.jpg)
+
+在Node 11以前的版本，打印如下：
+
+![image](../../../imgs/node_67.jpg)
+
+```js
+setTimeout(() => {
+    console.log('timer1')
+}, 0);
+
+setTimeout(() => {
+    console.log('timer2')
+    process.nextTick(() => {
+        console.log('next tick 1')
+    })
+}, 0);
+
+setTimeout(() => {
+    console.log('timer3')
+}, 0);
+```
 
 ### 案例1
 ```js

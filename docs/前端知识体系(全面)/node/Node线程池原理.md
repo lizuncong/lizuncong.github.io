@@ -26,6 +26,10 @@
 
 
 ### libuv
+- What? libuv是一个C语言实现的开源的跨平台的库
+- Why? libuv用于处理Node.js中的异步非阻塞操作
+- How? libuv使用线程池和事件循环处理异步操作
+
 在Node.js中，libuv用于处于异步方法。libuv有两种方式处理异步方法：
 - 操作系统的异步机制。比如网络I/O操作，libuv将网络I/O操作委托给操作系统底层处理。
 - 线程池。比如文件读取模块fs.readFile，密码模块的crypto.pbkdf2函数，libuv将这些操作委托到线程池处理。Linux使用epoll，MacOS使用Kqueue，Window使用IO Completion Port
