@@ -218,6 +218,7 @@ read file在setImmediate之后执行，而不是在setImmediate之前执行。
 
 这是因为当我们调用fs.readFile(pathname, cb)时，cb并不是立即就进入IO queue队列中的。因为IO操作是比较耗时的，因此事件循环必须轮询以检查IO操作是否完成(IO Polling阶段)，只有IO操作完成后，fs.readFile(pathname, cb)的回调cb才会加入IO Queue等待事件循环执行。因此当事件循环第一次进入IO Queue时，IO操作还没完成，此时IO Queue为空，然后依次进入check queue阶段，执行setImmediate的回调。当事件循环第二次进入IO Queue时，IO操作完成并已经添加cb到IO Queue中了。
 
+>总结：IO事件需要轮询的，只有当IO操作完成后，fs.readFile的回调函数才会被添加到IO queue中执行。
 
 ### 案例1
 ```js
