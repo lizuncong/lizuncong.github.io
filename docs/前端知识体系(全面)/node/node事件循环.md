@@ -177,6 +177,48 @@ double intervalMilliseconds = std::max(oneMillisecond, interval * oneMillisecond
 ![image](../../../imgs/node_71.jpg)
 
 
+### IO Polling
+Node事件循环中，会依次经过Timer Queue、IO Queue、Check Queue、close queue。因此，理论上来说，IO Queue会先执行。以下面的例子为例，输出顺序是怎样的？
+```js
+const fs = require('fs')
+
+fs.readFile('test.js', () => {
+    console.log('read file')
+})
+
+process.nextTick(() => {
+    console.log('next tick')
+})
+Promise.resolve().then(() => {
+    console.log('promise')
+})
+setTimeout(() => {
+    console.log('timer 1')
+}, 0);
+setImmediate(() => {
+    console.log('setImmediate')
+})
+
+const startTime = Date.now();
+
+while (Date.now() - startTime < 2) { }
+```
+
+实际上，上面代码的打印为：
+
+```bash
+next tick
+promise
+timer 1
+setImmediate
+read file
+```
+
+read file在setImmediate之后执行，而不是在setImmediate之前执行。
+
+这是因为当我们调用fs.readFile(pathname, cb)时，cb并不是立即就进入IO queue队列中的。因为IO操作是比较耗时的，因此事件循环必须轮询以检查IO操作是否完成(IO Polling阶段)，只有IO操作完成后，fs.readFile(pathname, cb)的回调cb才会加入IO Queue等待事件循环执行。因此当事件循环第一次进入IO Queue时，IO操作还没完成，此时IO Queue为空，然后依次进入check queue阶段，执行setImmediate的回调。当事件循环第二次进入IO Queue时，IO操作完成并已经添加cb到IO Queue中了。
+
+
 ### 案例1
 ```js
 setTimeout(() => { 
