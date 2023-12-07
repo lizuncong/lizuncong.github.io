@@ -220,6 +220,62 @@ read file在setImmediate之后执行，而不是在setImmediate之前执行。
 
 >总结：IO事件需要轮询的，只有当IO操作完成后，fs.readFile的回调函数才会被添加到IO queue中执行。
 
+### check queue
+```js
+setTimeout(() => {
+    console.log('timer1')
+}, 0);
+
+setImmediate(() => {
+    console.log('setImmediate')
+})
+```
+
+多次执行上面代码，可以发现输出如下：
+
+![image](../../../imgs/node_72.jpg)
+
+可以发现，输出顺序是随机的。这个原理和上面的例子一样，都是因为setTimeout(cb, 0)有1ms的延迟。
+
+### close queue
+```js
+const fs = require('fs')
+
+const readableStream = fs.createReadStream('test.js')
+readableStream.close();
+readableStream.on('close', () => {
+    console.log('close')
+})
+
+setTimeout(() => {
+    console.log('timer1')
+}, 0);
+
+setImmediate(() => {
+    console.log('setImmediate')
+})
+
+Promise.resolve().then(() => {
+    console.log('promise')
+})
+
+
+process.nextTick(() => {
+    console.log('next tick')
+})
+
+```
+
+### 小结
+- 事件循环是一个C语言程序，负责协调Node.js中同步和异步代码的执行
+- 事件循环负责协调执行6个不同队列中的回调：nextTick、Promise、Timer、I/O、check以及close队列。
+    + 使用process.nextTick方法添加一个回调到nextTick队列中
+    + 使用Promise添加一个回调到Promise队列中
+    + 使用setTimeout或者setInterval添加一个回调到timer队列中
+    + 使用fs.readFile添加一个回调到IO队列中
+    + 使用setImmediate添加一个回调到check队列中
+    + 监听close事件添加一个回调到close队列中
++ nextTick和Promise队列在事件循环切换到下一阶段前执行，或者在事件循环某个阶段的任务之间执行。
 ### 案例1
 ```js
 setTimeout(() => { 
