@@ -52,8 +52,11 @@ Lighthouse分数计算规则页面
 因此，虽然我们优化后，各指标下降很明显，视觉上我们的网页显示速度也快了很多，但由于各指标还是超过了最大值，得分依旧是0，加权后总分还是不变。
 
 
-## 实验讲解Lighthouse指标
+## Lighthouse指标实验
+
+### FCP && LCP
 以下面的代码为例
+
 ```html
 <!doctype html>
 <html lang="en">
@@ -64,7 +67,7 @@ Lighthouse分数计算规则页面
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
         const startTime = Date.now();
-        while (Date.now() - startTime < 11800) { }
+        while (Date.now() - startTime < 9000) { }
     </script>
 
 <body>
@@ -75,6 +78,160 @@ Lighthouse分数计算规则页面
 </body>
 </html>
 ```
+
+这里我们阻塞主线程9秒钟，跑分如下：
+
+![image](../../../imgs/p_06.jpg)
+
+
+如果我们修改阻塞时间，改成6秒
+
+```html
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        const startTime = Date.now();
+        while (Date.now() - startTime < 6000) { }
+    </script>
+
+<body>
+    <div id="root">
+        hello world
+        <button>btb</button>
+    </div>
+</body>
+</html>
+```
+
+跑分如下：
+
+![image](../../../imgs/p_07.jpg)
+
+从2个demo可以看到，FCP和LCP都下降很明显，但是我们的分数还是没有提高。但页面显示速度明显变快了。
+
+如果将阻塞时间调成500ms
+
+```html
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        const startTime = Date.now();
+        while (Date.now() - startTime < 500) { }
+    </script>
+
+<body>
+    <div id="root">
+        hello world
+        <button>btb</button>
+    </div>
+</body>
+</html>
+```
+
+跑分如下：
+
+![image](../../../imgs/p_08.jpg)
+
+### TBT
+这里我们通过在setTimeout里添加一个while循环以实验TBT耗时。
+```html
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<body>
+    <div id="root">
+        hello world
+        <button>btb</button>
+    </div>
+    <script>
+        setTimeout(() => {
+            const startTime = Date.now();
+            while (Date.now() - startTime < 6000) { }
+        }, 0);
+
+    </script>
+</body>
+
+</html>
+```
+
+![image](../../../imgs/p_09.jpg)
+
+可以看出，FCP和LCP都已经几乎满分，TBT耗时较大。
+
+可以尝试着调整setTimeout里面while循环的时间，并跑分观察TBT耗时。
+
+### CLS
+
+```html
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        .block {
+            width: 5px;
+            height: 5px;
+            background-color: red;
+        }
+    </style>
+
+<body>
+    <div id="root">
+        hello world
+        <div id="block2" class="block">
+
+        </div>
+        <p>dsafdsd </p>
+        <div id="block" class="block">
+
+        </div>
+        <button>btb</button>
+        <p>
+            hello world
+        </p>
+
+    </div>
+    <script>
+        let size = 5;
+        const resize = (el) => {
+            setTimeout(() => {
+                size = size + 5;
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                if (size < 1000) {
+                    resize(el)
+                }
+            }, 1);
+        }
+        resize(block)
+        resize(block2)
+
+    </script>
+</body>
+
+</html>
+```
+
+![image](../../../imgs/p_10.jpg)
 
 ## 跑分系统
 要使用谷歌Lighthouse实现自动化跑分，可以按照以下步骤进行操作：

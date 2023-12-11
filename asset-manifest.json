@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.cd3a0122.css",
-    "main.js": "/static/js/main.0307b2ce.js",
+    "main.js": "/static/js/main.f0a0585c.js",
     "A0000.css": "/static/css/A0000.9c86f874.chunk.css",
     "A0000.js": "/static/js/A0000.d6aa0516.chunk.js",
     "A0001.css": "/static/css/A0001.9c86f874.chunk.css",
@@ -263,7 +263,7 @@
     "A05130.css": "/static/css/A05130.9c86f874.chunk.css",
     "A05130.js": "/static/js/A05130.4e8e52c1.chunk.js",
     "A05131.css": "/static/css/A05131.9c86f874.chunk.css",
-    "A05131.js": "/static/js/A05131.aa8ccf7e.chunk.js",
+    "A05131.js": "/static/js/A05131.d8a80ab8.chunk.js",
     "A05132.css": "/static/css/A05132.9c86f874.chunk.css",
     "A05132.js": "/static/js/A05132.8af6faf9.chunk.js",
     "A05133.css": "/static/css/A05133.9c86f874.chunk.css",
@@ -605,7 +605,11 @@
     "../build/imgs/node_63.jpg": "/../build/imgs/node_63.jpg",
     "../build/imgs/height.jpg": "/../build/imgs/height.jpg",
     "../build/imgs/node_24.jpg": "/../build/imgs/node_24.jpg",
+    "../build/imgs/p_10.jpg": "/../build/imgs/p_10.jpg",
+    "../build/imgs/p_09.jpg": "/../build/imgs/p_09.jpg",
     "../build/imgs/b_08.jpg": "/../build/imgs/b_08.jpg",
+    "../build/imgs/p_08.jpg": "/../build/imgs/p_08.jpg",
+    "../build/imgs/p_07.jpg": "/../build/imgs/p_07.jpg",
     "../build/imgs/referer-02.jpg": "/../build/imgs/referer-02.jpg",
     "../build/imgs/node_09.jpg": "/../build/imgs/node_09.jpg",
     "../build/imgs/node_31.jpg": "/../build/imgs/node_31.jpg",
@@ -614,6 +618,7 @@
     "../build/imgs/node_59.jpg": "/../build/imgs/node_59.jpg",
     "../build/imgs/process-04.jpg": "/../build/imgs/process-04.jpg",
     "../build/imgs/node_08.jpg": "/../build/imgs/node_08.jpg",
+    "../build/imgs/p_06.jpg": "/../build/imgs/p_06.jpg",
     "../build/imgs/node_32.jpg": "/../build/imgs/node_32.jpg",
     "../build/imgs/node_42.jpg": "/../build/imgs/node_42.jpg",
     "../build/imgs/quic-01.png": "/../build/imgs/quic-01.png",
@@ -838,6 +843,7 @@
     "static/media/zip文件格式.md": "/static/media/zip文件格式.89bf8caf0f1b39bd1cae.md",
     "static/media/https简介及与http的区别.md": "/static/media/https简介及与http的区别.7011a5201dec0839b569.md",
     "static/media/JavaScript创建对象的方法.md": "/static/media/JavaScript创建对象的方法.f8acb597082070716572.md",
+    "static/media/lighthouse各指标计算.md": "/static/media/lighthouse各指标计算.12bea9ef41ea57594875.md",
     "static/media/web性能指标及前端监控体系.md": "/static/media/web性能指标及前端监控体系.5fff756050c4413aaea7.md",
     "static/media/客户端和js通信方式.md": "/static/media/客户端和js通信方式.bce3dbeb8d9fcbd12f2a.md",
     "static/media/http请求头字段.md": "/static/media/http请求头字段.3054c280bb5a960c8d19.md",
@@ -850,7 +856,6 @@
     "static/media/动态import实现原理.md": "/static/media/动态import实现原理.fe65a1ce1f25ccf410ba.md",
     "static/media/4.影响Node性能的因素.md": "/static/media/4.影响Node性能的因素.66b41aae29be339d9d32.md",
     "../build/imgs/net04.png": "/../build/imgs/net04.png",
-    "static/media/lighthouse各指标计算.md": "/static/media/lighthouse各指标计算.d5d412811afb47715ece.md",
     "static/media/6.优化设计：IO方面应该要注意什么.md": "/static/media/6.优化设计：IO方面应该要注意什么.cfab8b5044bb30efae3a.md",
     "static/media/Table表格的倒置用法.md": "/static/media/Table表格的倒置用法.a5a637f60283677ed648.md",
     "static/media/CRP关键渲染路径-从输入URL到页面呈现都发生了什么.md": "/static/media/CRP关键渲染路径-从输入URL到页面呈现都发生了什么.74c46db131a1a9172718.md",
@@ -1091,7 +1096,7 @@
     "static/media/流操作.md": "/static/media/流操作.31d6cfe0d16ae931b73c.md",
     "static/media/生产环境如何运用sourcemap定义js错误.md": "/static/media/生产环境如何运用sourcemap定义js错误.31d6cfe0d16ae931b73c.md",
     "main.cd3a0122.css.map": "/static/css/main.cd3a0122.css.map",
-    "main.0307b2ce.js.map": "/static/js/main.0307b2ce.js.map",
+    "main.f0a0585c.js.map": "/static/js/main.f0a0585c.js.map",
     "A0000.9c86f874.chunk.css.map": "/static/css/A0000.9c86f874.chunk.css.map",
     "A0000.d6aa0516.chunk.js.map": "/static/js/A0000.d6aa0516.chunk.js.map",
     "A0001.9c86f874.chunk.css.map": "/static/css/A0001.9c86f874.chunk.css.map",
@@ -1353,7 +1358,7 @@
     "A05130.9c86f874.chunk.css.map": "/static/css/A05130.9c86f874.chunk.css.map",
     "A05130.4e8e52c1.chunk.js.map": "/static/js/A05130.4e8e52c1.chunk.js.map",
     "A05131.9c86f874.chunk.css.map": "/static/css/A05131.9c86f874.chunk.css.map",
-    "A05131.aa8ccf7e.chunk.js.map": "/static/js/A05131.aa8ccf7e.chunk.js.map",
+    "A05131.d8a80ab8.chunk.js.map": "/static/js/A05131.d8a80ab8.chunk.js.map",
     "A05132.9c86f874.chunk.css.map": "/static/css/A05132.9c86f874.chunk.css.map",
     "A05132.8af6faf9.chunk.js.map": "/static/js/A05132.8af6faf9.chunk.js.map",
     "A05133.9c86f874.chunk.css.map": "/static/css/A05133.9c86f874.chunk.css.map",
@@ -1610,6 +1615,6 @@
   },
   "entrypoints": [
     "static/css/main.cd3a0122.css",
-    "static/js/main.0307b2ce.js"
+    "static/js/main.f0a0585c.js"
   ]
 }
