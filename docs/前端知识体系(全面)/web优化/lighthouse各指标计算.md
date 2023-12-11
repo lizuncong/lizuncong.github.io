@@ -234,53 +234,41 @@ Lighthouse分数计算规则页面
 ![image](../../../imgs/p_10.jpg)
 
 ## 跑分系统
-要使用谷歌Lighthouse实现自动化跑分，可以按照以下步骤进行操作：
+使用谷歌Lighthouse实现自动化跑分，demo
+```js
+import lighthouse from 'lighthouse';
+import * as chromeLauncher from 'chrome-launcher';
 
-1. 安装Lighthouse：首先，确保你已经安装了Node.js和npm。然后在命令行中运行以下命令来全局安装Lighthouse：
-```
-npm install -g lighthouse
-```
 
-2. 创建Lighthouse配置文件：可以创建一个JSON文件，用于配置Lighthouse的运行参数和规则。例如，创建一个名为`lighthouse-config.json`的文件，并在其中定义你想要的配置选项。你可以参考Lighthouse的文档来了解可用的配置选项。
-
-3. 编写自动化脚本：使用你喜欢的编程语言（如JavaScript、Python等）编写一个脚本来自动运行Lighthouse并获取跑分结果。在脚本中，你可以使用Lighthouse提供的Node.js API来运行Lighthouse，并获取报告数据。
-
-   例如，如果你使用JavaScript，可以创建一个名为`run-lighthouse.js`的文件，并在其中编写以下代码：
-```javascript
-const lighthouse = require('lighthouse');
-const chromeLauncher = require('chrome-launcher');
-
-async function runLighthouse(url, config) {
-  const chrome = await chromeLauncher.launch();
-  const options = { port: chrome.port };
-  const runnerResult = await lighthouse(url, options, config);
+async function runLighthouse(url) {
+  const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless'] });
+  const options = { logLevel: 'info', output: 'html', onlyCategories: ['performance'], port: chrome.port };
+  const runnerResult = await lighthouse(url, options);
   await chrome.kill();
-
-  return runnerResult.report;
+  return runnerResult;
 }
 
-const url = 'https://example.com';
-const config = require('./lighthouse-config.json');
+const url = 'http://localhost:8080/';
 
-runLighthouse(url, config)
-  .then(report => {
-    console.log(report);
+runLighthouse(url, {})
+  .then(runnerResult => {
+    // report是个html
+    delete runnerResult.report
+    const score = runnerResult.lhr.categories.performance.score * 100;
+    const fcp = runnerResult.lhr.audits['first-contentful-paint'].displayValue;
+    const lcp = runnerResult.lhr.audits['largest-contentful-paint'].displayValue;
+    const tbt = runnerResult.lhr.audits['total-blocking-time'].displayValue;
+    const cls = runnerResult.lhr.audits['cumulative-layout-shift'].displayValue;
+    const si = runnerResult.lhr.audits['speed-index'].displayValue;
+
+    console.log({ score, fcpObj, lcpObj, tbtObj, clsObj, siObj });
   })
   .catch(error => {
     console.error(error);
   });
 ```
 
-4. 运行脚本：在命令行中运行脚本，以执行自动化的Lighthouse跑分。使用以下命令：
-```
-node run-lighthouse.js
-```
-
-这样，Lighthouse就会自动运行，并生成一个包含跑分结果的报告。你可以根据需要在脚本中进一步处理和分析报告数据。
-
-请注意，为了获得准确的跑分结果，确保你的脚本在一个具有稳定网络连接的环境中运行，并且目标网站是可访问的。
-
-
+![image](../../../imgs/p_11.jpg)
 
 要在Lighthouse跑分脚本中实现登录鉴权，可以使用Lighthouse提供的自定义加载器（custom gatherer）和自定义脚本（custom audit）功能。以下是一种可能的实现方法：
 
