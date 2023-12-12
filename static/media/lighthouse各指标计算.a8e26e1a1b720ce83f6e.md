@@ -234,12 +234,10 @@ Lighthouse分数计算规则页面
 ![image](../../../imgs/p_10.jpg)
 
 ## 跑分系统
-使用谷歌Lighthouse实现自动化跑分，demo
+使用谷歌Lighthouse实现自动化跑分，代码如下：
 ```js
 import lighthouse from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
-
-
 async function runLighthouse(url) {
   const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless'] });
   const options = { logLevel: 'info', output: 'html', onlyCategories: ['performance'], port: chrome.port };
@@ -261,14 +259,18 @@ runLighthouse(url, {})
     const cls = runnerResult.lhr.audits['cumulative-layout-shift'].displayValue;
     const si = runnerResult.lhr.audits['speed-index'].displayValue;
 
-    console.log({ score, fcpObj, lcpObj, tbtObj, clsObj, siObj });
+    console.log({ score, fcp, lcp, tbt, cls, si });
   })
   .catch(error => {
     console.error(error);
   });
+
 ```
 
 ![image](../../../imgs/p_11.jpg)
+
+
+
 
 要在Lighthouse跑分脚本中实现登录鉴权，可以使用Lighthouse提供的自定义加载器（custom gatherer）和自定义脚本（custom audit）功能。以下是一种可能的实现方法：
 
