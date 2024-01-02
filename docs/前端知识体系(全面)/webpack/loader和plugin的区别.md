@@ -143,9 +143,9 @@ loader 包含两部分，[pitchLoader](https://webpack.js.org/api/loaders/#pitch
 
 - 当 pitch 没有定义或者没有返回值时，会先依次执行 pitch 在获取资源执行 loader
 - 如果定义的某个 pitch 有返回值则会跳过读取资源和自己的 loader。假设有 use: [loader1，loader2，loader3]，三个 loader 都包含 pitchloader 和 normal loader。
-  - 第一种情况，三个 loader 的 pitch loader 都没有返回值，那么执行顺序为：pitch loader3 -> pitch loader2 -> pitch loader1 -> 获取资源 -> normal loader1 ->
-    normal loader2 -> normal loader3
-  - 第二种情况，pitch loader 有返回值，假设 pitch loader2 有返回值，则执行顺序为：pitch loader3 -> pitch loader2 -> noraml loader3
+  - 第一种情况，三个 loader 的 pitch loader 都没有返回值，那么执行顺序为：pitch loader1 -> pitch loader2 -> pitch loader3 -> 获取资源 -> normal loader3 ->
+    normal loader2 -> normal loader1
+  - 第二种情况，pitch loader 有返回值，假设 pitch loader2 有返回值，则执行顺序为：pitch loader1 -> pitch loader2 -> noraml loader1
 
 ```javascript
 function loader(source) {
