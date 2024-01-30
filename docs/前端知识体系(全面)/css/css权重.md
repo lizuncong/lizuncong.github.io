@@ -6,6 +6,7 @@
 - 标签选择器(1)
 - 通配符，继承(0)
 
+```html
 <style type="text/css">
     #content div.main_content h2{
         color:red;    
@@ -25,3 +26,4 @@
 第二条样式的权重计算： 100+10+1，结果为111；
 h2标题的最终颜色为red
 -->
+```
