@@ -2,6 +2,7 @@
 
 ### 常用工具
 - [https://jsbin.com/?html,css,output](https://jsbin.com/?html,css,output)
+- [https://web.dev/explore/fast?hl=zh-cn#optimize-webfonts](https://web.dev/explore/fast?hl=zh-cn#optimize-webfonts)
 ### 踩坑系列
 
 按 debug 难度从高到低排列
