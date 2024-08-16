@@ -1,0 +1,24 @@
+## 约束useSelector的返回类型为只读类型
+```typescript
+import { configureStore } from '@reduxjs/toolkit';
+import type { EqualityFn, TypedUseSelectorHook } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
+
+export type ReadonlyNested<T> = {
+  readonly [P in keyof T]: T[P] extends object ? ReadonlyNested<T[P]> : T[P];
+};
+
+const makeStore = () =>
+  configureStore({
+    reducer: {
+      // ...
+    },
+  });
+
+export type AppStore = ReturnType<typeof makeStore>;
+export type AppState = ReadonlyNested<ReturnType<AppStore['getState']>>;
+export const useAppSelector: TypedUseSelectorHook<AppState> = <TState = unknown, Selected = unknown>(
+  selector: (state: TState) => Selected,
+  equalityFn?: EqualityFn<Selected> | undefined,
+) => useSelector<TState, Selected>(selector, equalityFn || stringEqual);
+```
