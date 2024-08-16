@@ -28,4 +28,6 @@ export const useAppSelector: TypedUseSelectorHook<AppState> = <TState = unknown,
 
 const { localContent } = useAppSelector((state) => state.commonState);
 
+// 如果直接修改值，则报错
+localContent.start = true
 ```
