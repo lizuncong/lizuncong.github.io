@@ -1,5 +1,6 @@
 ## 约束useSelector的返回类型为只读类型
 ```typescript
+
 import { configureStore } from '@reduxjs/toolkit';
 import type { EqualityFn, TypedUseSelectorHook } from 'react-redux';
 import { useDispatch, useSelector, useStore } from 'react-redux';
@@ -21,4 +22,5 @@ export const useAppSelector: TypedUseSelectorHook<AppState> = <TState = unknown,
   selector: (state: TState) => Selected,
   equalityFn?: EqualityFn<Selected> | undefined,
 ) => useSelector<TState, Selected>(selector, equalityFn || stringEqual);
+
 ```
