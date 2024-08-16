@@ -23,4 +23,9 @@ export const useAppSelector: TypedUseSelectorHook<AppState> = <TState = unknown,
   equalityFn?: EqualityFn<Selected> | undefined,
 ) => useSelector<TState, Selected>(selector, equalityFn || stringEqual);
 
+
+// 使用
+
+const { localContent } = useAppSelector((state) => state.commonState);
+
 ```
