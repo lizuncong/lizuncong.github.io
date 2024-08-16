@@ -1,4 +1,5 @@
 ## 约束useSelector的返回类型为只读类型
+
 ```typescript
 
 import { configureStore } from '@reduxjs/toolkit';
@@ -30,4 +31,5 @@ const { localContent } = useAppSelector((state) => state.commonState);
 
 // 如果直接修改值，则报错
 localContent.start = true
+
 ```
