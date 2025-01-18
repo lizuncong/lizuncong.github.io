@@ -18,6 +18,19 @@ const MENU = [
       <a
         className="custom-menu"
         target="_blank"
+        href="https://lizuncong.github.io/easy-webgl/"
+        rel="noreferrer"
+      >
+        WebGL 3D绘图教程
+      </a>
+    ),
+    key: "https://lizuncong.github.io/easy-webgl/",
+  },
+  {
+    label: (
+      <a
+        className="custom-menu"
+        target="_blank"
         href="https://lizuncong.github.io/react-ui/"
         rel="noreferrer"
       >
