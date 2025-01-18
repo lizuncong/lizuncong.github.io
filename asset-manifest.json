@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.cd3a0122.css",
-    "main.js": "/static/js/main.32faa9aa.js",
+    "main.js": "/static/js/main.fb3af816.js",
     "A0000.css": "/static/css/A0000.bd15fe2a.chunk.css",
     "A0000.js": "/static/js/A0000.d6aa0516.chunk.js",
     "A0001.css": "/static/css/A0001.bd15fe2a.chunk.css",
@@ -1133,7 +1133,7 @@
     "static/media/如何提高webpack构建速度.md": "/static/media/如何提高webpack构建速度.31d6cfe0d16ae931b73c.md",
     "static/media/生产环境如何运用sourcemap定义js错误.md": "/static/media/生产环境如何运用sourcemap定义js错误.31d6cfe0d16ae931b73c.md",
     "main.cd3a0122.css.map": "/static/css/main.cd3a0122.css.map",
-    "main.32faa9aa.js.map": "/static/js/main.32faa9aa.js.map",
+    "main.fb3af816.js.map": "/static/js/main.fb3af816.js.map",
     "A0000.bd15fe2a.chunk.css.map": "/static/css/A0000.bd15fe2a.chunk.css.map",
     "A0000.d6aa0516.chunk.js.map": "/static/js/A0000.d6aa0516.chunk.js.map",
     "A0001.bd15fe2a.chunk.css.map": "/static/css/A0001.bd15fe2a.chunk.css.map",
@@ -1672,6 +1672,6 @@
   },
   "entrypoints": [
     "static/css/main.cd3a0122.css",
-    "static/js/main.32faa9aa.js"
+    "static/js/main.fb3af816.js"
   ]
 }
