@@ -84,4 +84,23 @@
   border-image-slice: 0 @shu-bg-slice 0 @shu-bg-slice fill;
   border-image-width: 0 @shu-bg-width 0 @shu-bg-width;
 }
+
+### user select导致iOS12的input没法输入
+如果在项目中设置
+```less
+* {
+  user-select: none;
+}
+```
+将会导致在ios12中，h5的input没法获得焦点，没法输入。
+需要改成：
+```less
+* {
+  /* ios12会导致input没法聚焦 */
+  user-select: none; 
+}
+[contenteditable="true"], input, textarea {
+  /* 兼容ios12 */
+  user-select: auto !important;
+}
 ```
