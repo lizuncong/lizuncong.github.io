@@ -169,6 +169,7 @@ const MENU = [
     ),
     key: "https://github.com/lizuncong/mini-koa",
   },
+  ...dynamicMenus,
 ];
 
 export default MENU;
