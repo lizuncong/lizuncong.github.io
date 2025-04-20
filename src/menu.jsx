@@ -182,6 +182,19 @@ const MENU = [
     ),
     key: "https://github.com/lizuncong/babel-plugin-react-directives",
   },
+  {
+    label: (
+      <a
+        className="custom-menu"
+        target="_blank"
+        href="https://github.com/lizuncong/web-monitor"
+        rel="noreferrer"
+      >
+        前端性能监控SDK
+      </a>
+    ),
+    key: "https://github.com/lizuncong/web-monitor",
+  },
   ...dynamicMenus,
 ];
 
