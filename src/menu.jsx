@@ -5,6 +5,19 @@ const MENU = [
       <a
         className="custom-menu"
         target="_blank"
+        href="https://lizuncong.github.io/web-editor/"
+        rel="noreferrer"
+      >
+        落地页低代码编辑器
+      </a>
+    ),
+    key: "https://lizuncong.github.io/web-editor/",
+  },
+  {
+    label: (
+      <a
+        className="custom-menu"
+        target="_blank"
         href="https://lizuncong.github.io/excalidraw-app/"
         rel="noreferrer"
       >
