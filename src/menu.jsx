@@ -169,6 +169,19 @@ const MENU = [
     ),
     key: "https://github.com/lizuncong/mini-koa",
   },
+  {
+    label: (
+      <a
+        className="custom-menu"
+        target="_blank"
+        href="https://github.com/lizuncong/babel-plugin-react-directives"
+        rel="noreferrer"
+      >
+        Babel插件开发教程
+      </a>
+    ),
+    key: "https://github.com/lizuncong/babel-plugin-react-directives",
+  },
   ...dynamicMenus,
 ];
 
