@@ -6,6 +6,7 @@
 - [chrome常用工具面板，包括memory，performance，lighthouse说明](https://developer.chrome.com/docs/devtools/memory-problems?hl=zh-cn)
 - [内存术语](https://developer.chrome.com/docs/devtools/memory-problems/get-started?hl=zh-cn#object_sizes)
 - [点9图生成网站](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_backgrounds_and_borders/Border-image_generator)
+- [npm 包大小](https://bundlephobia.com/)
 ### 踩坑系列
 
 按 debug 难度从高到低排列
