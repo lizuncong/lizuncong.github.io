@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkFront_End_Development_Notes=self.webpackChunkFront_End_Development_Notes||[]).push([[8134],{69104:function(e,r,t){t.r(r);t(72791);var n=t(80184);r.default=function(){return(0,n.jsx)("iframe",{frameBorder:0,className:"doc-iframe",src:"html/\u524d\u7aef\u77e5\u8bc6\u4f53\u7cfb(\u5168\u9762)/\u5b57\u7b26\u96c6/5.read_file_demo.html"})}}}]);
-//# sourceMappingURL=A05194.5d84651d.chunk.js.map
