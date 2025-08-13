@@ -5,7 +5,7 @@ function Index() {
         gtag('event', 'hello_test', {
         'app_name': 'myAppName',
         'screen_name': 'Home',
-        '_my_test_time_': new Date().toLocaleString()
+        'my_test_time': new Date().toLocaleString()
       });
 }}>首页</div>;
 }
