@@ -9,3 +9,6 @@ https://analytics.google.com/analytics/web/?authuser=0#/provision/create
 
 
 https://www.screamingfrog.co.uk/
+
+
+https://learningseo.io/
