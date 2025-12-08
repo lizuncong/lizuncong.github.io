@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkFront_End_Development_Notes=self.webpackChunkFront_End_Development_Notes||[]).push([[4143],{67823:function(e,n,t){t.r(n),t.d(n,{default:function(){return o}});t(72791);var r=t(28535),c=t.p+"static/media/electron\u7b80\u4ecb.2fa56c6a367abeec8f75.md",a=t(80184);var o=function(){return(0,a.jsx)(r.Z,{src:c})}}}]);
+//# sourceMappingURL=A020.9a69cfa8.chunk.js.map
