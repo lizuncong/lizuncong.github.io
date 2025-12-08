@@ -1,5 +1,5 @@
 import React from "react";
-
+import Markdown from "@/components/markdown";
 function Index() {
   return <div className="home" onClick={() => {
         gtag('event', 'hello_test', {
@@ -7,7 +7,9 @@ function Index() {
         'screen_name': 'Home',
         'my_test_time': new Date().toLocaleString()
       });
-}}>首页</div>;
+}}>
+  <Markdown src={"/#/profile"} />
+</div>;
 }
 
 export default Index;
