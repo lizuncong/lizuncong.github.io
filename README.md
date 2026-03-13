@@ -7,6 +7,7 @@
 - [内存术语](https://developer.chrome.com/docs/devtools/memory-problems/get-started?hl=zh-cn#object_sizes)
 - [点9图生成网站](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_backgrounds_and_borders/Border-image_generator)
 - [npm 包大小](https://bundlephobia.com/)
+- [https://learn.lianglianglee.com/](https://learn.lianglianglee.com/)
 ### 踩坑系列
 
 按 debug 难度从高到低排列
