@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkFront_End_Development_Notes=self.webpackChunkFront_End_Development_Notes||[]).push([[8762],{32887:function(e,t,n){n.r(t),n.d(t,{default:function(){return s}});n(72791);var c=n(28535),r=n.p+"static/media/tapable.c06c2cb84070ab855d55.md",a=n(80184);var s=function(){return(0,a.jsx)(c.Z,{src:r})}}}]);
-//# sourceMappingURL=A09124.71db784b.chunk.js.map
