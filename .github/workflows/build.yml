@@ -12,11 +12,21 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: '16'
       - name: Install and Build
         run: |
           npm install
           npm run build
+      - name: Debug - List files
+        run: |
+          echo "=== 根目录内容 ==="
+          ls -la
+          echo "=== 检查 build 目录 ==="
+          ls -la build/ || echo "build 目录不存在"
+          echo "=== 检查 dist 目录 ==="
+          ls -la dist/ || echo "dist 目录不存在"
+          echo "=== 检查 out 目录 ==="
+          ls -la out/ || echo "out 目录不存在"
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
