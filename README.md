@@ -74,6 +74,7 @@
 - [segmentfault](https://segmentfault.com/)
 - [高性能浏览器网络](https://hpbn.co/)
 - [BFE](https://bigfrontend.dev/)
+- [Node.js最佳实践](https://github.com/goldbergyoni/nodebestpractices)
 
 为了在查看本仓库时有一个很好的体验，可以安装一个谷歌插件："Octotree - GitHub code tree"。这个插件使得在浏览器上查看 github 仓库时，能像
 IDE 一样组织目录。方便阅读。如下：
