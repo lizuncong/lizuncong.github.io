@@ -1,9 +1,10 @@
 {
   "files": {
     "main.css": "/static/css/main.8f35c76d.css",
-    "main.js": "/static/js/main.76f85964.js",
-    "A000.js": "/static/js/A000.0ceebb47.chunk.js",
-    "A001.js": "/static/js/A001.f4a8e3e0.chunk.js",
+    "main.js": "/static/js/main.90f260e7.js",
+    "A000.js": "/static/js/A000.e126a775.chunk.js",
+    "A001.js": "/static/js/A001.6333b489.chunk.js",
+    "A002.js": "/static/js/A002.7fb28d3d.chunk.js",
     "A010.js": "/static/js/A010.9a2e3923.chunk.js",
     "A02.js": "/static/js/A02.1ff272d5.chunk.js",
     "A0300.js": "/static/js/A0300.7d4c6cfc.chunk.js",
@@ -712,6 +713,7 @@
     "static/media/2.Node作为后台可以提供哪些服务.md": "/static/media/2.Node作为后台可以提供哪些服务.1a192d0d8cccd2a476af.md",
     "static/media/渲染优化.md": "/static/media/渲染优化.1a2b864860e3a45e19a0.md",
     "static/media/302重定向到同源网站cookie丢失的问题.md": "/static/media/302重定向到同源网站cookie丢失的问题.15818a5c39377fe5082c.md",
+    "static/media/大模型开发.md": "/static/media/大模型开发.33767f77da19cc530d02.md",
     "static/media/websocket与http的区别.md": "/static/media/websocket与http的区别.b19477807a4987dc1dc4.md",
     "static/media/http2服务器推送.md": "/static/media/http2服务器推送.833ccbc1e18ebc932d5a.md",
     "static/media/js深拷贝.md": "/static/media/js深拷贝.d96a983d0dfd5e72b4ca.md",
@@ -919,9 +921,10 @@
     "static/media/如何提高webpack构建速度.md": "/static/media/如何提高webpack构建速度.31d6cfe0d16ae931b73c.md",
     "static/media/生产环境如何运用sourcemap定义js错误.md": "/static/media/生产环境如何运用sourcemap定义js错误.31d6cfe0d16ae931b73c.md",
     "main.8f35c76d.css.map": "/static/css/main.8f35c76d.css.map",
-    "main.76f85964.js.map": "/static/js/main.76f85964.js.map",
-    "A000.0ceebb47.chunk.js.map": "/static/js/A000.0ceebb47.chunk.js.map",
-    "A001.f4a8e3e0.chunk.js.map": "/static/js/A001.f4a8e3e0.chunk.js.map",
+    "main.90f260e7.js.map": "/static/js/main.90f260e7.js.map",
+    "A000.e126a775.chunk.js.map": "/static/js/A000.e126a775.chunk.js.map",
+    "A001.6333b489.chunk.js.map": "/static/js/A001.6333b489.chunk.js.map",
+    "A002.7fb28d3d.chunk.js.map": "/static/js/A002.7fb28d3d.chunk.js.map",
     "A010.9a2e3923.chunk.js.map": "/static/js/A010.9a2e3923.chunk.js.map",
     "A02.1ff272d5.chunk.js.map": "/static/js/A02.1ff272d5.chunk.js.map",
     "A0300.7d4c6cfc.chunk.js.map": "/static/js/A0300.7d4c6cfc.chunk.js.map",
@@ -1212,6 +1215,6 @@
   },
   "entrypoints": [
     "static/css/main.8f35c76d.css",
-    "static/js/main.76f85964.js"
+    "static/js/main.90f260e7.js"
   ]
 }
