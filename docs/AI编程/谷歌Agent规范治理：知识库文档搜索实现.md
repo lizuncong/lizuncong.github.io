@@ -1,5 +1,8 @@
 # Google/Chromium Agents 的 docs 知识库检索实现解析
 
+谷歌Agent规范治理实践：[https://github.com/chromium/chromium/tree/main/agents](https://github.com/chromium/chromium/tree/main/agents)
+
+
 > 本文分析的是 Chromium 公开仓库 `agents/skills/chromium-docs` 中的文档检索实现，也就是 Google/Chromium 为 AI coding agents 提供的本地 `docs/` 知识库搜索能力。它不是 Google Search 产品级搜索引擎。
 
 ## 1. 总体结论
