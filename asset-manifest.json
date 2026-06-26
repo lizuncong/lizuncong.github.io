@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.8f35c76d.css",
-    "main.js": "/static/js/main.789d5f84.js",
+    "main.js": "/static/js/main.e33b8313.js",
     "A000.js": "/static/js/A000.3b2b9122.chunk.js",
     "A001.js": "/static/js/A001.6b5e2664.chunk.js",
     "A002.js": "/static/js/A002.f5691496.chunk.js",
@@ -11,7 +11,7 @@
     "A006.js": "/static/js/A006.98de1804.chunk.js",
     "A010.js": "/static/js/A010.0552f5ad.chunk.js",
     "A02.js": "/static/js/A02.1ff272d5.chunk.js",
-    "A030.js": "/static/js/A030.26deec24.chunk.js",
+    "A030.js": "/static/js/A030.3e8d3814.chunk.js",
     "A031.js": "/static/js/A031.a078d158.chunk.js",
     "A032.js": "/static/js/A032.92ad9cbf.chunk.js",
     "A0400.js": "/static/js/A0400.c8bcc4a3.chunk.js",
@@ -638,6 +638,7 @@
     "../build/imgs/BFC05.png": "/../build/imgs/BFC05.png",
     "static/media/跨域.md": "/static/media/跨域.83d4e1887f6216691761.md",
     "../build/imgs/board-02.png": "/../build/imgs/board-02.png",
+    "static/media/go代码编译及镜像构建流程.md": "/static/media/go代码编译及镜像构建流程.1d26145b7ab84510f969.md",
     "../build/imgs/net23.png": "/../build/imgs/net23.png",
     "../build/imgs/net10.png": "/../build/imgs/net10.png",
     "../build/imgs/net09.png": "/../build/imgs/net09.png",
@@ -656,7 +657,6 @@
     "static/media/auth耗时高的问题排查.md": "/static/media/auth耗时高的问题排查.2e8608698029797ff2dc.md",
     "static/media/JavaScript创建对象的方法.md": "/static/media/JavaScript创建对象的方法.f8acb597082070716572.md",
     "static/media/edge运行时.md": "/static/media/edge运行时.b785b2a8505746b3b630.md",
-    "static/media/go代码编译及镜像构建流程.md": "/static/media/go代码编译及镜像构建流程.ad2185a9bf610f223d08.md",
     "static/media/web性能指标及前端监控体系.md": "/static/media/web性能指标及前端监控体系.5fff756050c4413aaea7.md",
     "static/media/lighthouse各指标计算.md": "/static/media/lighthouse各指标计算.a8e26e1a1b720ce83f6e.md",
     "static/media/客户端和js通信方式.md": "/static/media/客户端和js通信方式.bce3dbeb8d9fcbd12f2a.md",
@@ -939,7 +939,7 @@
     "static/media/如何提高webpack构建速度.md": "/static/media/如何提高webpack构建速度.31d6cfe0d16ae931b73c.md",
     "static/media/生产环境如何运用sourcemap定义js错误.md": "/static/media/生产环境如何运用sourcemap定义js错误.31d6cfe0d16ae931b73c.md",
     "main.8f35c76d.css.map": "/static/css/main.8f35c76d.css.map",
-    "main.789d5f84.js.map": "/static/js/main.789d5f84.js.map",
+    "main.e33b8313.js.map": "/static/js/main.e33b8313.js.map",
     "A000.3b2b9122.chunk.js.map": "/static/js/A000.3b2b9122.chunk.js.map",
     "A001.6b5e2664.chunk.js.map": "/static/js/A001.6b5e2664.chunk.js.map",
     "A002.f5691496.chunk.js.map": "/static/js/A002.f5691496.chunk.js.map",
@@ -949,7 +949,7 @@
     "A006.98de1804.chunk.js.map": "/static/js/A006.98de1804.chunk.js.map",
     "A010.0552f5ad.chunk.js.map": "/static/js/A010.0552f5ad.chunk.js.map",
     "A02.1ff272d5.chunk.js.map": "/static/js/A02.1ff272d5.chunk.js.map",
-    "A030.26deec24.chunk.js.map": "/static/js/A030.26deec24.chunk.js.map",
+    "A030.3e8d3814.chunk.js.map": "/static/js/A030.3e8d3814.chunk.js.map",
     "A031.a078d158.chunk.js.map": "/static/js/A031.a078d158.chunk.js.map",
     "A032.92ad9cbf.chunk.js.map": "/static/js/A032.92ad9cbf.chunk.js.map",
     "A0400.c8bcc4a3.chunk.js.map": "/static/js/A0400.c8bcc4a3.chunk.js.map",
@@ -1242,6 +1242,6 @@
   },
   "entrypoints": [
     "static/css/main.8f35c76d.css",
-    "static/js/main.789d5f84.js"
+    "static/js/main.e33b8313.js"
   ]
 }
