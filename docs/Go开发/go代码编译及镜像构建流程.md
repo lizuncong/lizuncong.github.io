@@ -67,8 +67,8 @@ Go 编译器默认只处理 Go 源码，也就是 `.go` 文件和通过 `import`
 
 ```go
 import (
-	"html/template"
-	"net/http"
+    "html/template"
+    "net/http"
 )
 ```
 
@@ -78,8 +78,8 @@ import (
 
 ```go
 template.ParseFiles(
-	"templates/layout.html",
-	"templates/home.html",
+    "templates/layout.html",
+    "templates/home.html",
 )
 ```
 
@@ -305,7 +305,182 @@ registry.example.com/easy-kube:版本号
 
 发布时，Kubernetes 会根据镜像地址拉取镜像，然后启动 Pod。
 
-## 7. 代码编译和构建镜像的区别
+## 7. 镜像构建排错知识点
+
+本项目在镜像构建阶段遇到过几个典型问题，下面按“现象、原因、正确做法”整理。
+
+### 7.1 RUN 脚本不要随意换行
+
+最开始 RUN 脚本写成了两行：
+
+```bash
+tar -zxvf easy-kube.tar.gz
+chmod +x easy-kube
+```
+
+平台生成 Dockerfile 后，可能只会给第一行自动加上 `RUN`：
+
+```dockerfile
+RUN tar -zxvf easy-kube.tar.gz
+chmod +x easy-kube
+```
+
+Dockerfile 只认识 `RUN`、`CMD`、`COPY`、`ENV` 这类 Dockerfile 指令。第二行的 `chmod` 前面没有 `RUN`，Docker 会把 `chmod` 当成 Dockerfile 指令解析，最终报错：
+
+```text
+unknown instruction: chmod
+```
+
+正确做法是把多条命令写在同一行，用 `&&` 连接：
+
+```bash
+命令1 && 命令2 && 命令3
+```
+
+`&&` 的含义是：前一条命令执行成功后，才继续执行后一条命令。这样可以避免前面失败了，后面还继续执行。
+
+### 7.2 构建包可能已经被平台自动解压
+
+后面遇到过这个错误：
+
+```text
+easy-kube.tar.gz: Cannot open: No such file or directory
+```
+
+从平台生成的 Dockerfile 可以看到，它已经自动做了这些事情：
+
+```dockerfile
+wget -q -O easy-kube.tar.gz ...;
+unzip -q easy-kube.tar.gz || tar -zxf easy-kube.tar.gz;
+rm -rf easy-kube.tar.gz;
+```
+
+这表示平台已经：
+
+```text
+1. 下载 easy-kube.tar.gz 到镜像构建目录。
+2. 解压 easy-kube.tar.gz。
+3. 删除 easy-kube.tar.gz。
+```
+
+所以自定义 RUN 脚本里不能再写：
+
+```bash
+tar -zxvf easy-kube.tar.gz
+```
+
+因为执行到自定义 RUN 脚本时，压缩包已经被删除了。
+
+知识点：
+
+```text
+构建包字段告诉平台使用哪个构建产物。
+平台可能会自动下载、解压、清理构建包。
+RUN 脚本应该操作解压后的文件，而不是再次操作 tar.gz。
+```
+
+### 7.3 要把解压后的文件放到服务启动目录
+
+平台生成的启动逻辑里有：
+
+```dockerfile
+cd /data/app/easy-kube;
+service ssh start && ./easy-kube
+```
+
+这说明容器启动时会先进入：
+
+```text
+/data/app/easy-kube
+```
+
+然后执行：
+
+```bash
+./easy-kube
+```
+
+因此镜像构建阶段需要保证 `/data/app/easy-kube` 目录下存在这些文件：
+
+```text
+easy-kube
+templates/
+static/
+config/
+```
+
+否则可能出现两类问题：
+
+- 当前目录下没有 `easy-kube`，启动命令执行失败。
+- 当前目录下没有 `templates`、`static`、`config`，服务启动后找不到页面模板、静态资源或配置文件。
+
+### 7.4 Shell 路径之间必须用空格分隔
+
+有一次日志里出现了类似路径：
+
+```text
+/scripts/static/scripts/config
+```
+
+这说明原本想写两个路径：
+
+```text
+/scripts/static
+/scripts/config
+```
+
+但中间没有正确分隔，Shell 把它们拼成了一个不存在的路径。
+
+更稳的写法是先进入 `/scripts` 目录，再使用相对路径：
+
+```bash
+cd /scripts && cp -r easy-kube templates static config /data/app/easy-kube/
+```
+
+这样比写一长串绝对路径更不容易出错。
+
+### 7.5 当前推荐的镜像 RUN 脚本
+
+结合平台自动解压行为，easy-kube 当前推荐的 RUN 脚本是：
+
+```bash
+mkdir -p /data/app/easy-kube && cd /scripts && cp -r easy-kube templates static config /data/app/easy-kube/ && chmod +x /data/app/easy-kube/easy-kube
+```
+
+这条命令分成几步理解：
+
+```text
+1. mkdir -p /data/app/easy-kube
+   创建服务运行目录。
+
+2. cd /scripts
+   进入平台解压构建包后的目录。
+
+3. cp -r easy-kube templates static config /data/app/easy-kube/
+   把可执行文件、页面模板、静态资源、配置文件复制到服务运行目录。
+
+4. chmod +x /data/app/easy-kube/easy-kube
+   给 Go 编译产物增加可执行权限。
+```
+
+启动命令保持：
+
+```bash
+./easy-kube
+```
+
+因为平台最终会进入 `/data/app/easy-kube`，所以这里用相对路径执行当前目录下的 `easy-kube`。
+
+一句话总结：
+
+```text
+代码编译阶段生成 easy-kube.tar.gz。
+镜像构建平台自动下载并解压 easy-kube.tar.gz 到 /scripts。
+RUN 脚本负责把解压后的文件复制到 /data/app/easy-kube。
+容器启动时进入 /data/app/easy-kube，然后执行 ./easy-kube。
+```
+
+## 8. 代码编译和构建镜像的区别
 
 | 阶段 | 输入 | 输出 | 作用 |
 | --- | --- | --- | --- |
@@ -323,20 +498,22 @@ registry.example.com/easy-kube:版本号
 
 完成构建镜像后，Kubernetes 才能通过镜像地址启动服务。
 
-## 8. 平台配置建议
+## 9. 平台配置建议
 
-在构建平台中，可以按下面方式填写：
+在构建平台中，可以按下面方式填写。
+
+代码编译阶段：
 
 ```text
 仓库类型：git
-代码路径：https://xxx/aigc-service/easy-kube
+代码路径：https://git.xxx.info/aigc-service/easy-kube
 分支：master
 构建模板：选择最高版本 Go 模板，至少需要 Go 1.21 以上
 构建配置：参数
 构建包名称：easy-kube.tar.gz
 ```
 
-构建命令：
+代码编译命令：
 
 ```bash
 go version
@@ -356,9 +533,18 @@ tar -zcvf easy-kube.tar.gz easy-kube templates static config
 
 这种写法的好处是：前一步失败时，后一步不会继续执行。
 
-## 9. 常见问题
+镜像构建阶段：
 
-### 9.1 为什么不能只打包 easy-kube 一个文件
+```text
+基础镜像：library/go 或 library/golang，优先选择平台可用的新版本 Linux 镜像
+构建包：easy-kube.tar.gz
+RUN 脚本：mkdir -p /data/app/easy-kube && cd /scripts && cp -r easy-kube templates static config /data/app/easy-kube/ && chmod +x /data/app/easy-kube/easy-kube
+启动命令：./easy-kube
+```
+
+## 10. 常见问题
+
+### 10.1 为什么不能只打包 easy-kube 一个文件
 
 因为 easy-kube 运行时还会读取外部文件：
 
@@ -370,7 +556,7 @@ config/
 
 如果压缩包里只有 `easy-kube`，部署后可能出现模板、静态资源、配置文件找不到的问题。
 
-### 9.2 为什么 Go 版本太旧会构建失败
+### 10.2 为什么 Go 版本太旧会构建失败
 
 项目依赖的新版本库可能使用了新版 Go 标准库。
 
@@ -388,7 +574,7 @@ go version
 
 然后切换到更高版本的 Go 构建模板。
 
-### 9.3 外部文件能不能编译进二进制
+### 10.3 外部文件能不能编译进二进制
 
 可以，但需要使用 Go 的 `embed` 功能，例如：
 
@@ -401,7 +587,7 @@ var templatesFS embed.FS
 
 不过 easy-kube 当前更适合先使用外部文件打包方式，因为它更直观，也更方便修改配置和排查部署问题。
 
-## 10. 总结
+## 11. 总结
 
 easy-kube 的构建重点是：
 
@@ -410,9 +596,11 @@ go build 只会生成 Go 可执行文件。
 templates、static、config 是运行时外部文件，需要额外打包。
 代码编译产出 easy-kube.tar.gz。
 构建镜像把 easy-kube.tar.gz 做成 Kubernetes 可运行镜像。
+镜像构建平台可能会自动解压构建包，RUN 脚本要操作解压后的文件。
+容器启动目录要和 easy-kube、templates、static、config 所在目录一致。
 ```
 
-推荐最终构建命令：
+推荐最终代码编译命令：
 
 ```bash
 go version
@@ -421,3 +609,14 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o easy-kube .
 tar -zcvf easy-kube.tar.gz easy-kube templates static config
 ```
 
+推荐最终镜像 RUN 脚本：
+
+```bash
+mkdir -p /data/app/easy-kube && cd /scripts && cp -r easy-kube templates static config /data/app/easy-kube/ && chmod +x /data/app/easy-kube/easy-kube
+```
+
+推荐启动命令：
+
+```bash
+./easy-kube
+```
