@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkFront_End_Development_Notes=self.webpackChunkFront_End_Development_Notes||[]).push([[8832],{18324:function(e,n,t){t.r(n),t.d(n,{default:function(){return s}});t(72791);var r=t(28535),c=t.p+"static/media/codex-nfs-arg0-lock-triage.d5534ddf9718ea8f6bc6.md",o=t(80184);var s=function(){return(0,o.jsx)(r.Z,{src:c})}}}]);
+//# sourceMappingURL=A071.2febb568.chunk.js.map
