@@ -68,7 +68,7 @@
 Google 还会通过其他网页上的链接找到您的网页
 
 站点地图分包：
-<img width="1399" height="653" alt="image" src="https://github.com/user-attachments/assets/2c784027-37b8-4010-9c70-037eef83d96d" />
+<img width="1295" height="615" alt="image" src="https://github.com/user-attachments/assets/eff1d717-3ba6-47dd-b217-f87ea8596497" />
 
 ### robots.txt
 
