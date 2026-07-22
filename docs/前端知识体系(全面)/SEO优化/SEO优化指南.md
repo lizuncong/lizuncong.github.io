@@ -67,6 +67,9 @@
 
 Google 还会通过其他网页上的链接找到您的网页
 
+站点地图分包：
+<img width="1399" height="653" alt="image" src="https://github.com/user-attachments/assets/2c784027-37b8-4010-9c70-037eef83d96d" />
+
 ### robots.txt
 
 此文件必须命名为 robots.txt，且必须位于网站的根目录下。用于告诉搜索引擎不要抓取某些网页
