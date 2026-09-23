@@ -12,3 +12,8 @@ https://www.screamingfrog.co.uk/
 
 
 https://learningseo.io/
+
+
+https://ga-dev-tools.google/campaign-url-builder/
+
+https://popring.cn/blog/utm-tracking-guide
