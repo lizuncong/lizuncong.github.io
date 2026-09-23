@@ -31,8 +31,11 @@
 
 ### 2.3 检查CDN回源拉文件有无问题
 
-直接请求源站(COS)服务器
+直接请求源站(COS)服务器。
+
+下图是用HEAD请求从COS源站拉取的文件，返回304，content type是xml
 
 <img width="1106" height="777" alt="image" src="https://github.com/user-attachments/assets/84d0c948-5004-44c2-ad3c-c44bc4ad7a66" />
 
+<img width="1165" height="791" alt="image" src="https://github.com/user-attachments/assets/ccb601e2-8450-49e0-bdfc-1440dc500be9" />
 
