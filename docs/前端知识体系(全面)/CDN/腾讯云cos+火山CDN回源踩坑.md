@@ -56,3 +56,12 @@ head 200返回的content type是对的，下图是cos的head请求在200时的�
 
 ## 四、解决方法
 要么腾讯改，要么火山改，不行就打一架
+
+
+## 五、参考文档
+
+1、GET + If-None-Match → 304：Content-Type 与原对象一致
+参考文档：案例三 https://cloud.tencent.com/document/product/436/7753
+
+2、HEAD + If-None-Match → 304：Content-Type 为 application/xml（服务端默认值）
+ 参考文档：案例二 https://cloud.tencent.com/document/product/436/7745
