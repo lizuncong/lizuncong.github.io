@@ -53,3 +53,6 @@ head 200返回的content type是对的，下图是cos的head请求在200时的�
 火山CDN节点刚好是用HEAD请求从COS源站拉取的文件，COS的head请求判断文件没有变化，返回304，同时content type设置成xml。然后火山CDN节点又刚好直接用HEAD请求返回的content type: xml覆盖了CDN节点html文件的content type，导致CDN节点的html文件的响应头是错的
 
 <img width="806" height="544" alt="image" src="https://github.com/user-attachments/assets/102323f4-5f79-4a6f-8a79-b3b7923f6882" />
+
+## 四、解决方法
+要么腾讯改，要么火山改，不行就打一架
