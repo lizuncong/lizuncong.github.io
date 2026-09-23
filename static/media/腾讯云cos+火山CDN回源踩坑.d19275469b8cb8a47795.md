@@ -25,6 +25,14 @@
 - 2. CDN的节点缓存有问题，CDN改了节点的响应头？又或者回源的时候，设置错了响应头？
  
 ### 2.2 检查源站文件的修改历史
-如果COS开了版本控制，每次修改文件，都会有历史记录
+如果COS开了版本控制，每次修改文件，都会有历史记录。如下图，但看了下，这些历史记录的content type 都是对的
 
 <img width="1198" height="284" alt="企业微信截图_978d2fb1-8e05-4588-a8e7-df626afa60f3" src="https://github.com/user-attachments/assets/1a87ec7c-1000-401c-bdd0-9cec78d19079" />
+
+### 2.3 检查CDN回源拉文件有无问题
+
+直接请求源站(COS)服务器
+
+<img width="1106" height="777" alt="image" src="https://github.com/user-attachments/assets/84d0c948-5004-44c2-ad3c-c44bc4ad7a66" />
+
+
