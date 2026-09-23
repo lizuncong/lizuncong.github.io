@@ -33,9 +33,23 @@
 
 直接请求源站(COS)服务器。
 
-下图是用HEAD请求从COS源站拉取的文件，返回304，content type是xml
+下图是用HEAD请求从COS源站拉取的文件，返回304，content type是xml，下图是cos服务器的head请求在304命中缓存时的返回
 
 <img width="1106" height="777" alt="image" src="https://github.com/user-attachments/assets/84d0c948-5004-44c2-ad3c-c44bc4ad7a66" />
 
+下图使用GET请求从COS源站拉取的文件，返回304，content type是html，下图是cos服务器的get请求在304命中缓存时的返回
+
 <img width="1165" height="791" alt="image" src="https://github.com/user-attachments/assets/ccb601e2-8450-49e0-bdfc-1440dc500be9" />
 
+** 而火山CDN节点刚好是用HEAD请求从COS源站拉取的文件，然后又刚好直接用HEAD请求返回的content type: xml覆盖了CDN节点html文件的content type，导致CDN节点的html文件的响应头是错的 **
+
+head 200返回的content type是对的，下图是cos的head请求在200时的返回
+
+<img width="1088" height="816" alt="image" src="https://github.com/user-attachments/assets/ce1edd4e-28ef-4b72-833a-5212ab30ae5a" />
+
+
+## 三、结论
+
+火山CDN节点刚好是用HEAD请求从COS源站拉取的文件，COS的head请求判断文件没有变化，返回304，同时content type设置成xml。然后火山CDN节点又刚好直接用HEAD请求返回的content type: xml覆盖了CDN节点html文件的content type，导致CDN节点的html文件的响应头是错的
+
+<img width="806" height="544" alt="image" src="https://github.com/user-attachments/assets/102323f4-5f79-4a6f-8a79-b3b7923f6882" />
