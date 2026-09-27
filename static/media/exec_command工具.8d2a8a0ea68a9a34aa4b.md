@@ -139,7 +139,72 @@ format!("{header}\n{output}")
 
 **所以`exec_command`工具调用的输出最终不是 JSON，而是一段文本**。
 
-## 工具输出的token预算怎么计算
+## 工具输出token预算
+
+### 输出token的预算
+模型的工具输出预算来自 **`ModelInfo.truncation_policy`**，不是模型自己每次临时决定的。
+
+来源有三层：
+
+1. **模型目录元数据**
+   - Codex 会从远程 `/models`、缓存或内置 `models.json` 里查当前模型。
+   - 匹配逻辑是先最长前缀匹配，再尝试去掉 provider namespace 后匹配。
+   - 查到后使用该模型记录里的 `truncation_policy`。
+   - 见 `/codex/codex-rs/models-manager/src/manager.rs:782`。
+
+2. **未知模型的 fallback**
+   - 如果模型 slug 查不到，比如截图里的 `z-ai/glm-5.3-flash` 不在内置目录中，就使用 fallback 元数据。
+   - fallback 的工具输出策略是：
+     ```rust
+     truncation_policy: Bytes(10_000)
+     ```
+   - 也就是约 10KB，即2,500 tokens。
+   - 见 `/codex/codex-rs/models-manager/src/model_info.rs:98` 和 `:127`。
+
+3. **用户配置覆盖**
+   - 配置项 `tool_output_token_limit` 可以覆盖模型目录里的策略。
+   - 如果配置存在，Codex 会把它换算成对应 policy：
+     - 原本是 `Bytes` 模式：`token_limit * 4` 变成 byte limit；
+     - 原本是 `Tokens` 模式：直接使用 token limit。
+   - 见 `==/codex/codex-rs/models-manager/src/model_info.rs:32`。
+   - 配置字段定义在 `/codex/codex-rs/config/src/config_toml.rs:329`。
+
+所以决策顺序大概是：
+
+```text
+请求里的 max_output_tokens: 30000
+        ↓
+和 ModelInfo.truncation_policy 比较
+        ↓
+取更小的 byte budget
+        ↓
+如果仍超过序列化预算，再截断
+```
+
+对截图这个例子：
+
+```text
+max_output_tokens = 30000
+≈ 120000 bytes
+```
+
+但 `z-ai/glm-5.3-flash` 如果命中 fallback：
+
+```text
+model_policy = Bytes(10000)
+```
+
+实际生效：
+
+```text
+10000 bytes
+```
+
+所以约 20KB、估算 5000 tokens 的 `rg` 输出会被截断。
+
+注意这里的 `30000` 是 **模型在 tool call 里请求的参数**，而 `truncation_policy` 才是 **Codex 给该模型配置的安全上限**。
+
+### 截断策略
 以下面的调用为例：
 <img width="1129" height="607" alt="image" src="https://github.com/user-attachments/assets/cf6f3432-0a4d-4fe4-bd95-59254cf147f6" />
 
