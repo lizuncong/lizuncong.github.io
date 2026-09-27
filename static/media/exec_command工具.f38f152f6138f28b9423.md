@@ -1,0 +1,29 @@
+## exec_command工具
+
+exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/unified_exec.rs:28`
+<img width="819" height="494" alt="image" src="https://github.com/user-attachments/assets/8238a579-5c33-4525-bdfb-e3f76facbd0b" />
+
+
+工具schema在 `codex-rs/core/src/tools/handlers/shell_spec.rs`
+
+<img width="1026" height="533" alt="image" src="https://github.com/user-attachments/assets/3efc16b0-155d-4af8-a8ef-bb9bea23b162" />
+
+| 参数 | 作用 |
+|---|---|
+| `cmd` | 必填。完整 shell 命令字符串，例如 `"rg -n TODO codex-rs | head -200"`。支持管道、`&&`、引号、重定向、变量展开等 shell 语法。 |
+| `workdir` | 工作目录。省略时用当前 turn 的工作目录；相对路径会基于环境 cwd 解析，见 `/codex/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs:196`。 |
+| `tty` | 默认 `false`。`true` 分配 PTY，适合交互式进程；`false` 使用普通管道。若进程仍存活，返回 `session_id`，可用 `write_stdin` 继续交互。 |
+| `yield_time_ms` | 首次等待输出的时间，默认 `10000ms`。时间到了进程还没结束就返回 session ID。有效范围通常 clamp 到 `250–30000ms`，Windows 最低 10000ms，见 `/codex/codex-rs/core/src/unified_exec/mod.rs:218`。 |
+| `max_output_tokens` | 输出 token 预算，默认 `10000`。但实际会被当前模型的 truncation policy 进一步截断，前面讨论过的 30000 未必生效。 |
+| `shell` | 可选 shell 路径或名称。默认用用户的默认 shell。注意它主要用来识别 shell 类型，再发现对应可执行文件。 |
+| `login` | 可选布尔值。对 zsh/bash/sh 表示用 `-lc` 还是 `-c`；如果配置允许，省略时可能默认 login shell。 |
+| `sandbox_permissions` | 沙箱覆盖策略。常见值：`use_default`、`require_escalated`，功能开启时还有 `with_additional_permissions`。 |
+| `justification` | 用户可见的升级理由，通常只在 `sandbox_permissions: "require_escalated"` 时使用。 |
+| `prefix_rule` | 可复用的审批前缀规则，例如 `["git", "pull"]`，只在 `require_escalated` 场景下有意义。 |
+
+
+
+比如，下面是LLM返回的exec_command调用：
+<img width="1134" height="592" alt="image" src="https://github.com/user-attachments/assets/6ac1ad9d-8359-4aa0-b585-7c9b195e67d3" />
+
+## max_output_tokens参数
