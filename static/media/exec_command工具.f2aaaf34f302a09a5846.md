@@ -140,3 +140,39 @@ format!("{header}\n{output}")
 **所以`exec_command`工具调用的输出最终不是 JSON，而是一段文本**。
 
 ## 工具输出的token预算怎么计算
+以下面的调用为例：
+<img width="1129" height="607" alt="image" src="https://github.com/user-attachments/assets/cf6f3432-0a4d-4fe4-bd95-59254cf147f6" />
+
+执行的命令如下：
+```shell
+find codex-rs/core/src -maxdepth 2 -type f | sort | rg 'tool|shell|file|image' && printf '\n--- Tool definitions ---\n' && rg -n "pub enum Tool|struct Tool|ToolSpec|create_tools|build_tools|all_tools|LocalShell|ViewImage|view_image" codex-rs/core/src codex-rs/protocol/src codex-rs/core/src/tools 2>/dev/null | head -300
+```
+可以拿到本地(codex源码仓库)执行：
+
+<img width="1033" height="466" alt="image" src="https://github.com/user-attachments/assets/97e9d560-5846-45c4-b228-1f74abe7dab5" />
+
+这个命令原始的返回是367行，包含32,687 bytes，近似tokens：8,172。
+
+Codex 的近似公式是：
+```text
+1 token ≈ 4 bytes
+```
+
+所以工具返回的
+```text
+Original token count: 8108
+Output:
+Warning: truncated output (original token count: 8108)
+```
+这里面的8108 token表示命令原始返回的文本换算成近似token就是8108个。表示的是原本的输出。
+
+工具的返回如下，可以看到明显被截断了。Codex 工具实际返回给模型的约 141 行正文，包含10,212 bytes，近似tokens：2,553。
+<img width="1142" height="676" alt="image" src="https://github.com/user-attachments/assets/65bdda08-c725-41a0-9dc6-fb7bbf3dbe1d" />
+
+这里需要注意，输出是从中间截断的，保留了开头和结尾。不过这里有两层截断要区分：
+| 层 | 行为 |
+|---|---|
+| shell 里的 `head -300` | 只保留最后一段 `rg` 的前 300 行，丢掉后面的行 |
+| Codex 工具输出截断 | 保留整体输出的开头和结尾，丢中间 |
+
+也就是说，先从原始输出中截取前面300行，后面的直接丢掉。然后从前面三百行中根据token预算，只保留开头和结尾，中间的丢掉
