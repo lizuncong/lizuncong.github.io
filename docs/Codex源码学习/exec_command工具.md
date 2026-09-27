@@ -57,7 +57,9 @@ codex-rs/protocol/src/mcp.rs:459: ("read_file", Some("mcp__node_repl"), true),
 - 同一个文件如果有 8 个匹配，就会返回 8 行；
 - head -200 后最多只会看到 200 条这样的匹配行；
 - 图中 “Warning: truncated output” 说明这次工具输出被截断了，但截断来源是输出限制/head -200，不是 rg 本身必须限制输出。
-  
+
+> 从这里可以看出，rg根据关键字检索时，只会返回匹配关键字的那一行。比如检索"read_file"这个关键字时，虽然"mcp.rs"这个文件有很多命中，但rg并不会把整个"mcp.rs"文件内容都返回给模型，而是把"mcp.rs"匹配到"read_file"关键字的所有的行都列出来。这是由`ripreg`的检索机制决定的。
+
 ## exec_command返回结果：是一段文本
 <img width="943" height="570" alt="image" src="https://github.com/user-attachments/assets/a8bf97d9-fee3-4bb3-a233-7810a1765ada" />
 
