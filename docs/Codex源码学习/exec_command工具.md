@@ -26,6 +26,38 @@ exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/uni
 比如，下面是LLM返回的exec_command调用：
 <img width="1134" height="592" alt="image" src="https://github.com/user-attachments/assets/6ac1ad9d-8359-4aa0-b585-7c9b195e67d3" />
 
+含义逐段解释：
+- rg：Rust 的快速文本搜索工具，类似 grep，默认递归搜索目录。
+- -n：显示匹配内容所在源码文件的行号。
+- "read_file|ReadFile|..."：搜索正则表达式，| 表示“或”。所以只要某一行包含其中任意一个片段就会被匹配。
+- codex-rs：只在 codex-rs 目录里搜索。
+- --glob '*.rs'：只搜索 .rs 文件。
+- | head -200：把搜索输出截断为前 200 行。
+- local_image|local_image 是重复的，写一次即可。
+
+检索结果的格式是：
+
+```text
+文件路径:行号:匹配的那一行内容
+```
+
+例如图里这一行：
+
+```text
+codex-rs/protocol/src/mcp.rs:459: ("read_file", Some("mcp__node_repl"), true),
+```
+表示：
+- 文件是 codex-rs/protocol/src/mcp.rs
+- 匹配位置在第 459 行
+- 返回的是该文件第 459 行的原始内容
+- 该行包含 read_file
+所以结果特征是：
+- 不会返回整个 .rs 文件；
+- 每个匹配只会返回单行；
+- 同一个文件如果有 8 个匹配，就会返回 8 行；
+- head -200 后最多只会看到 200 条这样的匹配行；
+- 图中 “Warning: truncated output” 说明这次工具输出被截断了，但截断来源是输出限制/head -200，不是 rg 本身必须限制输出。
+  
 ## exec_command返回结果：是一段文本
 <img width="943" height="570" alt="image" src="https://github.com/user-attachments/assets/a8bf97d9-fee3-4bb3-a233-7810a1765ada" />
 
