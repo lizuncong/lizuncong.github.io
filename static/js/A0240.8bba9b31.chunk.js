@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkFront_End_Development_Notes=self.webpackChunkFront_End_Development_Notes||[]).push([[8353],{31683:function(e,n,t){t.r(n),t.d(n,{default:function(){return a}});t(72791);var r=t(28535),s=t.p+"static/media/0.readme.be62b21b6b819a495162.md",u=t(80184);var a=function(){return(0,u.jsx)(r.Z,{src:s})}}}]);
+//# sourceMappingURL=A0240.8bba9b31.chunk.js.map
