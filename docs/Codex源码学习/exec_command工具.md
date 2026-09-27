@@ -26,7 +26,7 @@ exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/uni
 比如，下面是LLM返回的exec_command调用：
 <img width="1134" height="592" alt="image" src="https://github.com/user-attachments/assets/6ac1ad9d-8359-4aa0-b585-7c9b195e67d3" />
 
-## exec_command返回结果
+## exec_command返回结果：是一段文本
 <img width="943" height="570" alt="image" src="https://github.com/user-attachments/assets/a8bf97d9-fee3-4bb3-a233-7810a1765ada" />
 
 以下面的返回为例：
@@ -48,5 +48,61 @@ Total output lines: 200
 
 codex-rs/protocol/src/mcp.rs:459:            ("read_file", Some("mcp__node_repl"), true),
 ```
+可以理解为：
+```rust
+model_output = header + "\n" + truncated_body
+```
+其中
+```rust
+header = [
+    "Chunk ID: e0ae14",
+    "Wall time: 0.0000 seconds",
+    "Process exited with code 0",
+    "Original token count: 5252",
+    "Output:",
+].join("\n")
+```
 
-## max_output_tokens参数
+这一段来自 `/codex/codex-rs/core/src/tools/context.rs:524`。
+
+各字段来源
+- Chunk ID：每次执行生成的短随机 ID，见 `/codex/codex-rs/core/src/unified_exec/mod.rs:236`。
+- Wall time：命令执行耗时，Instant::now() 前后相减，见 `/学习/codex/codex-rs/core/src/unified_exec/process_manager.rs:659`。
+- Process exited with code 0：子进程退出码。
+- Original token count: 5000：按大约 4 字节/token 估算原始输出 token 数，见 `/学习/codex/codex-rs/core/src/unified_exec/process_manager.rs:661`。
+- Output:：固定分隔行，不是命令输出的一部分。
+
+Warning 和 Total output lines
+下面这部分是 Codex 的截断包装：
+
+```text
+Warning: truncated output (original token count: 5000)
+Total output lines: 200
+
+...实际输出...
+```
+
+生成位置是 `/codex/codex-rs/utils/output-truncation/src/lib.rs:20：`
+
+```rust
+format!(
+    "Warning: truncated output (original token count: {original_token_count})\nTotal output lines: {total_lines}\n\n{result}"
+)
+```
+其中：
+- original_token_count 是截断前的近似 token 数；
+- total_lines 是截断前完整输出的行数；
+- 200 是 head -200 留下的 200 行
+- 
+最终返回给模型
+response_text() 会执行：
+
+```rust
+format!("{header}\n{output}")
+```
+
+见 `codex/codex-rs/core/src/tools/context.rs:550`。
+
+**所以`exec_command`工具调用的输出最终不是 JSON，而是一段文本**。
+
+## 工具输出的token预算怎么计算
