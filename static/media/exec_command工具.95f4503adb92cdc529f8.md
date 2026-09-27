@@ -29,6 +29,24 @@ exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/uni
 ## exec_command返回结果
 <img width="943" height="570" alt="image" src="https://github.com/user-attachments/assets/a8bf97d9-fee3-4bb3-a233-7810a1765ada" />
 
+以下面的返回为例：
+
 <img width="1129" height="625" alt="image" src="https://github.com/user-attachments/assets/2aaaf583-7ead-4e8c-be61-74f845b81c5d" />
+
+这些内容是 Codex 分层拼出来的：先收集 shell 的原始输出，再加上 exec_command 的元数据，最后按 token 预算截断。
+
+<img width="1077" height="704" alt="image" src="https://github.com/user-attachments/assets/ccece9ea-dbc5-4b79-9553-1c1c26e1e425" />
+
+```text
+Chunk ID: 752b0c
+Wall time: 0.2708 seconds
+Process exited with code 0
+Original token count: 5000
+Output:
+Warning: truncated output (original token count: 5000)
+Total output lines: 200
+
+codex-rs/protocol/src/mcp.rs:459:            ("read_file", Some("mcp__node_repl"), true),
+```
 
 ## max_output_tokens参数
