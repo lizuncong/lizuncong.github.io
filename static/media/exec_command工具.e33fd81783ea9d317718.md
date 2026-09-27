@@ -1,4 +1,4 @@
-## exec_command工具
+<img width="1146" height="672" alt="image" src="https://github.com/user-attachments/assets/dd817dfb-5945-4051-8300-542c7f55d1d9" />## exec_command参数定义
 
 exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/unified_exec.rs:28`
 <img width="819" height="494" alt="image" src="https://github.com/user-attachments/assets/8238a579-5c33-4525-bdfb-e3f76facbd0b" />
@@ -25,5 +25,10 @@ exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/uni
 
 比如，下面是LLM返回的exec_command调用：
 <img width="1134" height="592" alt="image" src="https://github.com/user-attachments/assets/6ac1ad9d-8359-4aa0-b585-7c9b195e67d3" />
+
+## exec_command返回结果
+<img width="943" height="570" alt="image" src="https://github.com/user-attachments/assets/a8bf97d9-fee3-4bb3-a233-7810a1765ada" />
+
+<img width="1129" height="625" alt="image" src="https://github.com/user-attachments/assets/2aaaf583-7ead-4e8c-be61-74f845b81c5d" />
 
 ## max_output_tokens参数
