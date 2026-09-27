@@ -1,4 +1,4 @@
-<img width="1146" height="672" alt="image" src="https://github.com/user-attachments/assets/dd817dfb-5945-4051-8300-542c7f55d1d9" />## exec_command参数定义
+## exec_command参数定义
 
 exec_command的完整参数定义在 `codex/codex-rs/core/src/tools/handlers/unified_exec.rs:28`
 <img width="819" height="494" alt="image" src="https://github.com/user-attachments/assets/8238a579-5c33-4525-bdfb-e3f76facbd0b" />
