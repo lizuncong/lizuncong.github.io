@@ -17,30 +17,34 @@ FROM (
 ) AS t;
 ```
 
-报错如下图所示，很明显是 MySQL的排序内存不足
+报错如下图所示，很明显是 MySQL的排序内存不足
+
+<img width="1292" height="417" alt="image" src="https://github.com/user-attachments/assets/0e9a34bb-03ae-4bd9-af38-b20bf0f83ad8" />
 
 
 下面就跟着我一步一步来深入剖析这个问题。回答这个问题前，我们需要了解一些理论知识
 
-前置理论知识
+## 前置理论知识
 本篇文章所有内容介绍都是基于MySQL innodb引擎。所以你要了解innodb存储引擎的特点。当然你不理解也不影响你看后面的内容
 
+<img width="1255" height="616" alt="image" src="https://github.com/user-attachments/assets/42d0681c-b62c-41de-ab3f-b76ef64cc671" />
 
-索引分类
+### 索引分类
 InnoDB 索引主要分为聚簇索引和二级索引；二级索引进一步可以分为主键索引、唯一索引、普通索引、联合索引、前缀索引、全文索引、空间索引等。
 
 这些索引大部分存放在 InnoDB 表空间中，以Page页的形式组织。从索引实现看，主要数据结构有：B+ 树、倒排索引、R-Tree、哈希表等，最常用的是B+树索引。每个索引都是独立的数据结构
 
-聚簇索引
+#### 聚簇索引
 InnoDB 的数据组织方式：叶子节点直接保存完整行数据。聚簇索引和主键索引还有点区别，每张表必定有一个聚簇索引，但不一定有我们显式定义的主键索引（PRIMARY KEY）。如果表定义了主键，InnoDB 就用它作为聚簇索引。
 
-二级索引
+#### 二级索引
 叶子节点保存的是：索引列 + 主键值
 
-什么是回表、覆盖索引
+### 什么是回表、覆盖索引
 回表是指：先通过二级索引找到主键值，然后再回到主键索引里查完整行数据的过程
 
 假设表结构：
+```SQL
 CREATE TABLE users (
   id BIGINT PRIMARY KEY,
   name VARCHAR(50),
@@ -48,6 +52,7 @@ CREATE TABLE users (
   city VARCHAR(50),
   KEY idx_name (name)
 );
+```
 
 id是主键索引(聚簇索引)，idx_name是二级索引。下图展示了聚簇索引和二级索引的数据结构，它们是两棵独立的 B+ 树。
 
