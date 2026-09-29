@@ -617,6 +617,7 @@ explain结果如下：
 ```
 
 可以把上面的丢给AI分析，这里简单总结这份trace的选择过程就是：
+```text
 全表扫描 cost 5104.75
   ↓ 太贵
 
@@ -633,24 +634,29 @@ intersect(idx_user_id, idx_game_id) cost 3.51569
   ↓ 估算交集只剩 1 行
 
 最终选择 intersect
+```
 
 所以结论是：
 MySQL 选择 intersect(idx_user_id, idx_game_id)，不是因为复合索引不能用，而是因为它估算这个交集方案只需要处理约 1 行，比复合索引的 100 行回表更便宜。
 但这个判断建立在“两列条件独立”的假设上；在真实业务数据里，如果列相关性强，这种选择可能反而不好。
 
-MySQL filesort
-filesort是什么
+### MySQL filesort
+#### filesort是什么
 filesort 是 MySQL 里排序算子的名字，不是“真的一定写文件”。当优化器发现：
 1.ORDER BY
 2.GROUP BY（某些版本/场景下隐含排序需求）
 3.DISTINCT + 排序
 4.窗口函数或某些子查询物化后的排序
 无法直接利用索引的有序性返回结果时，就需要一个专门的排序过程，这个排序过程在执行计划里通常显示为：
+
+```SQL
 Using filesort
+```
 
 注意：filesort 不等于“磁盘排序”。数据量小时它在内存里完成；只有排序数据超过 sort_buffer_size 等限制时，才可能写临时文件做多路归并。
-什么时候会出现filesort
+#### 什么时候会出现filesort
 假设表结构如下：
+```SQL
 CREATE TABLE orders (
   id BIGINT PRIMARY KEY,
   user_id BIGINT NOT NULL,
@@ -659,23 +665,28 @@ CREATE TABLE orders (
   amount DECIMAL(10,2) NOT NULL,
   KEY idx_user_status (user_id, status)
 );
+```
 
-会触发 filesort的查询
+##### 会触发 filesort的查询
+```SQL
 SELECT *
 FROM orders
 WHERE user_id = 1
 ORDER BY created_at DESC;
+```
 
 索引 idx_user_status(user_id, status) 保证的是 user_id, status 有序，但结果集里的 created_at 没有索引有序性，所以需要 filesort。
-不会触发 filesort的查询
+##### 不会触发 filesort的查询
+```SQL
 SELECT *
 FROM orders
 WHERE user_id = 1
 ORDER BY status;
+```
 
 因为 user_id = 1 后，索引的下一列 status 本身就是有序的，MySQL 可以按索引顺序直接返回。
 
-filesort是在内存中还是磁盘中完成？
+##### filesort是在内存中还是磁盘中完成？
 sort_buffer_size
 每个会话执行排序时，MySQL 会分配自己的 sort buffer。默认值通常不大，例如 256KB 或 1MB，具体取决于版本和配置。如果需要排序的数据能放进 sort buffer：
 ●内存内快速排序。
@@ -687,12 +698,14 @@ sort_buffer_size
 注意
 sort_buffer_size 是连接级变量，不建议盲目调到几百 MB，否则高并发下可能造成内存压力。
 
-为啥我们的chat messages查询会OOM
+## 为啥我们的chat messages查询会OOM
 前面铺垫了那么多，终于可以回来分析我们的问题了
-问题分析
+### 问题分析
 chat messages表索引结构：
+<img width="1354" height="653" alt="image" src="https://github.com/user-attachments/assets/5eceef63-6c8e-4ef7-9a1f-cc4fc85b3b25" />
 
 下面的查询语句
+```SQL
 SELECT COUNT(*) AS failed_rows
 FROM (
   SELECT
@@ -705,20 +718,24 @@ FROM (
   ORDER BY chat_messages.round_index, chat_messages.id
   LIMIT 10
 ) AS t;
+```
 
 拆开这条查询语句：
 1. 这条 SQL 的本意
+```SQL
 WHERE chat_messages.game_id = 994885889
   AND chat_messages.user_id = 1599514642999
 ORDER BY chat_messages.round_index, chat_messages.id
 LIMIT 10;
+```
 
 它的意思是：
 “找出某个游戏下某个用户的消息，按轮次和消息 ID 顺序，最多取 10 条。”
 2. 表里其实已经有合适的索引
 chat_messages 有这个索引：
+```SQL
 idx_game_user_round (game_id, user_id, round_index, id)
-
+```
 理论上，MySQL 应该这样走：
 1.先按 game_id = 994885889
 2.再按 user_id = 1599514642999
@@ -728,15 +745,17 @@ idx_game_user_round (game_id, user_id, round_index, id)
 
 3. 但 MySQL 优化器实际选了坏计划
 EXPLAIN 显示它没有走 idx_game_user_round，而是走了：
+```SQL
 Using intersect(idx_game_id, idx_user_id)
 Using filesort
-
+```
 意思是：
 ●它分别用了 idx_game_id 和 idx_user_id
 ●先把两个结果交集算出来
 ●再对结果做一次 filesort 排序
 ●最后才应用 LIMIT 10
 这就有问题了。
+<img width="1355" height="531" alt="image" src="https://github.com/user-attachments/assets/ee9c9c6e-95e0-4ea2-bb87-c7af464a3c23" />
 
 
 4. 排序时要带着大字段一起排
@@ -747,19 +766,19 @@ chat_messages.response_json
 Error 1038 (HY001): Out of sort memory
 
 
-结论
+#### 结论
 一句话就是这次查询，mysql优化器并没有走联合索引，而是选择了两个单列索引求交集的方案，然后交集的结果并不满足排序要求，因此还要拿到filesort中排序。结果刚好查出来的response_json字段直接撑爆了filesort的buffer缓存
 
-为啥这次chat messages的查询没有顺利转到磁盘排序？
+### 为啥这次chat messages的查询没有顺利转到磁盘排序？
 filesort会优先在内存中排序，如果内存放不下，才可能溢出到磁盘临时文件，再归并排序。
 那为啥这次chat messages的查询没有顺利转到磁盘排序？
 
 你问AI吧，懒得写了
-修复方案
-方案1：加 FORCE INDEX
+### 修复方案
+#### 方案1：加 FORCE INDEX
 FORCE INDEX (idx_game_user_round)
 
-方案2：业务层先排序再组装
+#### 方案2：业务层先排序再组装
 第一次 SQL：查消息列表元数据，不带 response_json
 第二次 SQL：根据第一次拿到的 id 批量查 response_json
 业务层：把 response_json 合并回消息对象
