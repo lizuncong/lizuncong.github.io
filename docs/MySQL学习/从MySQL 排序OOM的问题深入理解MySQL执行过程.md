@@ -106,8 +106,8 @@ Extra取值含义：
 
 这里可以看到key使用了idx_game_user_round，说明当前查询走了联合索引。然后extra列的值是using index，说明是覆盖索引，不需要回表
 
-MySQL优化器
-什么是优化器
+### MySQL优化器
+#### 什么是优化器
 MySQL 执行 SQL 前，优化器会做一次查询计划评估，判断怎么访问表最合适。比如：
 ●要不要用某个索引？
 ●用哪一个索引？
@@ -118,8 +118,9 @@ MySQL 执行 SQL 前，优化器会做一次查询计划评估，判断怎么访
  可以简单理解成： MySQL 会评估若干条看起来成本较低的执行路径，然后选 cost 最低的一条。
 
 
-如何查看优化器的评估过程：为啥选择交集方案
+#### 如何查看优化器的评估过程：为啥选择交集方案
 可以通过optimizer_trace查看优化器为什么这么选，使用下面的sql在终端演示一下：
+```SQL
 SET SESSION cte_max_recursion_depth = 50000;
 
 DROP TABLE IF EXISTS optimizer_trace_demo;
@@ -184,15 +185,21 @@ SET SESSION optimizer_trace = 'enabled=off';
 
 DROP TABLE optimizer_trace_demo;
 
+```
 
 explain结果如下：
+
+<img width="1495" height="921" alt="image" src="https://github.com/user-attachments/assets/cd3f83a8-221f-479b-be3c-84551675bf13" />
 
 这说明 MySQL 虽然有更完整的复合索引 idx_game_user_round，但这次它仍然选择了两个单列索引求交集，因为它估算这个方案 cost 更低。
 
 然后可以通过trace的结果查看为啥优化器选择了两个单列索引求交集的方案
+<img width="1298" height="989" alt="image" src="https://github.com/user-attachments/assets/cc226aba-c0ae-4588-bc86-d9699298828a" />
 
 
 截图不全，我贴一下原样输出的结果：
+
+```JSON
 {
   "steps": [
     {
@@ -606,6 +613,8 @@ explain结果如下：
   ]
 }
 
+
+```
 
 可以把上面的丢给AI分析，这里简单总结这份trace的选择过程就是：
 全表扫描 cost 5104.75
