@@ -56,13 +56,17 @@ CREATE TABLE users (
 
 id是主键索引(聚簇索引)，idx_name是二级索引。下图展示了聚簇索引和二级索引的数据结构，它们是两棵独立的 B+ 树。
 
+<img width="1312" height="645" alt="image" src="https://github.com/user-attachments/assets/a59c4fab-aefe-4003-b9a5-62eb2bbdbcb2" />
 
 
 
 执行下面的查询语句：
+
+```SQL
 SELECT id, name, age, city
 FROM users
 WHERE name = '张三';
+```
 
 查询过程是：
 1. 在 idx_name 里找到 name = '张三' 对应的 id。
@@ -72,31 +76,33 @@ WHERE name = '张三';
 
 
 如果只查：
+```SQL
 SELECT id, name
 FROM users
 WHERE name = '张三';
+```
 
 就不需要回表，因为 idx_name 里已经有 name 和 id 了。这种情况叫 覆盖索引。
 
-查看MySQL查询过程的三大工具
+### 查看MySQL查询过程的三大工具
 查看 MySQL 查询过程主要用三类工具：EXPLAIN、EXPLAIN ANALYZE、optimizer_trace。
 
 重点看这几列：
-列名	含义
-possible_keys	MySQL 觉得可能可用的索引
-key	MySQL 最终真正选的索引
-rows	预估扫描行数
-Extra	额外执行细节，比如是否 filesort
+
+<img width="625" height="181" alt="image" src="https://github.com/user-attachments/assets/5d8d7ea4-2a8a-415e-b143-00a87e38a4df" />
+
+
 Extra取值含义：
-Extra 值	含义
-Using index	覆盖索引，不需要回表
-Using index condition	使用了索引下推，但仍可能需要回表
-Using where	服务层过滤条件
-Using filesort	额外排序，通常说明 ORDER BY 没有完全利用索引顺序
+
+<img width="620" height="204" alt="image" src="https://github.com/user-attachments/assets/5eb2f2ae-d26f-4088-8b41-902546884436" />
+
 
 用chat_messages表举例，它有很多个索引，其中idx_game_user_round联合索引如红框所示
 
+<img width="1360" height="642" alt="image" src="https://github.com/user-attachments/assets/65e10586-334a-4f78-b242-70d26275ce0f" />
+
 使用explain查看下面的查询语句的过程
+<img width="1638" height="460" alt="image" src="https://github.com/user-attachments/assets/b7bbf143-b33a-47c1-8cd9-8928f3c58b64" />
 
 这里可以看到key使用了idx_game_user_round，说明当前查询走了联合索引。然后extra列的值是using index，说明是覆盖索引，不需要回表
 
