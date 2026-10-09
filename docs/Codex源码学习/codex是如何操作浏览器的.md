@@ -1,3 +1,28 @@
+# 待整理
+
+
+Codex Desktop 并不是直接启动你的默认 Chrome。
+
+**结论**
+- 本机安装的是 `/Applications/ChatGPT.app`，内部集成 Codex。
+- 它有两种浏览器形态：
+  - **in-app browser**：Codex 自己的 Chromium，使用 `~/Library/Application Support/Codex`。
+  - **外部 Chrome/Edge**：通过浏览器扩展接管你已打开的浏览器 tab。
+- 所以 GPT 能拿到登录态，不是因为 Codex 启动了默认 profile，而是扩展运行在你的浏览器里，可以访问当前页面/会话。
+- 你本地默认 Chrome 目前没有安装对应的 OpenAI/ChatGPT 扩展，所以我在 CDP 环境里看不到它。
+
+**证据**
+- 当前运行进程：
+  - `/Applications/ChatGPT.app/Contents/MacOS/ChatGPT`
+  - `--user-data-dir=/Users/lzc/Library/Application Support/Codex`
+- 插件目录：
+  - `/Applications/ChatGPT.app/Contents/Resources/plugins/openai-bundled/plugins/chrome`
+- 文档流程是：
+  - `agent.browsers.list()`
+  - `browser.user.openTabs()`
+  - `browser.user.claimTab(tab)`
+
+我把分析写进了 `docs/Codex_Desktop_浏览器默认实例分析.md:1`。
 ## 为啥codex每次打开的浏览器窗口都是很干净的
 是因为codex用的是独立调试 profile：`~/.cache/chrome-codex-debug`。
 
