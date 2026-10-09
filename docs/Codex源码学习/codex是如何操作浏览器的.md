@@ -12,7 +12,7 @@
 - Chrome 还有一个安全限制：**默认用户目录下会忽略 `--remote-debugging-port`**，必须指定独立的 `--user-data-dir`。
 - 所以打开的是 `~/.cache/chrome-codex-debug` 这个独立 profile
 
-d## Chrome 新版禁止默认用户目录开 CDP
+## Chrome 新版禁止默认用户目录开 CDP
 出于安全考虑，Chrome 136+ 对默认 `user-data-dir` 忽略 `--remote-debugging-port`，防止自动化直接拿到你的默认登录态。所以我刚才必须用独立 profile：`~/.cache/chrome-codex-debug`。
 
 也就是说，不是我不能点你这个 Chrome，而是 Chrome 不允许把默认 profile 直接暴露给 CDP。如果你想要持久化调试环境，我可以帮你做一个固定 profile 的一键启动脚本。
