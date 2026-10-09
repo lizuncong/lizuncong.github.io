@@ -44,7 +44,28 @@
 2. `browser.user.openTabs()` 读取用户浏览器中已打开的 tab。
 3. `browser.user.claimTab(tab)` 接管指定 tab。
 
-所以外部浏览器登录态可见，是因为扩展运行在用户自己的浏览器 profile 内，而不是 Codex App 直接读取 Chrome 的 cookies。
+所以外部浏览器登录态可见，是因为扩展运行在用户自己的浏览器 profile 内，而不是 Codex App 直接读取 Chrome 的 cookies。具体实现大致是：
+
+1. **Chrome/Edge 里装扩展**
+   - Codex/ChatGPT 有官方浏览器扩展。
+   - 扩展运行在你的用户 profile 内，所以能看到你已经打开的页面和登录态。
+
+2. **本地安装 native messaging host**
+   - Codex App 会写一个 native host manifest，例如 `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.openai.codexextension.json`。
+   - manifest 里的 `path` 指向 App 内置的 `ChatGPT for Chrome` 二进制。
+   - `allowed_origins` 只允许指定扩展 ID 连接。
+
+3. **扩展 ↔ native host ↔ Codex App**
+   - 扩展通过 native messaging 和本地 host 进程通信。
+   - host 再桥接到 Codex 的 app-server / 浏览器服务。
+   - 通信内容是结构化 RPC，不是你手动开的 CDP。
+
+4. **列出和接管 tab**
+   - `browser.user.openTabs()` 对应后端 `getUserTabs`。
+   - `browser.user.claimTab(tab)` 对应后端 `claimUserTab`。
+   - 接管后，后续导航、截图、点击、读取 DOM 都通过扩展后端执行，而不是连接 DevTools 端口。
+
+一句话：**外部浏览器控制不是 CDP，而是“扩展 + native messaging host + 本地 RPC”的桥接模型**。
 
 ## 与手动 CDP 的差异
 
