@@ -50,6 +50,15 @@
 
 <img width="847" height="784" alt="image" src="https://github.com/user-attachments/assets/1188b157-6ef3-4971-9ade-9fcd58939b64" />
 
+所以回退到CDP协议：
+下图里的做法走的就是 **CDP（Chrome DevTools Protocol）** 的发现/接入方式：
+- 请求 `http://127.0.0.1:<port>/json/version` 是 CDP 的 HTTP discovery endpoint，用来确认浏览器调试端口和获取 WebSocket debugger URL。
+- `Get-NetTCPConnection` 和检查进程 debug flags 是在找浏览器是否启用了 `--remote-debugging-port` 或 `--remote-debugging-pipe`。
+- 真正控制页面通常还要连接 `/json/version` 或 `/json/list` 返回的 WebSocket URL，再发送 CDP 命令；下图里只展示了“发现调试端口”这一步。
+
+也就是说：**下图是 CDP 协议的探测阶段，还没体现实际的 WebSocket CDP 控制。**
+<img width="794" height="823" alt="image" src="https://github.com/user-attachments/assets/99d4cc4b-256a-4c27-8941-14e03e5f29b1" />
+
 
 所以外部浏览器登录态可见，是因为扩展运行在用户自己的浏览器 profile 内，而不是 Codex App 直接读取 Chrome 的 cookies。具体实现大致是：
 
