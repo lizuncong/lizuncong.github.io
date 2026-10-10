@@ -44,6 +44,13 @@
 2. `browser.user.openTabs()` 读取用户浏览器中已打开的 tab。
 3. `browser.user.claimTab(tab)` 接管指定 tab。
 
+
+这种方式需要codex oauth鉴权
+<img width="883" height="601" alt="image" src="https://github.com/user-attachments/assets/937bfd33-9113-4ac7-a0b7-2dce2aea3f12" />
+
+<img width="847" height="784" alt="image" src="https://github.com/user-attachments/assets/1188b157-6ef3-4971-9ade-9fcd58939b64" />
+
+
 所以外部浏览器登录态可见，是因为扩展运行在用户自己的浏览器 profile 内，而不是 Codex App 直接读取 Chrome 的 cookies。具体实现大致是：
 
 1. **Chrome/Edge 里装扩展**
