@@ -14,3 +14,4 @@
 7. [[分享] AI Coding 进入 Harness 阶段：滴滴这套开源框架提供了新思路,从需求到验收再到归档，HelixHarness 如何组织 AI Coding 工作流](https://mp.weixin.qq.com/s/y03a6MwhbU0NmLfXO-XjRQ)
 
 8. [滴滴开源 HelixHarness：让团队AI Coding稳定交付](https://mp.weixin.qq.com/s/N2AXnzXKYtaNy3rO9dFnKw)
+9. [The Home Repo Pattern: 跨仓模式](https://www.aihero.dev/the-home-repo-pattern)
